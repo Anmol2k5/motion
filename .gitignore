@@ -1,0 +1,74 @@
+# Build outputs
+build/
+out/
+dist/
+bin/
+obj/
+*.exe
+*.dll
+*.dylib
+*.so
+*.pdb
+*.ilk
+*.obj
+*.o
+*.a
+*.lib
+
+# Test binaries
+tr_test
+tr_test.exe
+prog_test
+prog_test.exe
+
+# Local toolchains and SDKs
+.tmp/
+temp/
+tmp/
+mingw*/
+winlibs*/
+AdobeSDK/
+AdobeSDK*/
+PremiereSDK/
+PremiereSDK*/
+tools/local/
+vendor/adobe/
+
+# Archives and installers
+*.zip
+*.7z
+*.rar
+*.msi
+*.pkg
+*.dmg
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+credentials/
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs and caches
+*.log
+.cache/
+node_modules/
+coverage/
+
+# Local agent / scratch / unrelated scaffolding
+.agents/
+.claude/
+.gemini/
+.scratch/
+ponytail-tmp/
+skills-lock.json
+opencode.json
+statemotion-premiere-plugin-build-spec.md

@@ -1,0 +1,1187 @@
+{
+  "smoothstep": [
+    {
+      "t": 0,
+      "e": 0
+    },
+    {
+      "t": 0.25,
+      "e": 0.15625
+    },
+    {
+      "t": 0.5,
+      "e": 0.5
+    },
+    {
+      "t": 0.75,
+      "e": 0.84375
+    },
+    {
+      "t": 1,
+      "e": 1
+    }
+  ],
+  "cases": [
+    {
+      "name": "mode AToB q=0",
+      "input": {
+        "visibleElapsedSeconds": 0,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "mode AToB q=0.25",
+      "input": {
+        "visibleElapsedSeconds": 0.25,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 0,
+        "manualProgress": 0.25
+      },
+      "expected": {
+        "linearProgress": 0.25,
+        "easedProgress": 0.15625
+      }
+    },
+    {
+      "name": "mode AToB q=0.5",
+      "input": {
+        "visibleElapsedSeconds": 0.5,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 0,
+        "manualProgress": 0.5
+      },
+      "expected": {
+        "linearProgress": 0.5,
+        "easedProgress": 0.5
+      }
+    },
+    {
+      "name": "mode AToB q=0.75",
+      "input": {
+        "visibleElapsedSeconds": 0.75,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 0,
+        "manualProgress": 0.75
+      },
+      "expected": {
+        "linearProgress": 0.75,
+        "easedProgress": 0.84375
+      }
+    },
+    {
+      "name": "mode AToB q=1",
+      "input": {
+        "visibleElapsedSeconds": 1,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 0,
+        "manualProgress": 1
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "mode BToA q=0",
+      "input": {
+        "visibleElapsedSeconds": 0,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 1,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "mode BToA q=0.25",
+      "input": {
+        "visibleElapsedSeconds": 0.25,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 1,
+        "manualProgress": 0.25
+      },
+      "expected": {
+        "linearProgress": 0.25,
+        "easedProgress": 0.84375
+      }
+    },
+    {
+      "name": "mode BToA q=0.5",
+      "input": {
+        "visibleElapsedSeconds": 0.5,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 1,
+        "manualProgress": 0.5
+      },
+      "expected": {
+        "linearProgress": 0.5,
+        "easedProgress": 0.5
+      }
+    },
+    {
+      "name": "mode BToA q=0.75",
+      "input": {
+        "visibleElapsedSeconds": 0.75,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 1,
+        "manualProgress": 0.75
+      },
+      "expected": {
+        "linearProgress": 0.75,
+        "easedProgress": 0.15625
+      }
+    },
+    {
+      "name": "mode BToA q=1",
+      "input": {
+        "visibleElapsedSeconds": 1,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 1,
+        "manualProgress": 1
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "mode AToBToA q=0",
+      "input": {
+        "visibleElapsedSeconds": 0,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 2,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "mode AToBToA q=0.25",
+      "input": {
+        "visibleElapsedSeconds": 0.25,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 2,
+        "manualProgress": 0.25
+      },
+      "expected": {
+        "linearProgress": 0.25,
+        "easedProgress": 0.5
+      }
+    },
+    {
+      "name": "mode AToBToA q=0.5",
+      "input": {
+        "visibleElapsedSeconds": 0.5,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 2,
+        "manualProgress": 0.5
+      },
+      "expected": {
+        "linearProgress": 0.5,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "mode AToBToA q=0.75",
+      "input": {
+        "visibleElapsedSeconds": 0.75,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 2,
+        "manualProgress": 0.75
+      },
+      "expected": {
+        "linearProgress": 0.75,
+        "easedProgress": 0.5
+      }
+    },
+    {
+      "name": "mode AToBToA q=1",
+      "input": {
+        "visibleElapsedSeconds": 1,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 2,
+        "manualProgress": 1
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "mode BToAToB q=0",
+      "input": {
+        "visibleElapsedSeconds": 0,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 3,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "mode BToAToB q=0.25",
+      "input": {
+        "visibleElapsedSeconds": 0.25,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 3,
+        "manualProgress": 0.25
+      },
+      "expected": {
+        "linearProgress": 0.25,
+        "easedProgress": 0.5
+      }
+    },
+    {
+      "name": "mode BToAToB q=0.5",
+      "input": {
+        "visibleElapsedSeconds": 0.5,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 3,
+        "manualProgress": 0.5
+      },
+      "expected": {
+        "linearProgress": 0.5,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "mode BToAToB q=0.75",
+      "input": {
+        "visibleElapsedSeconds": 0.75,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 3,
+        "manualProgress": 0.75
+      },
+      "expected": {
+        "linearProgress": 0.75,
+        "easedProgress": 0.5
+      }
+    },
+    {
+      "name": "mode BToAToB q=1",
+      "input": {
+        "visibleElapsedSeconds": 1,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 3,
+        "manualProgress": 1
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "mode HoldA q=0",
+      "input": {
+        "visibleElapsedSeconds": 0,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 4,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "mode HoldA q=0.25",
+      "input": {
+        "visibleElapsedSeconds": 0.25,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 4,
+        "manualProgress": 0.25
+      },
+      "expected": {
+        "linearProgress": 0.25,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "mode HoldA q=0.5",
+      "input": {
+        "visibleElapsedSeconds": 0.5,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 4,
+        "manualProgress": 0.5
+      },
+      "expected": {
+        "linearProgress": 0.5,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "mode HoldA q=0.75",
+      "input": {
+        "visibleElapsedSeconds": 0.75,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 4,
+        "manualProgress": 0.75
+      },
+      "expected": {
+        "linearProgress": 0.75,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "mode HoldA q=1",
+      "input": {
+        "visibleElapsedSeconds": 1,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 4,
+        "manualProgress": 1
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "mode HoldB q=0",
+      "input": {
+        "visibleElapsedSeconds": 0,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 5,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "mode HoldB q=0.25",
+      "input": {
+        "visibleElapsedSeconds": 0.25,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 5,
+        "manualProgress": 0.25
+      },
+      "expected": {
+        "linearProgress": 0.25,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "mode HoldB q=0.5",
+      "input": {
+        "visibleElapsedSeconds": 0.5,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 5,
+        "manualProgress": 0.5
+      },
+      "expected": {
+        "linearProgress": 0.5,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "mode HoldB q=0.75",
+      "input": {
+        "visibleElapsedSeconds": 0.75,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 5,
+        "manualProgress": 0.75
+      },
+      "expected": {
+        "linearProgress": 0.75,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "mode HoldB q=1",
+      "input": {
+        "visibleElapsedSeconds": 1,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 5,
+        "manualProgress": 1
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "mode Manual q=0",
+      "input": {
+        "visibleElapsedSeconds": 0,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 6,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "mode Manual q=0.25",
+      "input": {
+        "visibleElapsedSeconds": 0.25,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 6,
+        "manualProgress": 0.25
+      },
+      "expected": {
+        "linearProgress": 0.25,
+        "easedProgress": 0.15625
+      }
+    },
+    {
+      "name": "mode Manual q=0.5",
+      "input": {
+        "visibleElapsedSeconds": 0.5,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 6,
+        "manualProgress": 0.5
+      },
+      "expected": {
+        "linearProgress": 0.5,
+        "easedProgress": 0.5
+      }
+    },
+    {
+      "name": "mode Manual q=0.75",
+      "input": {
+        "visibleElapsedSeconds": 0.75,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 6,
+        "manualProgress": 0.75
+      },
+      "expected": {
+        "linearProgress": 0.75,
+        "easedProgress": 0.84375
+      }
+    },
+    {
+      "name": "mode Manual q=1",
+      "input": {
+        "visibleElapsedSeconds": 1,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 6,
+        "manualProgress": 1
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "align CLIP_START before",
+      "input": {
+        "visibleElapsedSeconds": 0.2,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0.5,
+        "alignment": 0,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "align CLIP_START inside",
+      "input": {
+        "visibleElapsedSeconds": 1,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0.5,
+        "alignment": 0,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0.5,
+        "easedProgress": 0.5
+      }
+    },
+    {
+      "name": "align CLIP_START after",
+      "input": {
+        "visibleElapsedSeconds": 1.8,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0.5,
+        "alignment": 0,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "align CLIP_END before",
+      "input": {
+        "visibleElapsedSeconds": 0.2,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0.5,
+        "alignment": 1,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "align CLIP_END inside",
+      "input": {
+        "visibleElapsedSeconds": 1,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0.5,
+        "alignment": 1,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0.5,
+        "easedProgress": 0.5
+      }
+    },
+    {
+      "name": "align CLIP_END after",
+      "input": {
+        "visibleElapsedSeconds": 1.8,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0.5,
+        "alignment": 1,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "align ENTIRE_CLIP e=0.2",
+      "input": {
+        "visibleElapsedSeconds": 0.2,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 5,
+        "delaySeconds": 9,
+        "alignment": 2,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0.1,
+        "easedProgress": 0.028000000000000004
+      }
+    },
+    {
+      "name": "align ENTIRE_CLIP e=1.0",
+      "input": {
+        "visibleElapsedSeconds": 1,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 5,
+        "delaySeconds": 9,
+        "alignment": 2,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0.5,
+        "easedProgress": 0.5
+      }
+    },
+    {
+      "name": "align ENTIRE_CLIP e=1.8",
+      "input": {
+        "visibleElapsedSeconds": 1.8,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 5,
+        "delaySeconds": 9,
+        "alignment": 2,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0.9,
+        "easedProgress": 0.972
+      }
+    },
+    {
+      "name": "pingpong AToBToA q=0.49",
+      "input": {
+        "visibleElapsedSeconds": 0.49,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 2,
+        "manualProgress": 0.49
+      },
+      "expected": {
+        "linearProgress": 0.49,
+        "easedProgress": 0.9988159999999999
+      }
+    },
+    {
+      "name": "pingpong BToAToB q=0.49",
+      "input": {
+        "visibleElapsedSeconds": 0.49,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 3,
+        "manualProgress": 0.49
+      },
+      "expected": {
+        "linearProgress": 0.49,
+        "easedProgress": 0.0011840000000000739
+      }
+    },
+    {
+      "name": "pingpong AToBToA q=0.5",
+      "input": {
+        "visibleElapsedSeconds": 0.5,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 2,
+        "manualProgress": 0.5
+      },
+      "expected": {
+        "linearProgress": 0.5,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "pingpong BToAToB q=0.5",
+      "input": {
+        "visibleElapsedSeconds": 0.5,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 3,
+        "manualProgress": 0.5
+      },
+      "expected": {
+        "linearProgress": 0.5,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "pingpong AToBToA q=0.51",
+      "input": {
+        "visibleElapsedSeconds": 0.51,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 2,
+        "manualProgress": 0.51
+      },
+      "expected": {
+        "linearProgress": 0.51,
+        "easedProgress": 0.998816
+      }
+    },
+    {
+      "name": "pingpong BToAToB q=0.51",
+      "input": {
+        "visibleElapsedSeconds": 0.51,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 3,
+        "manualProgress": 0.51
+      },
+      "expected": {
+        "linearProgress": 0.51,
+        "easedProgress": 0.001184000000000002
+      }
+    },
+    {
+      "name": "zero-dur CLIP_START before",
+      "input": {
+        "visibleElapsedSeconds": 0.4,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 0,
+        "delaySeconds": 0.5,
+        "alignment": 0,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "zero-dur CLIP_START at",
+      "input": {
+        "visibleElapsedSeconds": 0.5,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 0,
+        "delaySeconds": 0.5,
+        "alignment": 0,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "zero-dur CLIP_START after",
+      "input": {
+        "visibleElapsedSeconds": 0.6,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 0,
+        "delaySeconds": 0.5,
+        "alignment": 0,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "dur>clip CLIP_START e=0",
+      "input": {
+        "visibleElapsedSeconds": 0,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 5,
+        "delaySeconds": 0,
+        "alignment": 0,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "dur>clip CLIP_START e=1",
+      "input": {
+        "visibleElapsedSeconds": 1,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 5,
+        "delaySeconds": 0,
+        "alignment": 0,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0.5,
+        "easedProgress": 0.5
+      }
+    },
+    {
+      "name": "dur>clip CLIP_START e=2",
+      "input": {
+        "visibleElapsedSeconds": 2,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 5,
+        "delaySeconds": 0,
+        "alignment": 0,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "delay-after CLIP_START e=0",
+      "input": {
+        "visibleElapsedSeconds": 0,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 3,
+        "alignment": 0,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "delay-after CLIP_START e=1",
+      "input": {
+        "visibleElapsedSeconds": 1,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 3,
+        "alignment": 0,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "delay-after CLIP_START e=2",
+      "input": {
+        "visibleElapsedSeconds": 2,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 3,
+        "alignment": 0,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "delay-before CLIP_END e=0",
+      "input": {
+        "visibleElapsedSeconds": 0,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 3,
+        "alignment": 1,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "delay-before CLIP_END e=1",
+      "input": {
+        "visibleElapsedSeconds": 1,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 3,
+        "alignment": 1,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "delay-before CLIP_END e=2",
+      "input": {
+        "visibleElapsedSeconds": 2,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 3,
+        "alignment": 1,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "partial CLIP_START before",
+      "input": {
+        "visibleElapsedSeconds": 1,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 2,
+        "delaySeconds": 1.5,
+        "alignment": 0,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "partial CLIP_START mid",
+      "input": {
+        "visibleElapsedSeconds": 1.75,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 2,
+        "delaySeconds": 1.5,
+        "alignment": 0,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0.5,
+        "easedProgress": 0.5
+      }
+    },
+    {
+      "name": "partial CLIP_START end",
+      "input": {
+        "visibleElapsedSeconds": 2,
+        "visibleDurationSeconds": 2,
+        "transitionDurationSeconds": 2,
+        "delaySeconds": 1.5,
+        "alignment": 0,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "entire-clip trim dur=0.5",
+      "input": {
+        "visibleElapsedSeconds": 0.25,
+        "visibleDurationSeconds": 0.5,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0.5,
+        "easedProgress": 0.5
+      }
+    },
+    {
+      "name": "entire-clip trim dur=0",
+      "input": {
+        "visibleElapsedSeconds": 0,
+        "visibleDurationSeconds": 0,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 2,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "manual mp=0",
+      "input": {
+        "visibleElapsedSeconds": 0,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 0,
+        "mode": 6,
+        "manualProgress": 0
+      },
+      "expected": {
+        "linearProgress": 0,
+        "easedProgress": 0
+      }
+    },
+    {
+      "name": "manual mp=0.3",
+      "input": {
+        "visibleElapsedSeconds": 0,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 0,
+        "mode": 6,
+        "manualProgress": 0.3
+      },
+      "expected": {
+        "linearProgress": 0.3,
+        "easedProgress": 0.216
+      }
+    },
+    {
+      "name": "manual mp=0.7",
+      "input": {
+        "visibleElapsedSeconds": 0,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 0,
+        "mode": 6,
+        "manualProgress": 0.7
+      },
+      "expected": {
+        "linearProgress": 0.7,
+        "easedProgress": 0.7839999999999999
+      }
+    },
+    {
+      "name": "manual mp=1",
+      "input": {
+        "visibleElapsedSeconds": 0,
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 0,
+        "mode": 6,
+        "manualProgress": 1
+      },
+      "expected": {
+        "linearProgress": 1,
+        "easedProgress": 1
+      }
+    },
+    {
+      "name": "invalid nonfinite",
+      "input": {
+        "visibleElapsedSeconds": "nan",
+        "visibleDurationSeconds": 1,
+        "transitionDurationSeconds": 1,
+        "delaySeconds": 0,
+        "alignment": 0,
+        "mode": 0,
+        "manualProgress": 0
+      },
+      "expected": {
+        "ok": false,
+        "error": "NonFiniteInput"
+      }
+    }
+  ],
+  "dense": {
+    "mode": 0,
+    "alignment": 0,
+    "visibleDurationSeconds": 1,
+    "transitionDurationSeconds": 1,
+    "delaySeconds": 0,
+    "samples": 10001,
+    "tolerance": 1e-9
+  }
+}
