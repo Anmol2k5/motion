@@ -1,28 +1,28 @@
 # Issue Tracker
 
-Issues for the StateMotion project are tracked as local markdown files under `.scratch/`.
+Implementation decisions and active work items are tracked in committed
+documentation under `docs/` and in GitHub Issues.
 
-Reason: this repository has no GitHub remote configured and no `gh` login, so the
-local-markdown tracker is the supported fallback for the engineering skills
-(Wayfinder, to-tickets, triage).
+Local `.scratch/` files may be used for temporary agent planning, but they are
+not part of the project record and must not be treated as authoritative.
 
 ## Layout
 
-- `.scratch/statemotion-wayfinder/map.md` — the Wayfinder map (`wayfinder:map`).
-- `.scratch/statemotion-wayfinder/issues/<id>-<slug>.md` — one file per ticket.
-- Each ticket file front-matter carries: type, status, labels, blocks / blocked-by.
+- `docs/implementation/` — committed implementation decisions and handoffs
+  (e.g. `phase-0-handoff.md`).
+- `docs/research/` — committed research records referenced by decisions.
+- `docs/agents/` — committed process notes for agentic workflows.
+- GitHub Issues — the canonical location for tracked work items.
 
 ## Conventions
 
-- The Wayfinder map is the index; tickets are the detail.
-- Issue id is the filename prefix (e.g. `001-...`). It is a local handle, not a
-  GitHub number.
-- Refer to tickets by their title (name), never just the id.
-- Research artifacts belong in `docs/research/`; tickets link to them.
+- Committed `docs/` are the project record; treat them as authoritative.
+- Local `.scratch/` planning files are temporary and gitignored; do not rely on
+  them as the source of truth.
+- Refer to work items by their title (name), not just an internal id.
+- Research artifacts belong in `docs/research/`; link to them from decisions.
 
 ## Workflow notes
 
-- Wayfinder: one non-research decision ticket resolved per session.
-- Research tickets may run in parallel as `/research` subagents.
 - This is a clean-room project; no commercial Motion State material is referenced,
   copied, or stored here.
