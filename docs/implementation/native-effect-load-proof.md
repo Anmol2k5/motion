@@ -47,13 +47,17 @@ Output: `x64\Release\StateMotion.aex`.
 - Export table contains `EntryPointFunc` (matches PiPL entry point).
 - `statemotion_identity_test.cpp`: 9/9 PASS.
 
-### Manual host test (operator, not automatable headlessly)
-1. Launch Premiere Pro 2026 (26.0.2).
-2. Confirm `StateMotion` appears under the `StateMotion` bin in the Effects panel.
-3. Apply it to a footage clip and to a still image; confirm visually identical output
-   (identity pass-through).
-4. Save the project, close Premiere, reopen; confirm the effect reloads (permanent match name).
-5. Report pass/fail here.
+### Manual host test (operator, Premiere Pro 2026 — ALL PASS)
+- `StateMotion` appears in the Effects panel: PASS (exactly once, under `StateMotion` bin).
+- Plugin-loading warning: NONE.
+- Applies to footage: PASS; appears in Effect Controls: PASS.
+- Custom StateMotion settings: NONE — expected (no custom params in this milestone).
+- Footage identity pass-through: PASS; no black frames / alpha corruption: PASS.
+- No crash or noticeable lag during apply/scrub: PASS.
+- Still-image identity pass-through: PASS.
+- Save / close / reopen persistence: PASS; effect remains attached; no missing/offline warning.
+
+All load-proof acceptance criteria are satisfied.
 
 ## Notes / deviations
 - The AE Effect SDK exposes no `PF_WORLD_IS_FLOAT`; `PF_LayerDef` has no `bitdepth` member.
