@@ -4,8 +4,10 @@ out/
 dist/
 bin/
 obj/
+x64/
 *.exe
 *.dll
+*.aex
 *.dylib
 *.so
 *.pdb
@@ -14,6 +16,12 @@ obj/
 *.o
 *.a
 *.lib
+*.exp
+
+# PiPL pipeline intermediates (generated from *.r at build time)
+*.rr
+*.rrc
+statemotion_effect.rc
 
 # Test binaries
 tr_test
