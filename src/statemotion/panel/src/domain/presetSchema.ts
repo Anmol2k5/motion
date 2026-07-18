@@ -26,6 +26,10 @@ export interface CompatibleContract {
   parameterCount: number;
 }
 
+export interface CanonicalStateMotionConfig {
+  parameters: Record<string, number | string>;
+}
+
 export interface StateMotionPreset {
   formatId: string;
   schemaVersion: number;

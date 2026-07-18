@@ -8,7 +8,7 @@
 import { buildApplyPlan, type SelectionItem, ItemStatus } from '../domain/applyPlan.ts';
 import { checkCompatibility, CompatLevel } from '../domain/compatibility.ts';
 import { getBinding, LOGICAL_IDS } from '../../../../../shared/generated/parameterBindings.ts';
-import type { StateMotionPreset } from '../domain/presetSchema.ts';
+import type { StateMotionPreset, CanonicalStateMotionConfig } from '../domain/presetSchema.ts';
 
 export interface ClipRef {
   clipId: string;
@@ -130,10 +130,6 @@ export class ContractIncompatible extends Error {
 
 export class ContractReadOnly extends Error {
   constructor(public reasons: string[]) { super('Contract read-only: ' + reasons.join('; ')); }
-}
-
-export interface CanonicalStateMotionConfig {
-  parameters: Record<string, number | string>;
 }
 
 // Pure filter: creative params only (exclude hidden metadata ownership).
