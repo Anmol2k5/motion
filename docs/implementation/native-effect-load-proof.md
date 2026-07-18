@@ -74,3 +74,9 @@ All load-proof acceptance criteria are satisfied.
 ## Next
 - Complete the manual host test above.
 - On pass, this branch is ready to merge to `main`.
+
+## Follow-up milestone
+- The native effect now also registers the 20 Phase 0.1 custom parameters:
+  see `docs/implementation/native-parameter-registration.md`
+  (branch `feat/native-parameter-registration`). Rendering remains identity
+  pass-through; no progress/renderer/UXP integration.

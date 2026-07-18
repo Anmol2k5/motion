@@ -1,7 +1,9 @@
 // StateMotion native effect - public header.
 //
-// Minimal native Adobe effect load proof. Identity pass-through only.
-// No StateMotion custom parameters are registered in this task.
+// Native Adobe effect: registers the permanent match name, the mandatory
+// input/source layer, and the Phase 0.1 generated parameter contract. Renders
+// an identity pass-through. No transform/progress/UXP integration is performed
+// in this milestone.
 //
 // Builds against the official Adobe After Effects Effect SDK (AE_Effect.h et al.).
 // The permanent match name is AE.io.github.anmol2k5.statemotion.effect.
@@ -29,17 +31,26 @@ typedef unsigned short PixelType;
 
 #include "statemotion_effect_strings.h"
 
-// Internal development version (Phase 0.1 load proof).
+// Generated parameter contract (do not edit). Source of truth:
+// shared/schema/parameter-contract.json -> shared/generated/parameter_bindings.hpp
+#include "parameter_ids.hpp"
+#include "parameter_bindings.hpp"
+
+// Internal development version (Phase 0.1 parameter registration).
 #define STATEMOTION_MAJOR_VERSION 0
 #define STATEMOTION_MINOR_VERSION 1
-#define STATEMOTION_BUG_VERSION   0
+#define STATEMOTION_BUG_VERSION   1
 #define STATEMOTION_STAGE_VERSION PF_Stage_DEVELOP
 #define STATEMOTION_BUILD_VERSION 0
 
 // Permanent registration identity.
 #define STATEMOTION_MATCH_NAME "AE.io.github.anmol2k5.statemotion.effect"
 
-// Parameter indices. Only the mandatory input/source layer is registered.
+// Runtime parameter indices. Index 0 is the SDK-mandated input/source layer
+// (not a StateMotion custom parameter). Custom parameters follow in the order
+// declared by statemotion::contract::kBindings. Runtime order is local to the
+// current callback and is NOT a persistent identity (disk ID + type + match
+// name is).
 enum {
     STATEMOTION_INPUT = 0,
     STATEMOTION_NUM_PARAMS
