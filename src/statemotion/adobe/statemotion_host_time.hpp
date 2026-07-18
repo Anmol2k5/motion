@@ -26,6 +26,7 @@ inline ProgressInput buildProgressInput(long current_time, long total_time, long
     in.manualProgress = (manualProgressNative < 0.0)   ? 0.0
                         : (manualProgressNative > 100.0) ? 1.0
                                                         : manualProgressNative / 100.0;
+    // Ignored by the progress engine unless mode == Manual.
     return in;
 }
 

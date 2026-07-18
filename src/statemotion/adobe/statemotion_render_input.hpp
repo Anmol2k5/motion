@@ -30,6 +30,8 @@ inline RendererTransformState toRendererTransformState(const TransformState& c,
     r.rotationDeg = c.rotationRadians * 180.0 / 3.14159265358979323846;
     r.anchorX = c.anchorNormX * static_cast<double>(d.sourceW);
     r.anchorY = c.anchorNormY * static_cast<double>(d.sourceH);
+    // ponytail: anchor uses source dims because in the Premiere software path
+    // source == output; if a future path differs, reconcile anchor space here.
     r.opacity = c.opacity;
     return r;
 }

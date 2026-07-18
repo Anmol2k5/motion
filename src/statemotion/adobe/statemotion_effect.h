@@ -36,6 +36,15 @@ typedef unsigned short PixelType;
 #include "parameter_ids.hpp"
 #include "parameter_bindings.hpp"
 
+// Native transform integration (pure, no Adobe SDK dependency):
+//   native adapter, host-time adapter, render-input boundary, canonical model.
+#include "statemotion_native_adapter.hpp"
+#include "statemotion_host_time.hpp"
+#include "statemotion_render_input.hpp"
+#include "transform_state.hpp"
+#include "transform_render.h"
+#include "progress_engine.h"
+
 // Internal development version (Phase 0.1 parameter registration).
 #define STATEMOTION_MAJOR_VERSION 0
 #define STATEMOTION_MINOR_VERSION 1
