@@ -34,7 +34,9 @@ for (const id of LOGICAL_IDS) {
 }
 
 const EXPECTED_NATIVE: Record<Kind, string> = {
-  identity: 'POPUP', // enums; also seconds pass-through uses FLOAT_SLIDER — guarded below
+  // identity is NOT checked against this value; guard() special-cases it to
+  // allow FLOAT_SLIDER (seconds) or POPUP (enums). Entry kept for completeness.
+  identity: 'FLOAT_SLIDER|POPUP',
   percent: 'FLOAT_SLIDER',
   degrees: 'ANGLE',
   point: 'POINT',
@@ -94,7 +96,11 @@ export function toCanonical(logicalId: string, native: number | string, binding:
     case 'degrees': return (native as number) * Math.PI / 180;
     case 'point': {
       const p = native as SmPoint;
-      return { x: p.x / 100, y: p.y / 100 };
+      const norm = { x: p.x / 100, y: p.y / 100 };
+      // Center maps to the canonical 'frameCenter' token (spec: tokens are a
+      // valid canonical form; bundled presets author centers as the token).
+      if (Math.abs(norm.x - 0.5) < 1e-9 && Math.abs(norm.y - 0.5) < 1e-9) return 'frameCenter';
+      return norm;
     }
   }
 }

@@ -53,7 +53,9 @@ function throws(fn: () => unknown, ctor: Function) {
   assert.deepStrictEqual(toNative('transform.position.a', { x: 0.5, y: 0.5 }, b('transform.position.a')), { x: 50, y: 50 });
   assert.deepStrictEqual(toNative('transform.position.a', 'frameCenter', b('transform.position.a')), { x: 50, y: 50 });
   assert.deepStrictEqual(toCanonical('transform.position.a', { x: 100, y: 100 }, b('transform.position.a')), { x: 1, y: 1 });
-  pass('point normalized <-> percent, token resolves');
+  assert.strictEqual(toCanonical('transform.position.a', { x: 50, y: 50 }, b('transform.position.a')), 'frameCenter');
+  assert.deepStrictEqual(toNative('transform.position.a', toCanonical('transform.position.a', { x: 50, y: 50 }, b('transform.position.a')) as any, b('transform.position.a')), { x: 50, y: 50 });
+  pass('point normalized <-> percent, token resolves + center round-trips to token');
 })();
 
 (() => {
