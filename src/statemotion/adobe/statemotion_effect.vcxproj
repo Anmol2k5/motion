@@ -62,7 +62,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SM_SDK_HEADERS);$(SM_SDK_HEADERS_SP);$(SM_SDK_HEADERS_WIN);$(SM_SDK_RESOURCES);$(SM_SDK_UTIL);$(MSBuildProjectDirectory)\..\..\..\shared\generated;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SM_SDK_HEADERS);$(SM_SDK_HEADERS_SP);$(SM_SDK_HEADERS_WIN);$(SM_SDK_RESOURCES);$(SM_SDK_UTIL);$(MSBuildProjectDirectory)\..\..\..\shared\generated;$(MSBuildProjectDirectory)\..\renderer;$(MSBuildProjectDirectory)\..\progress;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MSWindows;WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <StructMemberAlignment>8Bytes</StructMemberAlignment>
@@ -84,7 +84,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SM_SDK_HEADERS);$(SM_SDK_HEADERS_SP);$(SM_SDK_HEADERS_WIN);$(SM_SDK_RESOURCES);$(SM_SDK_UTIL);$(MSBuildProjectDirectory)\..\..\..\shared\generated;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SM_SDK_HEADERS);$(SM_SDK_HEADERS_SP);$(SM_SDK_HEADERS_WIN);$(SM_SDK_RESOURCES);$(SM_SDK_UTIL);$(MSBuildProjectDirectory)\..\..\..\shared\generated;$(MSBuildProjectDirectory)\..\renderer;$(MSBuildProjectDirectory)\..\progress;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MSWindows;WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <StructMemberAlignment>8Bytes</StructMemberAlignment>
@@ -112,6 +112,8 @@
   <ItemGroup>
     <ClCompile Include="statemotion_effect.cpp" />
     <ClCompile Include="statemotion_effect_strings.cpp" />
+    <ClCompile Include="$(MSBuildProjectDirectory)\..\renderer\transform_render.cpp" />
+    <ClCompile Include="$(MSBuildProjectDirectory)\..\progress\progress_engine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="statemotion_effect.h" />
