@@ -12,7 +12,6 @@ import { ManageView } from './ui/manage.ts';
 import { BUNDLED_PRESETS } from './starter/bundledPresets.ts';
 import type { LibraryModel } from './domain/presetStorage.ts';
 import type { StateMotionPreset } from './domain/presetSchema.ts';
-import { serializePreset } from './domain/presetSchema.ts';
 
 async function main(): Promise<void> {
   const app = document.getElementById('app')!;
@@ -89,9 +88,6 @@ function toggleFav(lib: LibraryModel, id: string): LibraryModel {
     favoritePresetIds: has ? lib.favoritePresetIds.filter((x) => x !== id) : [...lib.favoritePresetIds, id],
   };
 }
-
-// keep serializePreset import used (export helper surface)
-void serializePreset;
 
 main().catch((e) => {
   const app = document.getElementById('app');

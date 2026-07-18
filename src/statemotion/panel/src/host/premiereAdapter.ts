@@ -68,7 +68,10 @@ export class PremiereAdapter {
         await this.host.applyEffect(clip);
         contract = await this.host.getContract(clip);
       }
-      items.push({ clipId: clip.clipId, hasStateMotion: has, contract });
+      // After a successful apply, the clip now has the effect. Report the
+      // post-apply truth so the plan treats it as supported.
+      const effectiveHas = has || contract !== null;
+      items.push({ clipId: clip.clipId, hasStateMotion: effectiveHas, contract });
     }
 
     const plan = buildApplyPlan(items, preset.presetId, preset.compatibleContract);

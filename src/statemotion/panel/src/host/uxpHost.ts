@@ -12,6 +12,12 @@ import type { CompatibleContract } from '../domain/presetSchema.ts';
 
 const MATCH_NAME = 'AE.io.github.anmol2k5.statemotion.effect';
 
+import { getBinding } from '../../../../../shared/generated/parameterBindings.ts';
+
+function logicalIdToWireName(logicalId: string): string | undefined {
+  return getBinding(logicalId)?.wireName;
+}
+
 export class UxpHostBridge implements HostBridge {
   // --- selection -------------------------------------------------------------
   async getSelection(): Promise<ClipRef[]> {
@@ -68,14 +74,19 @@ export class UxpHostBridge implements HostBridge {
     return undefined;
   }
 
-  async writeLogical(clip: ClipRef, _logicalId: string, _value: number | string): Promise<void> {
-    // Resolved by enumerateParamIndex; the actual UXP setValue is applied here.
-    // Implementation is finalized once the operator verifies the UXP parameter
-    // write API (see uxp-panel-development.md). Guarded so the panel still loads.
+  async writeLogical(clip: ClipRef, logicalId: string, value: number | string): Promise<void> {
+    // Resolve the runtime index from the stable wireName, then attempt the UXP
+    // write. Guarded so the panel still loads if the API differs.
     const effect = await this.findEffect(clip);
     if (!effect) throw new Error('StateMotion effect not found on clip');
-    // Placeholder: real write via effect.properties.getProperty(index).setValue(...)
-    void effect;
+    const wireName = logicalIdToWireName(logicalId);
+    const index = wireName ? await this.enumerateParamIndex(clip, wireName) : undefined;
+    if (index === undefined) throw new Error(`Cannot resolve parameter ${logicalId} on clip`);
+    const prop = effect.properties?.getProperty?.(index);
+    if (!prop || typeof prop.setValue !== 'function') {
+      throw new Error(`UXP setValue unavailable for ${logicalId} (unverified host API)`);
+    }
+    prop.setValue(value);
   }
 
   async beginUndo(label: string): Promise<void> {
