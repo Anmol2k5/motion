@@ -19,6 +19,7 @@ export interface LibraryCallbacks {
 
 export class LibraryView {
   private view: LibraryViewState = { query: '', filter: FilterKind.All, sort: SortKind.AZ };
+  private listMode = false;
 
   constructor(
     private repo: PresetRepository,
@@ -32,11 +33,23 @@ export class LibraryView {
     const library = this.getLibrary();
     const vm = buildLibraryViewModel(all, library, this.view, CATEGORIES);
 
-    // Toolbar
+    // Toolbar: search + sort + view toggle
     const search = el('input', { class: 'sm-search', type: 'search', placeholder: 'Search presets', 'aria-label': 'Search presets' }) as HTMLInputElement;
     search.value = this.view.query;
     search.addEventListener('input', () => { this.view.query = search.value; this.render(container); });
-    container.append(el('div', { class: 'sm-toolbar' }, [search]));
+
+    const sort = el('select', { class: 'sm-chip', 'aria-label': 'Sort presets' }) as HTMLSelectElement;
+    for (const [label, val] of [['A–Z', SortKind.AZ], ['Newest', SortKind.Newest], ['Recently used', SortKind.RecentlyUsed]] as [string, SortKind][]) {
+      const o = el('option', { value: val, text: label }) as HTMLOptionElement;
+      if (val === this.view.sort) o.selected = true;
+      sort.append(o);
+    }
+    sort.addEventListener('change', () => { this.view.sort = sort.value as SortKind; this.render(container); });
+
+    const toggle = el('button', { class: 'sm-chip', 'aria-pressed': String(this.listMode), text: this.listMode ? 'List' : 'Grid' }) as HTMLButtonElement;
+    toggle.addEventListener('click', () => { this.listMode = !this.listMode; this.render(container); });
+
+    container.append(el('div', { class: 'sm-toolbar' }, [search, sort, toggle]));
 
     // Chips: filters + categories
     const chipRow = el('div', { class: 'sm-chips' });
@@ -60,8 +73,8 @@ export class LibraryView {
     }
     container.append(chipRow);
 
-    // Grid
-    const grid = el('div', { class: 'sm-grid' });
+    // Grid / List
+    const grid = el('div', { class: this.listMode ? 'sm-list' : 'sm-grid' });
     if (vm.presets.length === 0) {
       showState(grid, '🔍', 'No presets found', 'Try a different search or filter.');
     }

@@ -33,8 +33,6 @@ function preset(
   };
 }
 
-const SCALE_MIN = 0.01;
-
 export const BUNDLED_PRESETS: StateMotionPreset[] = [
   // ---- Entrances ----
   preset('bundled-soft-arrival', 'Soft Arrival', 'Gentle scale-up fade in.', 'Entrances', ['entrance', 'scale', 'fade'], {
@@ -110,5 +108,3 @@ export const BUNDLED_PRESETS: StateMotionPreset[] = [
 export const CATEGORIES: string[] = [
   'Entrances', 'Exits', 'Slides', 'Zooms', 'Focus', 'Layout', 'Screen', 'Titles', 'Custom',
 ];
-
-void SCALE_MIN;

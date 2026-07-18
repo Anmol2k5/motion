@@ -43,7 +43,7 @@ const PRESETS = [
 
 // filter: favorites
 (() => {
-  const r = searchPresets(PRESETS, { filter: FilterKind.Favorites });
+  const r = searchPresets(PRESETS, { filter: FilterKind.Favorites, favoriteIds: ['b'] });
   assert.deepStrictEqual(r.map((p) => p.presetId), ['b']);
   pass('filter Favorites');
 })();

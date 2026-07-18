@@ -39,7 +39,7 @@ export function buildLibraryViewModel(
     collectionIds: view.collectionId ? [view.collectionId] : undefined,
     sort: view.sort,
   };
-  const presets = searchPresets(list, opts);
+  const presets = searchPresets(list, { ...opts, favoriteIds: library.favoritePresetIds, recentlyUsed: library.recentlyUsed });
   return {
     presets,
     categories: knownCategories,

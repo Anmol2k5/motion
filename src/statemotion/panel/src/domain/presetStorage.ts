@@ -69,12 +69,23 @@ export class PresetRepository {
     await this.persistLibrary();
   }
 
+  getLibrary(): LibraryModel {
+    return structuredClone(this.library);
+  }
+
+  // Persist library metadata (favorites/collections/recently-used). The caller
+  // passes an updated model; this keeps the repository the single writer.
+  async saveLibrary(lib: LibraryModel): Promise<void> {
+    this.library = structuredClone(lib);
+    await this.persistLibrary();
+  }
+
   private async persistLibrary(): Promise<void> {
     await this.fs.writeFile(this.libPath(), JSON.stringify(this.library, null, 2));
   }
 
   private isBundled(id: string): boolean {
-    return id.startsWith('bundled-') || id.startsWith('b-');
+    return id.startsWith('bundled-');
   }
 
   async list(): Promise<StateMotionPreset[]> {

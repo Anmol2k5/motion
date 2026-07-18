@@ -10,6 +10,7 @@ import { LibraryView } from './ui/library.ts';
 import { InspectorView } from './ui/inspector.ts';
 import { ManageView } from './ui/manage.ts';
 import { BUNDLED_PRESETS } from './starter/bundledPresets.ts';
+import { toggleFavorite } from './domain/favorites.ts';
 import type { LibraryModel } from './domain/presetStorage.ts';
 import type { StateMotionPreset } from './domain/presetSchema.ts';
 
@@ -38,8 +39,16 @@ async function main(): Promise<void> {
       inspector.setLastPreset(p);
       const report = await adapter.applyPresetToSelection(p, (await adapter.detectSelection()).supported.map((c) => c.clipId));
       void report;
+      // Record recently used (cap to last 12).
+      const updated = { ...library, recentlyUsed: [p.presetId, ...library.recentlyUsed.filter((x) => x !== p.presetId)].slice(0, 12) };
+      setLibrary(updated);
+      await repo.saveLibrary(updated);
     },
-    onToggleFavorite: (id: string) => { setLibrary(toggleFav(library, id)); },
+    onToggleFavorite: async (id: string) => {
+      const updated = toggleFavorite(library, id);
+      setLibrary(updated);
+      await repo.saveLibrary(updated);
+    },
     getSelectionCount: () => selectionCount,
   });
   libraryView.setContainer(views);
