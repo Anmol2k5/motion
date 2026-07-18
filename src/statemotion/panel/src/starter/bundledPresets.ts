@@ -37,22 +37,22 @@ export const BUNDLED_PRESETS: StateMotionPreset[] = [
   // ---- Entrances ----
   preset('bundled-soft-arrival', 'Soft Arrival', 'Gentle scale-up fade in.', 'Entrances', ['entrance', 'scale', 'fade'], {
     'transform.scaleX.a': 0.85, 'transform.scaleY.a': 0.85, 'transform.opacity.a': 0,
-    'transform.scaleX.b': 1.0, 'transform.scaleY.b': 1.0, 'transform.opacity.b': 100,
+    'transform.scaleX.b': 1.0, 'transform.scaleY.b': 1.0, 'transform.opacity.b': 1,
   }),
   preset('bundled-quiet-fade', 'Quiet Fade', 'Simple opacity cross from black.', 'Entrances', ['entrance', 'fade'], {
-    'transform.opacity.a': 0, 'transform.opacity.b': 100,
+    'transform.opacity.a': 0, 'transform.opacity.b': 1,
   }),
   preset('bundled-rise-up', 'Rise Up', 'Slide upward into place.', 'Entrances', ['entrance', 'slide', 'position'], {
-    'transform.position.a': 'frameCenter', 'transform.position.b': 'frameCenter', 'transform.opacity.a': 0, 'transform.opacity.b': 100,
+    'transform.position.a': 'frameCenter', 'transform.position.b': 'frameCenter', 'transform.opacity.a': 0, 'transform.opacity.b': 1,
   }),
 
   // ---- Exits ----
   preset('bundled-soft-exit', 'Soft Exit', 'Ease out with a small scale-down.', 'Exits', ['exit', 'scale', 'fade'], {
-    'transform.scaleX.a': 1.0, 'transform.scaleY.a': 1.0, 'transform.opacity.a': 100,
+    'transform.scaleX.a': 1.0, 'transform.scaleY.a': 1.0, 'transform.opacity.a': 1,
     'transform.scaleX.b': 0.9, 'transform.scaleY.b': 0.9, 'transform.opacity.b': 0,
   }),
   preset('bundled-drift-away', 'Drift Away', 'Fade while drifting down.', 'Exits', ['exit', 'slide', 'fade'], {
-    'transform.opacity.a': 100, 'transform.opacity.b': 0,
+    'transform.opacity.a': 1, 'transform.opacity.b': 0,
   }),
 
   // ---- Slides ----
@@ -66,7 +66,7 @@ export const BUNDLED_PRESETS: StateMotionPreset[] = [
   // ---- Zooms ----
   preset('bundled-center-bloom', 'Center Bloom', 'Bloom outward from center.', 'Zooms', ['zoom', 'scale', 'entrance'], {
     'transform.scaleX.a': 0.7, 'transform.scaleY.a': 0.7, 'transform.opacity.a': 0,
-    'transform.scaleX.b': 1.0, 'transform.scaleY.b': 1.0, 'transform.opacity.b': 100,
+    'transform.scaleX.b': 1.0, 'transform.scaleY.b': 1.0, 'transform.opacity.b': 1,
   }),
   preset('bundled-focus-pull-in', 'Focus Pull-In', 'Zoom in to draw attention.', 'Zooms', ['zoom', 'scale'], {
     'transform.scaleX.a': 1.2, 'transform.scaleY.a': 1.2, 'transform.scaleX.b': 1.0, 'transform.scaleY.b': 1.0,
@@ -84,7 +84,7 @@ export const BUNDLED_PRESETS: StateMotionPreset[] = [
 
   // ---- Screen ----
   preset('bundled-wipe-spin', 'Wipe Spin', 'Rotate into place.', 'Screen', ['screen', 'rotation'], {
-    'transform.rotation.a': -8, 'transform.rotation.b': 0, 'transform.opacity.a': 0, 'transform.opacity.b': 100,
+    'transform.rotation.a': -8 * Math.PI / 180, 'transform.rotation.b': 0, 'transform.opacity.a': 0, 'transform.opacity.b': 1,
   }),
 
   // ---- Titles ----
@@ -93,7 +93,7 @@ export const BUNDLED_PRESETS: StateMotionPreset[] = [
   }),
   preset('bundled-title-glow-rise', 'Title Rise', 'Rise with a gentle scale for lower-thirds.', 'Titles', ['title', 'scale', 'rise'], {
     'transform.scaleX.a': 0.92, 'transform.scaleY.a': 0.92, 'transform.opacity.a': 0,
-    'transform.scaleX.b': 1.0, 'transform.scaleY.b': 1.0, 'transform.opacity.b': 100,
+    'transform.scaleX.b': 1.0, 'transform.scaleY.b': 1.0, 'transform.opacity.b': 1,
   }),
 
   // ---- Custom ----

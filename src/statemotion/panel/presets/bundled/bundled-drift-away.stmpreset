@@ -20,7 +20,7 @@
     "parameterCount": 20
   },
   "parameters": {
-    "transform.opacity.a": 100,
+    "transform.opacity.a": 1,
     "transform.opacity.b": 0
   },
   "preview": {

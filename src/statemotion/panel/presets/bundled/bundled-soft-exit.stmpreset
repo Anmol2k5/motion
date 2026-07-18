@@ -22,7 +22,7 @@
   "parameters": {
     "transform.scaleX.a": 1,
     "transform.scaleY.a": 1,
-    "transform.opacity.a": 100,
+    "transform.opacity.a": 1,
     "transform.scaleX.b": 0.9,
     "transform.scaleY.b": 0.9,
     "transform.opacity.b": 0

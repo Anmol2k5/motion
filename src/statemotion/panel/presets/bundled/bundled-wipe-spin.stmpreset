@@ -19,10 +19,10 @@
     "parameterCount": 20
   },
   "parameters": {
-    "transform.rotation.a": -8,
+    "transform.rotation.a": -0.13962634015954636,
     "transform.rotation.b": 0,
     "transform.opacity.a": 0,
-    "transform.opacity.b": 100
+    "transform.opacity.b": 1
   },
   "preview": {
     "kind": "generated"

@@ -20,7 +20,7 @@
   },
   "parameters": {
     "transform.opacity.a": 0,
-    "transform.opacity.b": 100
+    "transform.opacity.b": 1
   },
   "preview": {
     "kind": "generated"

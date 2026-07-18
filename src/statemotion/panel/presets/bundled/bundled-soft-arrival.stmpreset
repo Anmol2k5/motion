@@ -25,7 +25,7 @@
     "transform.opacity.a": 0,
     "transform.scaleX.b": 1,
     "transform.scaleY.b": 1,
-    "transform.opacity.b": 100
+    "transform.opacity.b": 1
   },
   "preview": {
     "kind": "generated"

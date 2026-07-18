@@ -4,7 +4,8 @@
 import assert from 'node:assert';
 import { BUNDLED_PRESETS, CATEGORIES } from './bundledPresets.ts';
 import { validatePreset } from '../domain/presetSchema.ts';
-import { LOGICAL_IDS } from '../../../../../shared/generated/parameterBindings.ts';
+import { LOGICAL_IDS, getBinding } from '../../../../../shared/generated/parameterBindings.ts';
+import { toNative } from '../host/valueConversion.ts';
 
 let passed = 0;
 function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
@@ -36,6 +37,22 @@ function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
   assert.ok(CATEGORIES.length >= 5, 'has several original categories');
   for (const p of BUNDLED_PRESETS) assert.ok(CATEGORIES.includes(p.category), `category ${p.category} declared`);
   pass('all preset categories are declared original categories');
+})();
+
+(() => {
+  for (const p of BUNDLED_PRESETS) {
+    const r = validatePreset(p);
+    assert.ok(r.ok, `preset ${p.presetId} should validate: ${r.errors.join('; ')}`);
+    for (const [id, v] of Object.entries(p.parameters)) {
+      // opacity must be 0..1 canonical, not percent
+      if (id.startsWith('transform.opacity')) assert.ok((v as number) <= 1, `${p.presetId} ${id} must be <= 1 canonical, got ${v}`);
+      // rotation must be radians, not degrees (|rad| < ~6.3)
+      if (id.startsWith('transform.rotation')) assert.ok(Math.abs(v as number) < 6.3, `${p.presetId} ${id} must be radians, got ${v}`);
+      // every stored value must convert to a finite native value
+      assert.doesNotThrow(() => toNative(id, v as any, getBinding(id)!), `preset ${p.presetId} ${id} converts to finite native`);
+    }
+  }
+  pass('all bundled presets store true canonical units (radians / 0..1 opacity)');
 })();
 
 console.log(`\nALL PASSED (${passed})`);
