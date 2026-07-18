@@ -15,18 +15,18 @@
 
 | Field | Value |
 |---|---|
-| Adobe After Effects SDK version | _<operator fills>_ |
-| Visual Studio version | _<operator fills>_ |
+| Adobe After Effects SDK version | 2026 (D:\ASCI PR PRO\AfterEffectsSDK) |
+| Visual Studio version | VS2019 BuildTools |
 | MSVC toolset | v142 (per vcxproj) |
 | Windows SDK version | 10.0 (per vcxproj) |
-| Build command | `set STATEMOTION_SDK=<sdk>; msbuild statemotion_effect.vcxproj /p:Configuration=Release /p:Platform=x64` |
-| Build exit code | _<operator fills>_ |
-| Warnings | _<operator fills>_ |
-| Errors | _<operator fills>_ |
+| Build command | `set "STATEMOTION_SDK=D:\ASCI PR PRO\AfterEffectsSDK"; msbuild E:\motion-panel-integration\src\statemotion\adobe\statemotion_effect.vcxproj /p:Configuration=Release /p:Platform=x64` |
+| Build exit code | 0 |
+| Warnings | C5033 ('register' storage class, SDK header) + MSB8012 (TargetExt .dll vs linker .aex — cosmetic; .aex is the real output) |
+| Errors | none |
 | Output binary | `src\statemotion\adobe\x64\Release\StateMotion.aex` |
-| Binary size | _<operator fills>_ |
-| SHA-256 (new) | _<operator fills>_ |
-| SHA-256 (previous build) | _<operator fills>_ |
+| Binary size | 27648 bytes |
+| SHA-256 (new) | `187BA976B42439F051FA1FEBE6989DDD9199610C9568FB1009373ABE42FE5700` |
+| SHA-256 (previous build) | `03E83A34...` (17-07-2026 identity-only binary) — differs ✓ |
 
 The previous `StateMotion.aex` in `x64\Release\` dated **17-07-2026** is the
 identity-only registration binary. A successful new build MUST overwrite it and

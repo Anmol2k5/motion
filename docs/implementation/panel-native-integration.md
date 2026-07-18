@@ -18,6 +18,21 @@
 code-complete and automated-test-green only. It must NOT be merged to main until
 the operator runs host verification.
 
+## Build state (verified 2026-07-19, operator handoff point)
+
+| Artifact | Result |
+|---|---|
+| Native AEX build (`msbuild Release\|x64`) | exit 0, `StateMotion.aex` 27648 B |
+| Native AEX SHA-256 | `187BA976B42439F051FA1FEBE6989DDD9199610C9568FB1009373ABE42FE5700` |
+| AEX integration markers | match name `AE.io.github.anmol2k5.statemotion.effect` ✔, `Manual`/`manualProgress` ✔ |
+| Panel `npm test` | 13/13 suites PASS |
+| Panel `npm run build` | OK → `src/statemotion/panel/dist/main.js` (56963 B) |
+| Contract `generate-contract.js --check` | CHECK OK (no diskID/bindingRevision drift) |
+| 10 SDK-free C++ suites | 0 failures (built from worktree `src/`) |
+
+Host gates A–R remain **NOT YET OPERATOR VERIFIED** (see ledger below).
+The two `.aex`/`.dll`/`.pdb` artifacts are gitignored and were NOT committed.
+
 ## Host-dependent gates (operator-run later)
 
 | # | Gate | Status |
