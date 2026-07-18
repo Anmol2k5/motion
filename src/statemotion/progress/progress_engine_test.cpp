@@ -221,8 +221,8 @@ void runDense(const JsonValue& fixture) {
 
 void runIntegration() {
     // Prove easedProgress drives State A/B interpolation rendered by the CPU renderer.
-    using statemotion::TransformState;
-    TransformState a, b;
+    using statemotion::RendererTransformState;
+    RendererTransformState a, b;
     // A: no transform; B: translate +1,+1, scale 1.5, opacity 0.5.
     b.positionX = 1.0; b.positionY = 1.0; b.scaleX = 1.5; b.scaleY = 1.5; b.opacity = 0.5;
 
@@ -235,7 +235,7 @@ void runIntegration() {
     ProgressOutput out = statemotion::evaluateProgress(pi);
     check(out.ok, "integration: evaluateProgress ok at q=0.5");
 
-    TransformState interp = statemotion::interpolate(a, b, out.result.easedProgress);
+    RendererTransformState interp = statemotion::interpolate(a, b, out.result.easedProgress);
     // at eased=0.5: position 0.5,0.5; scale 1.25; opacity 0.75.
     bool midOk = maxErr(interp.positionX, 0.5) < 1e-9 &&
                  maxErr(interp.scaleX, 1.25) < 1e-9 &&
