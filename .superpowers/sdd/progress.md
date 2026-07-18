@@ -15,6 +15,6 @@ NOT YET OPERATOR VERIFIED (deferred by operator decision).
 - [x] Task 5: complete (commits 38235fd..4edc82e, review clean; note: shuffle test locks behavior, not adversarial proof)
 - [x] Task 6: complete (doc ledger, commit a92e6ba)
 - [x] Task 7: complete (13 panel suites + contract CHECK OK + 10 C++ suites PASS from worktree src + npm build OK + grep guards pass; fixed latent build-panel.mjs path bug 2d27d6f)
-- [ ] Final: code review + verification-before-completion + push
+- [x] Final: review (requesting-code-review = Ready to merge w/ 1 follow-up; fixed token round-trip + test) + verification-before-completion (all green) + pushed branch c6fcb2a (no merge/force)
 
 ## Minor findings (triaged in final review)
