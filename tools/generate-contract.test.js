@@ -89,10 +89,19 @@ expectFail('POINT default invalid', (c) => { c.parameters.find(p => p.logicalId 
   const ts = fs.readFileSync(path.join(GEN, 'parameterIds.ts'), 'utf8');
   assert.ok(cpp.includes('enum class ProgressMode'), 'C++ missing ProgressMode enum');
   assert.ok(ts.includes('export enum ProgressMode'), 'TS missing ProgressMode enum');
+  // TS panel mirror must carry the full binding fields the panel relies on
+  // (logical IDs are canonical; no raw native index is exposed here).
+  const bts = fs.readFileSync(path.join(GEN, 'parameterBindings.ts'), 'utf8');
+  assert.ok(bts.includes('export interface ParameterBinding'), 'TS missing ParameterBinding interface');
+  assert.ok(bts.includes('defaultVal'), 'TS binding missing defaultVal');
+  assert.ok(bts.includes('enumRef'), 'TS binding missing enumRef');
+  assert.ok(bts.includes('oldDefault'), 'TS binding missing oldDefault');
+  assert.ok(bts.includes('getBinding'), 'TS binding missing getBinding lookup');
+  assert.ok(bts.includes('"transform.scaleX.a"'), 'TS binding missing scaleX.a');
   // C++/TS agreement: regenerate and re-check via --check path.
   const { execSync } = require('child_process');
   execSync(`node ${path.join(__dirname, 'generate-contract.js')} --check`, { stdio: 'pipe' });
-  pass('generated C++/TS bindings exist, enums present, --check agreement passes');
+  pass('generated C++/TS bindings exist, enums present, TS mirror fields present, --check agreement passes');
 })();
 
 // ---- digest artifact matches -------------------------------------------------
