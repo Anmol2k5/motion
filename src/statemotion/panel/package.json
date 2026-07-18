@@ -1,0 +1,16 @@
+{
+  "name": "statemotion-panel",
+  "version": "0.1.0",
+  "private": true,
+  "description": "StateMotion Preset Panel (UXP) for Premiere Pro. Independent clean-room implementation.",
+  "type": "module",
+  "scripts": {
+    "build": "node tools/build-panel.mjs",
+    "test": "node tools/run-panel-tests.mjs",
+    "gen:contract": "node tools/generate-contract.js",
+    "gen:presets": "node --experimental-transform-types tools/generate-bundled-presets.ts"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}

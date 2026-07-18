@@ -1,0 +1,29 @@
+{
+  "formatId": "io.github.anmol2k5.statemotion.preset",
+  "schemaVersion": 1,
+  "presetId": "bundled-title-drop",
+  "name": "Title Drop",
+  "description": "Drop and settle for title cards.",
+  "author": "StateMotion",
+  "createdAt": "2026-07-18T00:00:00.000Z",
+  "modifiedAt": "2026-07-18T00:00:00.000Z",
+  "tags": [
+    "title",
+    "position",
+    "slide"
+  ],
+  "category": "Titles",
+  "collectionIds": [],
+  "compatibleContract": {
+    "schemaVersion": 1,
+    "bindingRevision": 1,
+    "parameterCount": 20
+  },
+  "parameters": {
+    "transform.position.a": "frameCenter",
+    "transform.position.b": "frameCenter"
+  },
+  "preview": {
+    "kind": "generated"
+  }
+}

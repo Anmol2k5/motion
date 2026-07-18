@@ -1,0 +1,26 @@
+{
+  "id": "io.github.anmol2k5.statemotion.panel",
+  "name": "StateMotion",
+  "version": "0.1.0",
+  "main": "index.html",
+  "host": {
+    "app": "PPRO",
+    "minVersion": "26.0.0"
+  },
+  "icons": [],
+  "requiredPermissions": {
+    "localFileSystem": "plugin",
+    "network": false,
+    "allowCodeGeneration": false
+  },
+  "entryPoints": [
+    {
+      "type": "panel",
+      "id": "statemotion.panel",
+      "label": "StateMotion",
+      "panelId": "statemotion.panel",
+      "main": "index.html",
+      "size": { "width": 320, "height": 600 }
+    }
+  ]
+}
