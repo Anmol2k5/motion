@@ -11,6 +11,8 @@ import {
   serializePreset,
   deserializePreset,
   PRESET_EXTENSION,
+  buildUserPresetFromConfig,
+  type CanonicalStateMotionConfig,
 } from './presetSchema.ts';
 
 let passed = 0;
@@ -145,6 +147,18 @@ function basePreset(overrides: Record<string, unknown> = {}) {
 (() => {
   assert.strictEqual(PRESET_EXTENSION, '.stmpreset');
   pass('preset extension is .stmpreset');
+})();
+
+// ---- buildUserPresetFromConfig ----
+(() => {
+  const cfg: CanonicalStateMotionConfig = { parameters: { 'transform.opacity.b': 1, 'transition.manualProgress': 0.5 } };
+  const preset = buildUserPresetFromConfig(cfg, null);
+  assert.ok(validatePreset(preset).ok, 'built preset should validate');
+  assert.strictEqual(preset.formatId, FORMAT_ID);
+  assert.strictEqual(preset.category, 'Custom');
+  assert.strictEqual(preset.parameters['transition.manualProgress'], 0.5);
+  assert.strictEqual(preset.compatibleContract.schemaVersion, SCHEMA_VERSION);
+  pass('buildUserPresetFromConfig produces a valid preset');
 })();
 
 console.log(`\nALL PASSED (${passed})`);

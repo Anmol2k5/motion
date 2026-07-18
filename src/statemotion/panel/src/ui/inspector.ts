@@ -2,8 +2,8 @@
 
 import { el, clear, showState } from './components.ts';
 import type { PremiereAdapter } from '../host/premiereAdapter.ts';
-import { checkCompatibility, CompatLevel } from '../domain/compatibility.ts';
-import type { StateMotionPreset } from '../domain/presetSchema.ts';
+import type { PresetRepository } from '../domain/presetStorage.ts';
+import { buildUserPresetFromConfig, type StateMotionPreset } from '../domain/presetSchema.ts';
 
 export class InspectorView {
   constructor(private adapter: PremiereAdapter) {}
@@ -42,6 +42,23 @@ export class InspectorView {
     applyBtn.addEventListener('click', () => { if (this.lastPreset) this.adapter.applyPresetToSelection(this.lastPreset, supported.map((c) => c.clipId)); });
     container.append(el('div', { class: 'sm-actionbar' }, [applyBtn]));
 
+    if (this.repository) {
+      const createBtn = el('button', { class: 'sm-btn', text: 'Create preset from selection' }) as HTMLButtonElement;
+      createBtn.addEventListener('click', async () => {
+        try {
+          const clip = supported[0];
+          const cfg = await this.adapter.readState(clip);
+          const contract = await this.adapter.getContract(clip);
+          const preset = buildUserPresetFromConfig(cfg, contract);
+          await this.repository!.create(preset);
+          showState(container, '✅', 'Preset created', `Saved "${preset.name}" from ${clip.clipId}.`);
+        } catch (e) {
+          showState(container, '⚠️', 'Create failed', String((e as Error).message));
+        }
+      });
+      container.append(el('div', { class: 'sm-actionbar' }, [createBtn]));
+    }
+
     if (unsupported.length > 0) {
       const warn = el('p', { class: 'sm-warn', text: `${unsupported.length} clip(s) skipped: no StateMotion effect.` });
       container.append(warn);
@@ -49,5 +66,7 @@ export class InspectorView {
   }
 
   setLastPreset(p: StateMotionPreset | null) { this.lastPreset = p; }
+  setRepository(repo: PresetRepository) { this.repository = repo; }
   private lastPreset: StateMotionPreset | null = null;
+  private repository: PresetRepository | null = null;
 }

@@ -7,7 +7,7 @@
 
 import { buildApplyPlan, type SelectionItem, ItemStatus } from '../domain/applyPlan.ts';
 import { checkCompatibility, CompatLevel } from '../domain/compatibility.ts';
-import { getBinding } from '../../../../../shared/generated/parameterBindings.ts';
+import { getBinding, LOGICAL_IDS } from '../../../../../shared/generated/parameterBindings.ts';
 import type { StateMotionPreset } from '../domain/presetSchema.ts';
 
 export interface ClipRef {
@@ -101,4 +101,43 @@ export class PremiereAdapter {
     }
     return report;
   }
+
+  async getContract(clip: ClipRef) {
+    return this.host.getContract(clip);
+  }
+
+  async readState(clip: ClipRef): Promise<CanonicalStateMotionConfig> {
+    const contract = await this.host.getContract(clip);
+    const compat = checkCompatibility(contract);
+    if (compat.level === CompatLevel.Incompatible) throw new ContractIncompatible(compat.reasons);
+    if (compat.level === CompatLevel.ReadOnly) throw new ContractReadOnly(compat.reasons);
+    if (!(await this.host.hasStateMotionEffect(clip))) throw new Error('No StateMotion effect on clip');
+
+    const parameters: Record<string, number | string> = {};
+    for (const id of LOGICAL_IDS) {
+      if (!isCreative(id)) continue; // never read metadata
+      const v = await this.host.readLogical(clip, id);
+      if (v === undefined) continue;
+      parameters[id] = v;
+    }
+    return { parameters };
+  }
+}
+
+export class ContractIncompatible extends Error {
+  constructor(public reasons: string[]) { super('Contract incompatible: ' + reasons.join('; ')); }
+}
+
+export class ContractReadOnly extends Error {
+  constructor(public reasons: string[]) { super('Contract read-only: ' + reasons.join('; ')); }
+}
+
+export interface CanonicalStateMotionConfig {
+  parameters: Record<string, number | string>;
+}
+
+// Pure filter: creative params only (exclude hidden metadata ownership).
+function isCreative(logicalId: string): boolean {
+  const b = getBinding(logicalId);
+  return !!b && b.stateOwnership !== 'metadata';
 }

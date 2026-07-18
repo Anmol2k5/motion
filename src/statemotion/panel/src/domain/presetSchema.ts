@@ -181,3 +181,34 @@ export function deserializePreset(text: string): StateMotionPreset {
 export function defaultValueFor(logicalId: string): number | string | undefined {
   return getBinding(logicalId)?.defaultVal;
 }
+
+// Build a valid user preset from a live canonical config + contract. Used by the
+// inspector "Create preset from selection" action. Always produces a preset that
+// passes validatePreset (fallback contract matches the current generated contract).
+export function buildUserPresetFromConfig(
+  cfg: CanonicalStateMotionConfig,
+  contract: CompatibleContract | null,
+): StateMotionPreset {
+  const now = new Date().toISOString();
+  const compatibleContract: CompatibleContract = contract ?? {
+    schemaVersion: SCHEMA_VERSION,
+    bindingRevision: BINDING_REVISION,
+    parameterCount: PARAMETER_COUNT,
+  };
+  return {
+    formatId: FORMAT_ID,
+    schemaVersion: CURRENT_SCHEMA_VERSION,
+    presetId: 'user-' + Date.now().toString(36),
+    name: 'StateMotion preset',
+    description: '',
+    author: 'StateMotion',
+    createdAt: now,
+    modifiedAt: now,
+    tags: [],
+    category: 'Custom',
+    collectionIds: [],
+    compatibleContract,
+    parameters: { ...cfg.parameters },
+    preview: { kind: 'generated' },
+  };
+}
