@@ -1,0 +1,28 @@
+{
+  "formatId": "io.github.anmol2k5.statemotion.preset",
+  "schemaVersion": 1,
+  "presetId": "bundled-side-glide",
+  "name": "Side Glide",
+  "description": "Glide in from the left.",
+  "author": "StateMotion",
+  "createdAt": "2026-07-18T00:00:00.000Z",
+  "modifiedAt": "2026-07-18T00:00:00.000Z",
+  "tags": [
+    "slide",
+    "position"
+  ],
+  "category": "Slides",
+  "collectionIds": [],
+  "compatibleContract": {
+    "schemaVersion": 1,
+    "bindingRevision": 1,
+    "parameterCount": 20
+  },
+  "parameters": {
+    "transform.position.a": "frameCenter",
+    "transform.position.b": "frameCenter"
+  },
+  "preview": {
+    "kind": "generated"
+  }
+}
