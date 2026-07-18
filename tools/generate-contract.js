@@ -31,6 +31,9 @@ const REQUIRED_ENUMS = {
   AlignmentMode: [
     ['ClipStart', 0], ['ClipEnd', 1], ['EntireClip', 2],
   ],
+  EasingMode: [
+    ['Linear', 0], ['EaseIn', 1], ['EaseOut', 2], ['EaseInOut', 3], ['Custom', 4],
+  ],
 };
 
 const KNOWN_NATIVE_TYPES = new Set(['FLOAT_SLIDER', 'POINT', 'ANGLE', 'POPUP']);

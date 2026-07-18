@@ -1,9 +1,9 @@
 # StateMotion Parameter Contract (generated)
 
 - schemaVersion: 1
-- bindingRevision: 1
-- parameterCount: 20
-- SHA-256: `f878b5ac9d46b1658608532486ff26bd276a12e3f2103579bcb73b9718efdc23`
+- bindingRevision: 2
+- parameterCount: 25
+- SHA-256: `cad16d90a5b04ec13c366db2d2a241a95b44c99ae611934e5a40d5487919aea6`
 
 > GENERATED from shared/schema/parameter-contract.json. Do not edit by hand.
 
@@ -23,18 +23,30 @@
 - ClipEnd = 1
 - EntireClip = 2
 
+### EasingMode
+- Linear = 0
+- EaseIn = 1
+- EaseOut = 2
+- EaseInOut = 3
+- Custom = 4
+
 ## Parameters
 
 | logicalId | diskId | wireName | nativeType | default | range | timeVariance | state |
 |---|---|---|---|---|---|---|---|
 | contract.schemaVersion | 1 | SM Schema Version | FLOAT_SLIDER | 1 | 1..9999 | static | metadata |
-| contract.parameterCount | 2 | SM Param Count | FLOAT_SLIDER | 20 | 1..9999 | static | metadata |
+| contract.parameterCount | 2 | SM Param Count | FLOAT_SLIDER | 25 | 1..9999 | static | metadata |
 | contract.bindingRevision | 3 | SM Binding Rev | FLOAT_SLIDER | 1 | 1..9999 | static | metadata |
 | transition.mode | 50 | SM Mode | POPUP | 0 | ProgressMode | static | transition |
 | transition.alignment | 51 | SM Alignment | POPUP | 0 | AlignmentMode | static | transition |
 | transition.durationSeconds | 52 | SM Duration | FLOAT_SLIDER | 1 | 0..3600 | static | transition |
 | transition.delaySeconds | 53 | SM Delay | FLOAT_SLIDER | 0 | 0..3600 | static | transition |
 | transition.manualProgress | 54 | SM Manual Progress | FLOAT_SLIDER | 0 | 0..100 | keyframeable | transition |
+| transition.easing | 55 | SM Easing | POPUP | 3 | EasingMode | static | transition |
+| transition.curveX1 | 56 | SM Curve X1 | FLOAT_SLIDER | 0.42 | 0..1 | static | transition |
+| transition.curveY1 | 57 | SM Curve Y1 | FLOAT_SLIDER | 0 | 0..1 | static | transition |
+| transition.curveX2 | 58 | SM Curve X2 | FLOAT_SLIDER | 0.58 | 0..1 | static | transition |
+| transition.curveY2 | 59 | SM Curve Y2 | FLOAT_SLIDER | 1 | 0..1 | static | transition |
 | transform.position.a | 100 | SM Position A | POINT | "frameCenter" | n/a | interpolatable | A |
 | transform.position.b | 101 | SM Position B | POINT | "frameCenter" | n/a | interpolatable | B |
 | transform.scaleX.a | 102 | SM Scale X A | FLOAT_SLIDER | 100 | 0.01..10000 | interpolatable | A |

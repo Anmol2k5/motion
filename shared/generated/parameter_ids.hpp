@@ -21,9 +21,17 @@ enum class AlignmentMode : int {
   EntireClip = 2
 };
 
+enum class EasingMode : int {
+  Linear = 0,
+  EaseIn = 1,
+  EaseOut = 2,
+  EaseInOut = 3,
+  Custom = 4
+};
+
 inline constexpr int kSchemaVersion = 1;
-inline constexpr int kBindingRevision = 1;
-inline constexpr int kParameterCount = 20;
+inline constexpr int kBindingRevision = 2;
+inline constexpr int kParameterCount = 25;
 
 inline constexpr int kContractSchemaVersion = 1;
 inline constexpr int kContractParameterCount = 2;
@@ -33,6 +41,11 @@ inline constexpr int kTransitionAlignment = 51;
 inline constexpr int kTransitionDurationSeconds = 52;
 inline constexpr int kTransitionDelaySeconds = 53;
 inline constexpr int kTransitionManualProgress = 54;
+inline constexpr int kTransitionEasing = 55;
+inline constexpr int kTransitionCurveX1 = 56;
+inline constexpr int kTransitionCurveY1 = 57;
+inline constexpr int kTransitionCurveX2 = 58;
+inline constexpr int kTransitionCurveY2 = 59;
 inline constexpr int kTransformPositionA = 100;
 inline constexpr int kTransformPositionB = 101;
 inline constexpr int kTransformScaleXA = 102;
