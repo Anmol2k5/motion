@@ -62,12 +62,13 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SM_SDK_HEADERS);$(SM_SDK_HEADERS_SP);$(SM_SDK_HEADERS_WIN);$(SM_SDK_RESOURCES);$(SM_SDK_UTIL);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SM_SDK_HEADERS);$(SM_SDK_HEADERS_SP);$(SM_SDK_HEADERS_WIN);$(SM_SDK_RESOURCES);$(SM_SDK_UTIL);$(MSBuildProjectDirectory)\..\..\..\shared\generated;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MSWindows;WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <StructMemberAlignment>8Bytes</StructMemberAlignment>
       <WarningLevel>Level3</WarningLevel>
       <WarnAsError>false</WarnAsError>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)StateMotion.aex</OutputFile>
@@ -83,12 +84,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SM_SDK_HEADERS);$(SM_SDK_HEADERS_SP);$(SM_SDK_HEADERS_WIN);$(SM_SDK_RESOURCES);$(SM_SDK_UTIL);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SM_SDK_HEADERS);$(SM_SDK_HEADERS_SP);$(SM_SDK_HEADERS_WIN);$(SM_SDK_RESOURCES);$(SM_SDK_UTIL);$(MSBuildProjectDirectory)\..\..\..\shared\generated;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MSWindows;WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <StructMemberAlignment>8Bytes</StructMemberAlignment>
       <WarningLevel>Level3</WarningLevel>
       <WarnAsError>false</WarnAsError>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

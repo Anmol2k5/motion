@@ -121,3 +121,22 @@ Every Adobe API name, version requirement, effect-host limitation, GPU claim,
 installation path, and packaging assumption must be verified against current
 primary Adobe documentation before implementation. See the research tickets under
 `.scratch/statemotion-wayfinder/issues/` and artifacts in `docs/research/`.
+
+## Capability observations from provided product screenshots (broad only)
+
+Recorded 2026-07-17. The user supplied reference screenshots of a commercial
+motion-state product. Per the clean-room boundary, only broad user-visible
+capabilities were noted; no names, layout, assets, values, or internals were
+copied.
+
+| Observed broad capability | Independent StateMotion design | Implementation source | No proprietary asset/internal used |
+|---|---|---|---|
+| A panel with preset browsing (thumbnails, search, categories) | Original StateMotion Presets view (Milestone 6) | docs/handoff + this file | Yes — UI is original; no screenshot layout copied |
+| Per-clip A/B transform states editable in an inspector | State A/B inspector (Milestone 4) | parameter-contract.json | Yes — original parameter contract |
+| Easing/curve control with editable handles | Original easing system + graph editor (Milestone 7) | progress engine + curve fixtures | Yes — curve math original |
+| Transition timing (duration/delay/alignment/mode) | transition.* params (registered) | parameter-contract.json | Yes — original disk IDs/enums |
+| Styling (stroke/glow/shadow) and motion blur | Milestones 9/10 | handoff §2.5 | Yes — original rendering order |
+| Batch apply / multiple-clip workflows | Milestone 12 | handoff §2.6 | Yes — original component selection by match name |
+
+No screenshot asset, thumbnail artwork, preset name, numeric value, or UI
+coordinate was extracted or reproduced.

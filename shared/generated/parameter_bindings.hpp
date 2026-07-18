@@ -15,31 +15,40 @@ struct ParameterBinding {
   const char* nativeType;
   const char* stateOwnership;
   const char* timeVariance;
+  double defaultNum;      // contract default (POINT=0, resolved natively)
+  double validMin;        // FLOAT_SLIDER valid range min (else 0)
+  double validMax;        // FLOAT_SLIDER valid range max (else 0)
+  double uiMin;           // FLOAT_SLIDER UI range min (else 0)
+  double uiMax;           // FLOAT_SLIDER UI range max (else 0)
+  double oldDefaultNum;   // contract oldProjectDefault (POINT=0)
+  int precision;          // FLOAT_SLIDER display decimals (else 0)
+  int enumCount;          // POPUP choice count (else 0)
+  const char* enumRef;    // POPUP enum name (else "")
 };
 
 inline constexpr char kContractDigest[] = "f878b5ac9d46b1658608532486ff26bd276a12e3f2103579bcb73b9718efdc23";
 
 inline constexpr ParameterBinding kBindings[20] = {
-  {"contract.schemaVersion", 1, "SM Schema Version", "FLOAT_SLIDER", "metadata", "static"},
-  {"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static"},
-  {"contract.bindingRevision", 3, "SM Binding Rev", "FLOAT_SLIDER", "metadata", "static"},
-  {"transition.mode", 50, "SM Mode", "POPUP", "transition", "static"},
-  {"transition.alignment", 51, "SM Alignment", "POPUP", "transition", "static"},
-  {"transition.durationSeconds", 52, "SM Duration", "FLOAT_SLIDER", "transition", "static"},
-  {"transition.delaySeconds", 53, "SM Delay", "FLOAT_SLIDER", "transition", "static"},
-  {"transition.manualProgress", 54, "SM Manual Progress", "FLOAT_SLIDER", "transition", "keyframeable"},
-  {"transform.position.a", 100, "SM Position A", "POINT", "A", "interpolatable"},
-  {"transform.position.b", 101, "SM Position B", "POINT", "B", "interpolatable"},
-  {"transform.scaleX.a", 102, "SM Scale X A", "FLOAT_SLIDER", "A", "interpolatable"},
-  {"transform.scaleX.b", 103, "SM Scale X B", "FLOAT_SLIDER", "B", "interpolatable"},
-  {"transform.scaleY.a", 104, "SM Scale Y A", "FLOAT_SLIDER", "A", "interpolatable"},
-  {"transform.scaleY.b", 105, "SM Scale Y B", "FLOAT_SLIDER", "B", "interpolatable"},
-  {"transform.rotation.a", 106, "SM Rotation A", "ANGLE", "A", "interpolatable"},
-  {"transform.rotation.b", 107, "SM Rotation B", "ANGLE", "B", "interpolatable"},
-  {"transform.anchor.a", 108, "SM Anchor A", "POINT", "A", "interpolatable"},
-  {"transform.anchor.b", 109, "SM Anchor B", "POINT", "B", "interpolatable"},
-  {"transform.opacity.a", 110, "SM Opacity A", "FLOAT_SLIDER", "A", "interpolatable"},
-  {"transform.opacity.b", 111, "SM Opacity B", "FLOAT_SLIDER", "B", "interpolatable"}
+  {"contract.schemaVersion", 1, "SM Schema Version", "FLOAT_SLIDER", "metadata", "static", 1, 1, 9999, 1, 9999, 1, 2, 0, ""},
+  {"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 20, 1, 9999, 1, 9999, 17, 2, 0, ""},
+  {"contract.bindingRevision", 3, "SM Binding Rev", "FLOAT_SLIDER", "metadata", "static", 1, 1, 9999, 1, 9999, 1, 2, 0, ""},
+  {"transition.mode", 50, "SM Mode", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 7, "ProgressMode"},
+  {"transition.alignment", 51, "SM Alignment", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 3, "AlignmentMode"},
+  {"transition.durationSeconds", 52, "SM Duration", "FLOAT_SLIDER", "transition", "static", 1, 0, 3600, 0, 10, 1, 3, 0, ""},
+  {"transition.delaySeconds", 53, "SM Delay", "FLOAT_SLIDER", "transition", "static", 0, 0, 3600, 0, 10, 0, 3, 0, ""},
+  {"transition.manualProgress", 54, "SM Manual Progress", "FLOAT_SLIDER", "transition", "keyframeable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"transform.position.a", 100, "SM Position A", "POINT", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"transform.position.b", 101, "SM Position B", "POINT", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"transform.scaleX.a", 102, "SM Scale X A", "FLOAT_SLIDER", "A", "interpolatable", 100, 0.01, 10000, 0, 400, 100, 2, 0, ""},
+  {"transform.scaleX.b", 103, "SM Scale X B", "FLOAT_SLIDER", "B", "interpolatable", 100, 0.01, 10000, 0, 400, 100, 2, 0, ""},
+  {"transform.scaleY.a", 104, "SM Scale Y A", "FLOAT_SLIDER", "A", "interpolatable", 100, 0.01, 10000, 0, 400, 100, 2, 0, ""},
+  {"transform.scaleY.b", 105, "SM Scale Y B", "FLOAT_SLIDER", "B", "interpolatable", 100, 0.01, 10000, 0, 400, 100, 2, 0, ""},
+  {"transform.rotation.a", 106, "SM Rotation A", "ANGLE", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"transform.rotation.b", 107, "SM Rotation B", "ANGLE", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"transform.anchor.a", 108, "SM Anchor A", "POINT", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"transform.anchor.b", 109, "SM Anchor B", "POINT", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"transform.opacity.a", 110, "SM Opacity A", "FLOAT_SLIDER", "A", "interpolatable", 100, 0, 100, 0, 100, 100, 2, 0, ""},
+  {"transform.opacity.b", 111, "SM Opacity B", "FLOAT_SLIDER", "B", "interpolatable", 100, 0, 100, 0, 100, 100, 2, 0, ""}
 };
 
 } // namespace contract

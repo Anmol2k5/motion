@@ -107,4 +107,24 @@ expectFail('POINT default invalid', (c) => { c.parameters.find(p => p.logicalId 
   pass('stored SHA-256 artifact matches recomputed + present in markdown');
 })();
 
+// ---- enhanced C++ binding fields (native registration) ----------------------
+
+(function enhancedCppBinding() {
+  main(); // ensure files are current
+  const cpp = fs.readFileSync(path.join(GEN, 'parameter_bindings.hpp'), 'utf8');
+  assert.ok(cpp.includes('struct ParameterBinding'), 'missing ParameterBinding struct');
+  assert.ok(cpp.includes('double defaultNum;'), 'missing defaultNum field');
+  assert.ok(cpp.includes('double oldDefaultNum;'), 'missing oldDefaultNum field');
+  assert.ok(cpp.includes('int enumCount;'), 'missing enumCount field');
+  // A FLOAT_SLIDER with a range must emit validMin/Max and a nonzero default.
+  assert.ok(cpp.includes('"transform.scaleX.a", 102, "SM Scale X A", "FLOAT_SLIDER", "A", "interpolatable", 100, 0.01, 10000'), 'scaleX.a binding numbers wrong');
+  // A POPUP must emit enumCount (7 for ProgressMode) and enumRef.
+  assert.ok(cpp.includes('"transition.mode", 50, "SM Mode", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 7, "ProgressMode"'), 'transition.mode popup binding wrong');
+  // A POINT must emit defaultNum 0 (native resolves center).
+  assert.ok(cpp.includes('"transform.position.a", 100, "SM Position A", "POINT", "A", "interpolatable", 0,'), 'position.a POINT default must be 0');
+  // parameterCount metadata new-default 20, old-default 17.
+  assert.ok(cpp.includes('"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 20, 1, 9999, 1, 9999, 17,'), 'parameterCount old default wrong');
+  pass('enhanced C++ binding fields present and match contract');
+})();
+
 console.log(`\nALL PASSED (${passed} explicit checks + valid/agreement groups)`);
