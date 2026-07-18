@@ -20,9 +20,9 @@ double safeScale(double value) {
     return std::signbit(value) ? -epsilon : epsilon;
 }
 
-TransformState interpolate(const TransformState& a, const TransformState& b, double p) {
+RendererTransformState interpolate(const RendererTransformState& a, const RendererTransformState& b, double p) {
     double t = std::clamp(p, 0.0, 1.0);
-    TransformState r;
+    RendererTransformState r;
     r.positionX = a.positionX + (b.positionX - a.positionX) * t;
     r.positionY = a.positionY + (b.positionY - a.positionY) * t;
     r.scaleX = a.scaleX + (b.scaleX - a.scaleX) * t;
@@ -34,7 +34,7 @@ TransformState interpolate(const TransformState& a, const TransformState& b, dou
     return r;
 }
 
-CpuRenderPlan plan(const TransformState& t, int srcW, int srcH) {
+CpuRenderPlan plan(const RendererTransformState& t, int srcW, int srcH) {
     CpuRenderPlan p;
     p.srcW = srcW;
     p.srcH = srcH;

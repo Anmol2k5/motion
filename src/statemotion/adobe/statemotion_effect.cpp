@@ -9,6 +9,7 @@
 
 #include <cstdio>
 #include <cstring>
+#include <vector>
 
 #include "statemotion_effect.h"
 #include "statemotion_point_default.hpp"
@@ -189,6 +190,63 @@ ParamsSetup(
     return err;
 }
 
+// Map a permanent disk ID to the runtime parameter index used in params[].
+// Runtime index = SDK input layer (0) + 1 + binding array position.
+static int
+smParamIndex(int diskId)
+{
+    const auto &b = statemotion::contract::kBindings;
+    const int n = static_cast<int>(sizeof(b) / sizeof(b[0]));
+    for (int i = 0; i < n; ++i) {
+        if (b[i].diskId == diskId) return STATEMOTION_INPUT + 1 + i;
+    }
+    return -1;
+}
+
+// Build a premultiplied-alpha RGBA float Pixel buffer from a Premiere software
+// PF_EffectWorld. Phase 0.1 supports the 32-bit float, 4-channel (RGBA) world the
+// host hands the CPU path; the exact channel order is confirmed by the operator on
+// the test machine. No generic pixel-format conversion framework is added.
+static void
+smWorldToPixels(const PF_EffectWorld *world, std::vector<statemotion::Pixel> &out)
+{
+    const int w = world->width;
+    const int h = world->height;
+    out.resize(static_cast<size_t>(w) * h);
+    const A_long rowbytes = world->rowbytes;
+    for (int y = 0; y < h; ++y) {
+        const PF_PixelFloat *row =
+            reinterpret_cast<const PF_PixelFloat *>(reinterpret_cast<const char *>(world->data) + y * rowbytes);
+        for (int x = 0; x < w; ++x) {
+            const PF_PixelFloat &px = row[x];
+            statemotion::Pixel &p = out[static_cast<size_t>(y) * w + x];
+            p.r = px.red;
+            p.g = px.green;
+            p.b = px.blue;
+            p.a = px.alpha;
+        }
+    }
+}
+
+static void
+smPixelsToWorld(const std::vector<statemotion::Pixel> &in, PF_EffectWorld *world)
+{
+    const int w = world->width;
+    const int h = world->height;
+    const A_long rowbytes = world->rowbytes;
+    for (int y = 0; y < h; ++y) {
+        PF_PixelFloat *row =
+            reinterpret_cast<PF_PixelFloat *>(reinterpret_cast<char *>(world->data) + y * rowbytes);
+        for (int x = 0; x < w; ++x) {
+            const statemotion::Pixel &p = in[static_cast<size_t>(y) * w + x];
+            row[x].red = static_cast<float>(p.r);
+            row[x].green = static_cast<float>(p.g);
+            row[x].blue = static_cast<float>(p.b);
+            row[x].alpha = static_cast<float>(p.a);
+        }
+    }
+}
+
 static PF_Err
 Render(
     PF_InData   *in_data,
@@ -196,26 +254,91 @@ Render(
     PF_ParamDef *params[],
     PF_LayerDef *output)
 {
-    PF_Err              err = PF_Err_NONE;
-    PF_EffectWorld      *src = &params[STATEMOTION_INPUT]->u.ld;
+    PF_Err err = PF_Err_NONE;
 
-    if (!in_data || !output || !src || !src->data || !output->data) {
-        return PF_Err_BAD_CALLBACK_PARAM;
+    if (!in_data || !output || !params) return PF_Err_BAD_CALLBACK_PARAM;
+    PF_EffectWorld *src = &params[STATEMOTION_INPUT]->u.ld;
+    PF_EffectWorld *dst = &output->u.ld;
+    if (!src->data || !dst->data) return PF_Err_BAD_CALLBACK_PARAM;
+
+    const int W = output->width;
+    const int H = output->height;
+    const int SW = src->width;
+    const int SH = src->height;
+
+    // 1. Read registered params by disk ID (runtime index resolved via smParamIndex).
+    #define SM_RD(did) params[smParamIndex(statemotion::ids::did)]
+    const int modeIdx = static_cast<int>(SM_RD(kTransformMode)->u.pd.value);
+    const int alignIdx = static_cast<int>(SM_RD(kTransformAlignment)->u.pd.value);
+    const double dur = SM_RD(kTransitionDurationSeconds)->u.fs_d.value;
+    const double delay = SM_RD(kTransitionDelaySeconds)->u.fs_d.value;
+    const double manual = SM_RD(kTransitionManualProgress)->u.fs_d.value;
+    const PF_PointDef &pa = SM_RD(kTransformPositionA)->u.td;
+    const PF_PointDef &pb = SM_RD(kTransformPositionB)->u.td;
+    const double sxa = SM_RD(kTransformScaleXA)->u.fs_d.value;
+    const double sxb = SM_RD(kTransformScaleXB)->u.fs_d.value;
+    const double sya = SM_RD(kTransformScaleYA)->u.fs_d.value;
+    const double syb = SM_RD(kTransformScaleYB)->u.fs_d.value;
+    const double ra = SM_RD(kTransformRotationA)->u.ad.value / 65536.0;
+    const double rb = SM_RD(kTransformRotationB)->u.ad.value / 65536.0;
+    const PF_PointDef &aa = SM_RD(kTransformAnchorA)->u.td;
+    const PF_PointDef &ab = SM_RD(kTransformAnchorB)->u.td;
+    const double oa = SM_RD(kTransformOpacityA)->u.fs_d.value;
+    const double ob = SM_RD(kTransformOpacityB)->u.fs_d.value;
+    #undef SM_RD
+
+    // Native POINT is percent (fixed 16.16); convert to a percent double.
+    auto pct = [](PF_Fixed v) { return static_cast<double>(v) / 65536.0; };
+
+    // 2. Native -> canonical A/B.
+    auto A = statemotion::native::buildCanonicalState(
+        pct(pa.x_value), pct(pa.y_value), sxa, sya, ra,
+        pct(aa.x_value), pct(aa.y_value), oa);
+    auto B = statemotion::native::buildCanonicalState(
+        pct(pb.x_value), pct(pb.y_value), sxb, syb, rb,
+        pct(ab.x_value), pct(ab.y_value), ob);
+
+    // 3. Host clip-local time -> ProgressInput seconds.
+    auto pin = statemotion::host::buildProgressInput(
+        in_data->current_time, in_data->total_time, in_data->time_scale,
+        statemotion::native::modeFromPopup(modeIdx),
+        statemotion::native::alignmentFromPopup(alignIdx),
+        dur, delay, manual);
+
+    // 4. Progress -> canonical interpolation.
+    auto pe = statemotion::evaluateProgress(pin);
+    if (!pe.ok) {
+        // Non-finite input: fail safe to identity copy.
+        const A_long bytes = output->rowbytes * H;
+        if (bytes > 0) ::memcpy(dst->data, src->data, static_cast<size_t>(bytes));
+        return err;
+    }
+    auto canon = statemotion::interpolateCanonical(A, B, pe.result.easedProgress);
+
+    // 5. Canonical -> renderer-native units (single boundary conversion, after interp).
+    statemotion::raster::RenderDimensions dims{W, H, SW, SH};
+    auto rt = statemotion::raster::toRendererTransformState(canon, dims);
+
+    // 6. Identity fast path (true no-op only).
+    auto plan = statemotion::plan(rt, SW, SH);
+    if (plan.identityTransform) {
+        const A_long bytes = output->rowbytes * H;
+        if (bytes > 0) ::memcpy(dst->data, src->data, static_cast<size_t>(bytes));
+        return err;
     }
 
-    if (!src->world_flags && !output->world_flags) {
-        // Not a valid world pair; let the host handle it.
-        return PF_Err_BAD_CALLBACK_PARAM;
-    }
-
-    // Identity pass-through: copy the source world buffer verbatim into the
-    // output world. This is format-agnostic (8/16/32 bpc, any channel layout)
-    // and performs no per-pixel transformation. Both worlds share the same
-    // dimensions and rowbytes for this effect.
-    const A_long bytes = output->rowbytes * output->height;
-    if (bytes > 0) {
-        ::memcpy(output->data, src->data, static_cast<size_t>(bytes));
-    }
+    // 7. Render via the existing verified CPU renderer.
+    std::vector<statemotion::Pixel> srcPix, dstPix;
+    smWorldToPixels(src, srcPix);
+    struct Ctx { const std::vector<statemotion::Pixel> *buf; int w; };
+    Ctx ctx{&srcPix, SW};
+    auto sample = [](void *user, int x, int y) -> statemotion::Pixel {
+        const auto *c = static_cast<const Ctx *>(user);
+        return (*c->buf)[static_cast<size_t>(y) * c->w + x];
+    };
+    dstPix.resize(static_cast<size_t>(W) * H);
+    statemotion::render(plan, sample, &ctx, W, H, dstPix.data());
+    smPixelsToWorld(dstPix, dst);
 
     (void)out_data;
 
