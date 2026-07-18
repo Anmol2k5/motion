@@ -11,7 +11,7 @@
 namespace {
 
 using statemotion::Pixel;
-using statemotion::TransformState;
+using statemotion::RendererTransformState;
 
 int failures = 0;
 
@@ -52,7 +52,7 @@ int main() {
     {
         Pixel* src = makeSource(W, H, 0.5);
         std::vector<statemotion::Pixel> out(W * H);
-        TransformState id;
+        RendererTransformState id;
         auto p = statemotion::plan(id, W, H);
         statemotion::render(p, sample, src, W, H, out.data());
         bool ok = true;
@@ -65,7 +65,7 @@ int main() {
     {
         Pixel* src = makeSource(W, H, 0.5);
         std::vector<statemotion::Pixel> out(W * H);
-        TransformState t;
+        RendererTransformState t;
         t.positionX = 1.0; t.positionY = 1.0;
         auto p = statemotion::plan(t, W, H);
         statemotion::render(p, sample, src, W, H, out.data());
@@ -79,7 +79,7 @@ int main() {
     {
         Pixel* src = makeSource(W, H, 0.5);
         std::vector<statemotion::Pixel> out(W * H);
-        TransformState t;
+        RendererTransformState t;
         t.scaleX = 2.0; t.scaleY = 2.0;
         auto p = statemotion::plan(t, W, H);
         statemotion::render(p, sample, src, W, H, out.data());
@@ -93,7 +93,7 @@ int main() {
     {
         Pixel* src = makeSource(W, H, 0.5);
         std::vector<statemotion::Pixel> out(W * H);
-        TransformState t;
+        RendererTransformState t;
         t.scaleX = 1.5; t.scaleY = 0.7; t.rotationDeg = 33.0;
         auto p = statemotion::plan(t, W, H);
         statemotion::render(p, sample, src, W, H, out.data());
@@ -108,7 +108,7 @@ int main() {
     {
         Pixel* src = makeSource(W, H, 0.5);
         std::vector<statemotion::Pixel> out(W * H);
-        TransformState t;
+        RendererTransformState t;
         t.anchorX = 1.0; t.anchorY = 1.0; t.rotationDeg = 90.0;
         auto p = statemotion::plan(t, W, H);
         statemotion::render(p, sample, src, W, H, out.data());
@@ -122,7 +122,7 @@ int main() {
     {
         Pixel* src = makeSource(W, H, 0.8);
         std::vector<statemotion::Pixel> out(W * H);
-        TransformState t;
+        RendererTransformState t;
         t.opacity = 0.5;
         auto p = statemotion::plan(t, W, H);
         statemotion::render(p, sample, src, W, H, out.data());
@@ -136,7 +136,7 @@ int main() {
     {
         Pixel* src = makeSource(W, H, 0.5);
         std::vector<statemotion::Pixel> out(W * H);
-        TransformState t;
+        RendererTransformState t;
         t.positionX = -100.0;  // pushes everything off-source
         auto p = statemotion::plan(t, W, H);
         statemotion::render(p, sample, src, W, H, out.data());
@@ -150,7 +150,7 @@ int main() {
     {
         Pixel* src = makeSource(W, H, 0.6);
         std::vector<statemotion::Pixel> out(W * H);
-        TransformState t;
+        RendererTransformState t;
         t.opacity = 0.25;
         auto p = statemotion::plan(t, W, H);
         statemotion::render(p, sample, src, W, H, out.data());
@@ -172,7 +172,7 @@ int main() {
     {
         Pixel* src = makeSource(W, H, 0.5);
         std::vector<statemotion::Pixel> out(W * H);
-        TransformState t;
+        RendererTransformState t;
         t.scaleX = 0.0; t.scaleY = 0.0;
         auto p = statemotion::plan(t, W, H);
         statemotion::render(p, sample, src, W, H, out.data());
@@ -186,9 +186,9 @@ int main() {
     {
         Pixel* src = makeSource(W, H, 0.5);
         std::vector<statemotion::Pixel> out(W * H);
-        TransformState a, b;
+        RendererTransformState a, b;
         b.positionX = 10.0; b.scaleX = 3.0; b.rotationDeg = 720.0;
-        TransformState mid = statemotion::interpolate(a, b, 1.5);  // overshoot
+        RendererTransformState mid = statemotion::interpolate(a, b, 1.5);  // overshoot
         auto p = statemotion::plan(mid, W, H);
         statemotion::render(p, sample, src, W, H, out.data());
         bool ok = true;
@@ -201,7 +201,7 @@ int main() {
     {
         Pixel* src = makeSource(W, H, 0.5);
         std::vector<statemotion::Pixel> out1(W * H), out2(W * H);
-        TransformState t;
+        RendererTransformState t;
         t.positionX = 0.3; t.scaleX = 1.2; t.rotationDeg = 17.0; t.anchorX = 1.0;
         auto p = statemotion::plan(t, W, H);
         statemotion::render(p, sample, src, W, H, out1.data());

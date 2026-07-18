@@ -24,10 +24,12 @@ struct Pixel {
     double a = 0.0;
 };
 
-// One endpoint of the A/B transform (handoff 2.2 transform family).
-// Position/anchor are in source pixels (canonical, post native-to-adapter).
-// scaleX/scaleY are fractions (1.0 == 100%). rotationDeg clockwise. opacity [0,1].
-struct TransformState {
+// One endpoint of the A/B transform in renderer-native units.
+// Position/anchor are in source pixels. scaleX/scaleY are fractions (1.0 == 100%).
+// rotationDeg clockwise. opacity [0,1]. The canonical (normalized/radians) model
+// is defined separately in transform_state.hpp; toRendererTransformState() maps
+// between them exactly once, after interpolation.
+struct RendererTransformState {
     double positionX = 0.0;
     double positionY = 0.0;
     double scaleX = 1.0;
@@ -46,8 +48,8 @@ double evaluateCurve(double t);
 // overshoot. Negative scale stays valid for mirroring (handoff 3, 018).
 double safeScale(double value);
 
-// Linear interpolation of the full transform at progress p in [0,1].
-TransformState interpolate(const TransformState& a, const TransformState& b, double p);
+// Linear interpolation of the full renderer-native transform at progress p in [0,1].
+RendererTransformState interpolate(const RendererTransformState& a, const RendererTransformState& b, double p);
 
 // Precomputed, allocation-free per-pixel-loop state (handoff 5).
 struct CpuRenderPlan {
@@ -66,8 +68,8 @@ struct CpuRenderPlan {
     bool fullyTransparent = false;
 };
 
-// Build the plan from an interpolated transform + source dimensions.
-CpuRenderPlan plan(const TransformState& t, int srcW, int srcH);
+// Build the plan from an interpolated renderer-native transform + source dimensions.
+CpuRenderPlan plan(const RendererTransformState& t, int srcW, int srcH);
 
 // Source accessor: returns pixel at integer coords, or transparent black if outside.
 using Sampler = Pixel(*)(void* user, int x, int y);
