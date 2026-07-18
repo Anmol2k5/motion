@@ -9,6 +9,7 @@
 
 import type { HostBridge, ClipRef } from './premiereAdapter.ts';
 import type { CompatibleContract } from '../domain/presetSchema.ts';
+import { toNative, toCanonical } from './valueConversion.ts';
 
 const MATCH_NAME = 'AE.io.github.anmol2k5.statemotion.effect';
 
@@ -70,13 +71,30 @@ export class UxpHostBridge implements HostBridge {
     }
   }
 
+  private marshalNative(_logicalId: string, native: number | string | { x: number; y: number }): unknown {
+    return native; // identity until Premiere POINT shape is operator-verified
+  }
+  private unmarshalNative(_logicalId: string, raw: unknown): number | string | { x: number; y: number } {
+    return raw as number | string | { x: number; y: number };
+  }
+
   async readLogical(clip: ClipRef, logicalId: string): Promise<number | string | undefined> {
-    return undefined;
+    const binding = getBinding(logicalId);
+    if (!binding) return undefined;
+    const effect = await this.findEffect(clip);
+    if (!effect) return undefined;
+    const wireName = logicalIdToWireName(logicalId);
+    const index = wireName ? await this.enumerateParamIndex(clip, wireName) : undefined;
+    if (index === undefined) return undefined;
+    const prop = effect.properties?.getProperty?.(index);
+    if (!prop || typeof prop.getValue !== 'function') return undefined;
+    const native = this.unmarshalNative(logicalId, prop.getValue());
+    return toCanonical(logicalId, native as any, binding);
   }
 
   async writeLogical(clip: ClipRef, logicalId: string, value: number | string): Promise<void> {
-    // Resolve the runtime index from the stable wireName, then attempt the UXP
-    // write. Guarded so the panel still loads if the API differs.
+    const binding = getBinding(logicalId);
+    if (!binding) throw new Error(`Unknown logical ID ${logicalId}`);
     const effect = await this.findEffect(clip);
     if (!effect) throw new Error('StateMotion effect not found on clip');
     const wireName = logicalIdToWireName(logicalId);
@@ -86,7 +104,8 @@ export class UxpHostBridge implements HostBridge {
     if (!prop || typeof prop.setValue !== 'function') {
       throw new Error(`UXP setValue unavailable for ${logicalId} (unverified host API)`);
     }
-    prop.setValue(value);
+    const native = toNative(logicalId, value, binding);
+    prop.setValue(this.marshalNative(logicalId, native));
   }
 
   async beginUndo(label: string): Promise<void> {
