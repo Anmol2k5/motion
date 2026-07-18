@@ -7,7 +7,7 @@ import { build } from 'esbuild';
 import * as path from 'path';
 import * as fs from 'fs';
 
-const root = path.resolve(import.meta.dirname, '..', '..', '..');
+const root = path.resolve(import.meta.dirname, '..', '..', '..', '..');
 const panelDir = path.resolve(root, 'src', 'statemotion', 'panel');
 
 const outDir = path.resolve(panelDir, 'dist');
