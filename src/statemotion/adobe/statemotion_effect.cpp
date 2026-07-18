@@ -1,11 +1,10 @@
-// StateMotion native effect - entry point and pass-through render.
+// StateMotion native effect - entry point and CPU transform render.
 //
-// This is the minimal native load proof: it registers a single effect
-// ("StateMotion") with the permanent match name, declares only the SDK-required
-// input/source layer, and performs an identity pass-through render.
-//
-// It does NOT implement any StateMotion transform parameter, progress control,
-// animation, or the CPU transform renderer. Those are separate later tasks.
+// Registers the "StateMotion" effect with the permanent match name and its 20
+// transform + progress parameters. Render() reads native params via disk-ID
+// adapters, builds canonical A/B states, evaluates progress from clip-local
+// host time, interpolates, converts to renderer units, and rasterizes through
+// the existing verified CPU transform renderer.
 
 #include <cstdio>
 #include <cstring>
@@ -258,7 +257,7 @@ Render(
 
     if (!in_data || !output || !params) return PF_Err_BAD_CALLBACK_PARAM;
     PF_EffectWorld *src = &params[STATEMOTION_INPUT]->u.ld;
-    PF_EffectWorld *dst = &output->u.ld;
+    PF_EffectWorld *dst = output;
     if (!src->data || !dst->data) return PF_Err_BAD_CALLBACK_PARAM;
 
     const int W = output->width;
@@ -268,8 +267,8 @@ Render(
 
     // 1. Read registered params by disk ID (runtime index resolved via smParamIndex).
     #define SM_RD(did) params[smParamIndex(statemotion::ids::did)]
-    const int modeIdx = static_cast<int>(SM_RD(kTransformMode)->u.pd.value);
-    const int alignIdx = static_cast<int>(SM_RD(kTransformAlignment)->u.pd.value);
+    const int modeIdx = static_cast<int>(SM_RD(kTransitionMode)->u.pd.value);
+    const int alignIdx = static_cast<int>(SM_RD(kTransitionAlignment)->u.pd.value);
     const double dur = SM_RD(kTransitionDurationSeconds)->u.fs_d.value;
     const double delay = SM_RD(kTransitionDelaySeconds)->u.fs_d.value;
     const double manual = SM_RD(kTransitionManualProgress)->u.fs_d.value;

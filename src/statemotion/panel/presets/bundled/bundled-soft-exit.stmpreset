@@ -1,0 +1,33 @@
+{
+  "formatId": "io.github.anmol2k5.statemotion.preset",
+  "schemaVersion": 1,
+  "presetId": "bundled-soft-exit",
+  "name": "Soft Exit",
+  "description": "Ease out with a small scale-down.",
+  "author": "StateMotion",
+  "createdAt": "2026-07-18T00:00:00.000Z",
+  "modifiedAt": "2026-07-18T00:00:00.000Z",
+  "tags": [
+    "exit",
+    "scale",
+    "fade"
+  ],
+  "category": "Exits",
+  "collectionIds": [],
+  "compatibleContract": {
+    "schemaVersion": 1,
+    "bindingRevision": 1,
+    "parameterCount": 20
+  },
+  "parameters": {
+    "transform.scaleX.a": 1,
+    "transform.scaleY.a": 1,
+    "transform.opacity.a": 1,
+    "transform.scaleX.b": 0.9,
+    "transform.scaleY.b": 0.9,
+    "transform.opacity.b": 0
+  },
+  "preview": {
+    "kind": "generated"
+  }
+}

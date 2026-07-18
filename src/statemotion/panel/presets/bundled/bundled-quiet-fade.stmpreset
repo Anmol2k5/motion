@@ -1,0 +1,28 @@
+{
+  "formatId": "io.github.anmol2k5.statemotion.preset",
+  "schemaVersion": 1,
+  "presetId": "bundled-quiet-fade",
+  "name": "Quiet Fade",
+  "description": "Simple opacity cross from black.",
+  "author": "StateMotion",
+  "createdAt": "2026-07-18T00:00:00.000Z",
+  "modifiedAt": "2026-07-18T00:00:00.000Z",
+  "tags": [
+    "entrance",
+    "fade"
+  ],
+  "category": "Entrances",
+  "collectionIds": [],
+  "compatibleContract": {
+    "schemaVersion": 1,
+    "bindingRevision": 1,
+    "parameterCount": 20
+  },
+  "parameters": {
+    "transform.opacity.a": 0,
+    "transform.opacity.b": 1
+  },
+  "preview": {
+    "kind": "generated"
+  }
+}

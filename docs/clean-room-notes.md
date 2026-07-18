@@ -140,3 +140,23 @@ copied.
 
 No screenshot asset, thumbnail artwork, preset name, numeric value, or UI
 coordinate was extracted or reproduced.
+
+## Preset Panel — broad capability observations (2026-07-18)
+
+StateMotion Preset Panel is an original UXP panel. Broad user-visible capabilities
+inspired generally (NOT copied) from commercial motion-preset tools, with independent
+StateMotion design decisions:
+
+| Observed broad capability (general) | Independent StateMotion decision | No proprietary asset/internal used |
+|---|---|---|
+| Searchable preset library | Original Library view with substring search over name/tags/description/category | Yes — original UI |
+| Categories / collections | Original categories (Entrances, Exits, Slides, Zooms, Focus, Layout, Screen, Titles, Custom) + user collections | Yes — original names |
+| Favorites | `favoritePresetIds` in local `library.json`, no file mutation of bundled/user presets | Yes |
+| User presets + create/edit/delete/duplicate | Original user-preset repository under UXP plugin data folder | Yes |
+| Thumbnails / previews | Deterministic SVG/CSS preview cards generated from preset values (no video decode) | Yes — generated, no asset |
+| Preset management view | Original Manage view (import/export/collections/compatibility) | Yes |
+| Separate panel alongside Effect Controls | Original three-view panel (Library / Inspector / Manage) | Yes — original layout |
+| Import / export portability | `.stmpreset` files, validated + migrated, never executed | Yes |
+
+No commercial preset name, value, layout, color, icon, thumbnail, or asset was
+reproduced. All starter-preset names/values are independently chosen.

@@ -1,0 +1,33 @@
+{
+  "formatId": "io.github.anmol2k5.statemotion.preset",
+  "schemaVersion": 1,
+  "presetId": "bundled-soft-arrival",
+  "name": "Soft Arrival",
+  "description": "Gentle scale-up fade in.",
+  "author": "StateMotion",
+  "createdAt": "2026-07-18T00:00:00.000Z",
+  "modifiedAt": "2026-07-18T00:00:00.000Z",
+  "tags": [
+    "entrance",
+    "scale",
+    "fade"
+  ],
+  "category": "Entrances",
+  "collectionIds": [],
+  "compatibleContract": {
+    "schemaVersion": 1,
+    "bindingRevision": 1,
+    "parameterCount": 20
+  },
+  "parameters": {
+    "transform.scaleX.a": 0.85,
+    "transform.scaleY.a": 0.85,
+    "transform.opacity.a": 0,
+    "transform.scaleX.b": 1,
+    "transform.scaleY.b": 1,
+    "transform.opacity.b": 1
+  },
+  "preview": {
+    "kind": "generated"
+  }
+}

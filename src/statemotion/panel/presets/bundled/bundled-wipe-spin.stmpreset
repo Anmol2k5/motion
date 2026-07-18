@@ -1,0 +1,30 @@
+{
+  "formatId": "io.github.anmol2k5.statemotion.preset",
+  "schemaVersion": 1,
+  "presetId": "bundled-wipe-spin",
+  "name": "Wipe Spin",
+  "description": "Rotate into place.",
+  "author": "StateMotion",
+  "createdAt": "2026-07-18T00:00:00.000Z",
+  "modifiedAt": "2026-07-18T00:00:00.000Z",
+  "tags": [
+    "screen",
+    "rotation"
+  ],
+  "category": "Screen",
+  "collectionIds": [],
+  "compatibleContract": {
+    "schemaVersion": 1,
+    "bindingRevision": 1,
+    "parameterCount": 20
+  },
+  "parameters": {
+    "transform.rotation.a": -0.13962634015954636,
+    "transform.rotation.b": 0,
+    "transform.opacity.a": 0,
+    "transform.opacity.b": 1
+  },
+  "preview": {
+    "kind": "generated"
+  }
+}

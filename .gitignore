@@ -80,3 +80,6 @@ ponytail-tmp/
 skills-lock.json
 opencode.json
 statemotion-premiere-plugin-build-spec.md
+
+dist/
+node_modules/
