@@ -4,7 +4,6 @@
 import assert from 'node:assert';
 import {
   GateSeverity,
-  classifyGate,
   canLaunchPrivateAlpha,
   openGatesBySeverity,
   type ReleaseGate,
@@ -16,11 +15,6 @@ function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
 const blocker: ReleaseGate = { id: 'b1', title: 'plugin load', severity: GateSeverity.Blocker, status: 'open' };
 const major: ReleaseGate = { id: 'm1', title: 'undo grouping', severity: GateSeverity.Major, status: 'open' };
 const minor: ReleaseGate = { id: 'n1', title: 'spacing', severity: GateSeverity.Minor, status: 'open' };
-
-assert.strictEqual(classifyGate(GateSeverity.Blocker), 'blocker');
-assert.strictEqual(classifyGate(GateSeverity.Major), 'major');
-assert.strictEqual(classifyGate(GateSeverity.Minor), 'minor');
-pass('classifyGate maps severity');
 
 // Blocker open -> cannot launch.
 assert.strictEqual(canLaunchPrivateAlpha([blocker]), false);

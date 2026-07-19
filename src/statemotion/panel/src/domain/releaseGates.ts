@@ -17,10 +17,6 @@ export interface ReleaseGate {
   note?: string;
 }
 
-export function classifyGate(severity: GateSeverity): 'blocker' | 'major' | 'minor' {
-  return severity;
-}
-
 // Can Private Alpha launch given the current open gates?
 export function canLaunchPrivateAlpha(gates: ReleaseGate[]): boolean {
   return !gates.some((g) => g.severity === GateSeverity.Blocker && g.status === 'open');

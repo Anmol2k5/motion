@@ -6,12 +6,10 @@
 // report (see domain/diagnostics.ts).
 
 import { el, clear } from './components.ts';
-import { buildDebugReport, type DiagnosticInput } from '../domain/diagnostics.ts';
+import { buildDebugReport, EXPECTED_MATCH_NAME, type DiagnosticInput } from '../domain/diagnostics.ts';
 import { getProductVersion } from '../domain/productVersion.ts';
 import { SCHEMA_VERSION, BINDING_REVISION, PARAMETER_COUNT } from '../../../../../shared/generated/parameterBindings.ts';
 import { Capability, VerifyState, capabilityLabel, type CapabilityMatrix } from '../domain/capability.ts';
-
-const MATCH_NAME = 'AE.io.github.anmol2k5.statemotion.effect';
 
 export class DiagnosticsView {
   // Injected by main.ts: live snapshot data. Host-dependent fields default to
@@ -42,7 +40,7 @@ export class DiagnosticsView {
 
     container.append(el('div', { class: 'sm-section-title', text: 'Environment' }));
     const env = el('div', {});
-    env.append(row('Effect match name', MATCH_NAME));
+    env.append(row('Effect match name', EXPECTED_MATCH_NAME));
     env.append(row('Contract status', input.contractStatus ?? 'unknown'));
     env.append(row('Selection count', String(input.selectionCount ?? 0)));
     env.append(row('Last operation', input.lastOperation ?? 'none'));

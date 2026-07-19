@@ -10,7 +10,7 @@ import { LibraryView } from './ui/library.ts';
 import { InspectorView } from './ui/inspector.ts';
 import { ManageView } from './ui/manage.ts';
 import { DiagnosticsView } from './ui/diagnosticsView.ts';
-import type { DiagnosticInput } from './domain/diagnostics.ts';
+import { EXPECTED_MATCH_NAME, type DiagnosticInput } from './domain/diagnostics.ts';
 import { BUNDLED_PRESETS } from './starter/bundledPresets.ts';
 import { toggleFavorite } from './domain/favorites.ts';
 import type { LibraryModel } from './domain/presetStorage.ts';
@@ -62,7 +62,7 @@ async function main(): Promise<void> {
   // Diagnostics: live snapshot. Host-dependent fields stay UNKNOWN / not-yet
   // verified until an operator confirms them on real Premiere.
   const diagnostics = new DiagnosticsView((): DiagnosticInput => ({
-    effectMatchName: 'AE.io.github.anmol2k5.statemotion.effect',
+    effectMatchName: EXPECTED_MATCH_NAME,
     contractStatus: 'unknown',
     selectionCount,
     selectionStatus: selectionCount > 0 ? `${selectionCount} clip(s)` : 'none',
@@ -112,7 +112,7 @@ function toggleFav(lib: LibraryModel, id: string): LibraryModel {
   };
 }
 
-main().catch((e) => {
+main().catch(() => {
   const app = document.getElementById('app');
-  if (app) app.textContent = 'StateMotion panel failed to load: ' + (e?.message ?? e);
+  if (app) app.textContent = 'StateMotion failed to load. Open the panel again or check the developer console.';
 });
