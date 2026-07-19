@@ -36,6 +36,7 @@ function preset(
 export const BUNDLED_PRESETS: StateMotionPreset[] = [
   // ---- Entrances ----
   preset('bundled-soft-arrival', 'Soft Arrival', 'Gentle scale-up fade in.', 'Entrances', ['entrance', 'scale', 'fade'], {
+    'transition.easing': 3,
     'transform.scaleX.a': 0.85, 'transform.scaleY.a': 0.85, 'transform.opacity.a': 0,
     'transform.scaleX.b': 1.0, 'transform.scaleY.b': 1.0, 'transform.opacity.b': 1,
   }),
@@ -102,6 +103,11 @@ export const BUNDLED_PRESETS: StateMotionPreset[] = [
   }),
   preset('bundled-custom-hold', 'Hold Then Move', 'Hold on A, then transition.', 'Custom', ['custom', 'hold'], {
     'transition.mode': 4,
+  }),
+  preset('bundled-custom-organic', 'Organic Custom', 'Custom cubic-bezier with a soft lead-in.', 'Custom', ['custom', 'curve'], {
+    'transition.easing': 4,
+    'transition.curveX1': 0.25, 'transition.curveY1': 0.1,
+    'transition.curveX2': 0.25, 'transition.curveY2': 1.0,
   }),
 ];
 

@@ -127,7 +127,11 @@ export function validatePreset(preset: unknown): ValidationResult {
 // Explicit forward migration. Add cases as schema versions grow.
 export function migratePreset(raw: unknown): StateMotionPreset {
   const p = raw as Record<string, unknown>;
-  if (typeof p.schemaVersion === 'number' && p.schemaVersion === CURRENT_SCHEMA_VERSION) {
+  const cc = p.compatibleContract as CompatibleContract | undefined;
+  const current =
+    typeof p.schemaVersion === 'number' && p.schemaVersion === CURRENT_SCHEMA_VERSION &&
+    cc && cc.bindingRevision === BINDING_REVISION && cc.parameterCount === PARAMETER_COUNT;
+  if (current) {
     // Already current; just normalize via validation-free copy.
     return p as unknown as StateMotionPreset;
   }
@@ -145,7 +149,9 @@ export function migratePreset(raw: unknown): StateMotionPreset {
     tags: Array.isArray(p.tags) ? (p.tags as string[]) : [],
     category: String(p.category ?? 'Custom'),
     collectionIds: Array.isArray(p.collectionIds) ? (p.collectionIds as string[]) : [],
-    compatibleContract: (p.compatibleContract as CompatibleContract) ?? {
+    // Forward migration always targets the current contract so the result
+    // validates and applies against the current native build.
+    compatibleContract: {
       schemaVersion: SCHEMA_VERSION,
       bindingRevision: BINDING_REVISION,
       parameterCount: PARAMETER_COUNT,
