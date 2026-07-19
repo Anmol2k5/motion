@@ -132,8 +132,10 @@ is selected, four numeric inputs (X1/Y1/X2/Y2). No graph editor this milestone.
 
 ## 11. Starter presets
 
-The 16 bundled presets get an `EasingMode` variety (Linear / Ease In / Ease Out /
-Ease In Out); **no Custom** for starters. Existing creative transforms unchanged.
+The 17 bundled presets (as of v0.1) get an `EasingMode` variety (Linear / Ease In /
+Ease Out / Ease In Out); the three `Custom`-category starters ship a fixed custom
+curve but the inspector Custom mode is fully user-editable. Existing creative
+transforms unchanged.
 
 ## 12. Backward compatibility (unit-tested now)
 
