@@ -1,0 +1,1454 @@
+{
+  "tolerance": 0.000001,
+  "named": [
+    {
+      "mode": "LINEAR",
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.05,
+      "eased": 0.05
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.1,
+      "eased": 0.1
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.15,
+      "eased": 0.15
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.2,
+      "eased": 0.2
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.25,
+      "eased": 0.25
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.3,
+      "eased": 0.3
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.35,
+      "eased": 0.35
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.4,
+      "eased": 0.4
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.45,
+      "eased": 0.45
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.5,
+      "eased": 0.5
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.55,
+      "eased": 0.55
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.6,
+      "eased": 0.6
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.65,
+      "eased": 0.65
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.7,
+      "eased": 0.7
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.75,
+      "eased": 0.75
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.8,
+      "eased": 0.8
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.85,
+      "eased": 0.85
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.9,
+      "eased": 0.9
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.95,
+      "eased": 0.95
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.05,
+      "eased": 0.0025000000000000005
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.1,
+      "eased": 0.010000000000000002
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.15,
+      "eased": 0.0225
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.2,
+      "eased": 0.04000000000000001
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.25,
+      "eased": 0.0625
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.3,
+      "eased": 0.09
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.35,
+      "eased": 0.12249999999999998
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.4,
+      "eased": 0.16000000000000003
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.45,
+      "eased": 0.2025
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.5,
+      "eased": 0.25
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.55,
+      "eased": 0.30250000000000005
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.6,
+      "eased": 0.36
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.65,
+      "eased": 0.42250000000000004
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.7,
+      "eased": 0.48999999999999994
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.75,
+      "eased": 0.5625
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.8,
+      "eased": 0.6400000000000001
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.85,
+      "eased": 0.7224999999999999
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.9,
+      "eased": 0.81
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.95,
+      "eased": 0.9025
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.05,
+      "eased": 0.09750000000000003
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.1,
+      "eased": 0.18999999999999995
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.15,
+      "eased": 0.2775000000000001
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.2,
+      "eased": 0.3599999999999999
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.25,
+      "eased": 0.4375
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.3,
+      "eased": 0.51
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.35,
+      "eased": 0.5774999999999999
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.4,
+      "eased": 0.64
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.45,
+      "eased": 0.6975
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.5,
+      "eased": 0.75
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.55,
+      "eased": 0.7975000000000001
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.6,
+      "eased": 0.84
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.65,
+      "eased": 0.8775000000000001
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.7,
+      "eased": 0.9099999999999999
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.75,
+      "eased": 0.9375
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.8,
+      "eased": 0.96
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.85,
+      "eased": 0.9775
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.9,
+      "eased": 0.99
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.95,
+      "eased": 0.9974999999999999
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.05,
+      "eased": 0.007250000000000001
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.1,
+      "eased": 0.028000000000000004
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.15,
+      "eased": 0.06075
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.2,
+      "eased": 0.10400000000000002
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.25,
+      "eased": 0.15625
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.3,
+      "eased": 0.216
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.35,
+      "eased": 0.28174999999999994
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.4,
+      "eased": 0.3520000000000001
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.45,
+      "eased": 0.4252500000000001
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.5,
+      "eased": 0.5
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.55,
+      "eased": 0.5747500000000001
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.6,
+      "eased": 0.648
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.65,
+      "eased": 0.71825
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.7,
+      "eased": 0.7839999999999999
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.75,
+      "eased": 0.84375
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.8,
+      "eased": 0.8960000000000001
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.85,
+      "eased": 0.9392499999999999
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.9,
+      "eased": 0.972
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.95,
+      "eased": 0.99275
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 1,
+      "eased": 1
+    }
+  ],
+  "custom": [
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.05,
+      "eased": 0.05000000000054338
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.1,
+      "eased": 0.09999999999970731
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.15,
+      "eased": 0.1500000000004832
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.2,
+      "eased": 0.19999999999939488
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.25,
+      "eased": 0.2499999999998832
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.3,
+      "eased": 0.3000000000004849
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.35,
+      "eased": 0.35000000000046677
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.4,
+      "eased": 0.39999999999903596
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.45,
+      "eased": 0.45000000000011997
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.5,
+      "eased": 0.5
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.55,
+      "eased": 0.5499999999998798
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.6,
+      "eased": 0.6000000000009639
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.65,
+      "eased": 0.6499999999995332
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.7,
+      "eased": 0.6999999999995148
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.75,
+      "eased": 0.7500000000001168
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.8,
+      "eased": 0.8000000000006054
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.85,
+      "eased": 0.8499999999995167
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.9,
+      "eased": 0.9000000000002932
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.95,
+      "eased": 0.9499999999994566
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.05,
+      "eased": 0.004829749667889966
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.1,
+      "eased": 0.019722453548600517
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.15,
+      "eased": 0.045210307296832584
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.2,
+      "eased": 0.08165985626664321
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.25,
+      "eased": 0.12916193104788043
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.3,
+      "eased": 0.18739590670636797
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.35,
+      "eased": 0.2554856135465512
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.4,
+      "eased": 0.3318838700963407
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.45,
+      "eased": 0.41433970898513145
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.5,
+      "eased": 0.5
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.55,
+      "eased": 0.5856602910148692
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.6,
+      "eased": 0.6681161299036591
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.65,
+      "eased": 0.7445143864534489
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.7,
+      "eased": 0.8126040932936321
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.75,
+      "eased": 0.8708380689521196
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.8,
+      "eased": 0.9183401437333569
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.85,
+      "eased": 0.9547896927031674
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.9,
+      "eased": 0.9802775464513996
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.95,
+      "eased": 0.9951702503321099
+    },
+    {
+      "curve": "legacy",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.05,
+      "eased": 0.3685355490144784
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.1,
+      "eased": 0.5852730721148867
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.15,
+      "eased": 0.7130874646465098
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.2,
+      "eased": 0.7943936906120945
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.25,
+      "eased": 0.8494695047480619
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.3,
+      "eased": 0.8884564074515048
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.35,
+      "eased": 0.9169006683910963
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.4,
+      "eased": 0.9380834777895761
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.45,
+      "eased": 0.9540722271851848
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.5,
+      "eased": 0.9662364338971082
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.55,
+      "eased": 0.975520564577349
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.6,
+      "eased": 0.9825976630219193
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.65,
+      "eased": 0.9879605220646082
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.7,
+      "eased": 0.9919782301930883
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.75,
+      "eased": 0.9949325787040997
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.8,
+      "eased": 0.9970422641942407
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.85,
+      "eased": 0.9984794285083741
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.9,
+      "eased": 0.999381237559009
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.95,
+      "eased": 0.9998581602987398
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.05,
+      "eased": 0.0001418397012603205
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.1,
+      "eased": 0.000618762440991027
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.15,
+      "eased": 0.0015205714916259562
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.2,
+      "eased": 0.0029577358057593143
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.25,
+      "eased": 0.005067421295900329
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.3,
+      "eased": 0.008021769806911768
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.35,
+      "eased": 0.012039477935391892
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.4,
+      "eased": 0.017402336978080732
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.45,
+      "eased": 0.02447943542265103
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.5,
+      "eased": 0.03376356610289173
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.55,
+      "eased": 0.04592777281481514
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.6,
+      "eased": 0.06191652221042392
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.65,
+      "eased": 0.08309933160890375
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.7,
+      "eased": 0.11154359254849519
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.75,
+      "eased": 0.15053049525193804
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.8,
+      "eased": 0.2056063093879053
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.85,
+      "eased": 0.28691253535349037
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.9,
+      "eased": 0.41472692788511356
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.95,
+      "eased": 0.6314644509855217
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.05,
+      "eased": 0.04999999999979072
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.1,
+      "eased": 0.0999999999990949
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.15,
+      "eased": 0.14999999999972333
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.2,
+      "eased": 0.1999999999996551
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.25,
+      "eased": 0.2500000000000659
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.3,
+      "eased": 0.30000000000016624
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.35,
+      "eased": 0.3499999999999735
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.4,
+      "eased": 0.40000000000037933
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.45,
+      "eased": 0.45000000000011736
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.5,
+      "eased": 0.5
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.55,
+      "eased": 0.5499999999998826
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.6,
+      "eased": 0.5999999999996207
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.65,
+      "eased": 0.6500000000000266
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.7,
+      "eased": 0.6999999999998338
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.75,
+      "eased": 0.749999999999934
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.8,
+      "eased": 0.8000000000003451
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.85,
+      "eased": 0.8500000000002768
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.9,
+      "eased": 0.9000000000009052
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.95,
+      "eased": 0.9500000000002093
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 1,
+      "eased": 1
+    }
+  ],
+  "invalid": [
+    {
+      "invalid": true,
+      "curve": "nanX1",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "invalid": true,
+      "curve": "nanX1",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.25,
+      "eased": 0.25
+    },
+    {
+      "invalid": true,
+      "curve": "nanX1",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.5,
+      "eased": 0.5
+    },
+    {
+      "invalid": true,
+      "curve": "nanX1",
+      "x1": 0.42,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "invalid": true,
+      "curve": "negX1",
+      "x1": -0.5,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "invalid": true,
+      "curve": "negX1",
+      "x1": -0.5,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.25,
+      "eased": 0.25
+    },
+    {
+      "invalid": true,
+      "curve": "negX1",
+      "x1": -0.5,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 0.5,
+      "eased": 0.5
+    },
+    {
+      "invalid": true,
+      "curve": "negX1",
+      "x1": -0.5,
+      "y1": 0,
+      "x2": 0.58,
+      "y2": 1,
+      "progress": 1,
+      "eased": 1
+    }
+  ]
+}

@@ -209,8 +209,8 @@ void runDense(const JsonValue& fixture) {
         pi.visibleElapsedSeconds = q;  // ENTIRE_CLIP-like: elapsed/dur == q
         ProgressOutput out = statemotion::evaluateProgress(pi);
         if (!out.ok || !std::isfinite(out.result.easedProgress)) { allFinite = false; break; }
-        // reference: smoothstep(q) for AToB + ENTIRE_CLIP (elapsed==q*dur)
-        double ref = statemotion::smoothstep(q);
+        // reference: easing for AToB + ENTIRE_CLIP (elapsed==q*dur); default is EASE_IN_OUT
+        double ref = statemotion::evaluateEasing(pi.easing, pi.curve, q);
         worst = std::max(worst, maxErr(out.result.easedProgress, ref));
     }
     check(allFinite && worst < tol, "dense 10001-sample finite + smoothstep within tolerance");

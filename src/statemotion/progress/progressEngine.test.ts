@@ -6,7 +6,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import { evaluateProgress, smoothstep } from './progressEngine.ts';
+import { evaluateProgress } from './progressEngine.ts';
+import { evaluateEasing, EasingMode, type EasingCurve } from './easing.ts';
 import { ProgressMode, AlignmentMode } from '../../../shared/generated/parameterIds.ts';
 
 let failures = 0;
@@ -122,9 +123,10 @@ for (let i = 0; i < samples; i++) {
     manualProgress: 0,
   });
   if (!out.ok || !Number.isFinite(out.result.easedProgress)) { allFinite = false; break; }
-  worst = Math.max(worst, maxErr(out.result.easedProgress, smoothstep(q)));
+  const ref = evaluateEasing(EasingMode.EASE_IN_OUT, { x1: 0.42, y1: 0, x2: 0.58, y2: 1 }, q);
+  worst = Math.max(worst, maxErr(out.result.easedProgress, ref));
 }
-check(allFinite && worst < tol, `dense ${samples}-sample finite + smoothstep within tolerance`);
+check(allFinite && worst < tol, `dense ${samples}-sample finite + easing within tolerance`);
 console.log(`    (worst abs err ${worst.toExponential(2)})`);
 
 console.log(`\n${failures ? 'FAILED' : 'ALL PASSED'}: ${failures} failures`);
