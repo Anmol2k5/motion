@@ -310,7 +310,7 @@ Render(
         statemotion::native::modeFromPopup(modeIdx),
         statemotion::native::alignmentFromPopup(alignIdx),
         dur, delay, manual,
-        static_cast<ids::EasingMode>(easingIdx),
+        static_cast<statemotion::EasingMode>(easingIdx),
         {cx1, cy1, cx2, cy2});
 
     // 4. Progress -> canonical interpolation.
