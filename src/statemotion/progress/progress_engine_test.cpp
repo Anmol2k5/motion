@@ -213,7 +213,7 @@ void runDense(const JsonValue& fixture) {
         double ref = statemotion::evaluateEasing(pi.easing, pi.curve, q);
         worst = std::max(worst, maxErr(out.result.easedProgress, ref));
     }
-    check(allFinite && worst < tol, "dense 10001-sample finite + smoothstep within tolerance");
+    check(allFinite && worst < tol, "dense 10001-sample finite + easing within tolerance");
     std::printf("    (worst abs err %.2e)\n", worst);
 }
 
@@ -230,7 +230,7 @@ void runIntegration() {
     pi.mode = ProgressMode::AToB;
     pi.alignment = AlignmentMode::EntireClip;
     pi.visibleDurationSeconds = 1.0;
-    pi.visibleElapsedSeconds = 0.5;  // q = 0.5 -> eased = smoothstep(0.5) = 0.5
+    pi.visibleElapsedSeconds = 0.5;  // q = 0.5 -> eased = EASE_IN_OUT bezier(0.5) = 0.5
 
     ProgressOutput out = statemotion::evaluateProgress(pi);
     check(out.ok, "integration: evaluateProgress ok at q=0.5");
