@@ -63,7 +63,7 @@ Custom is selected. Changes write through `writeLogical` to the effect.
 ## Verification status
 
 - C++ suites (render, progress, easing, ts, native, host, ri, integ, reg, identity, point): PASS.
-- Panel suites (13): PASS.
+- Panel suites (14): PASS.
 - Contract `--check` and `generate-contract.test.js`: PASS.
 - **Host gates (native Premiere render, panel host integration, live easing controls) are
   NOT YET OPERATOR VERIFIED** — deferred per plan.
