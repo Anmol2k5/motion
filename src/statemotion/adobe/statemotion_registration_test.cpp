@@ -26,7 +26,7 @@ struct Expectation {
 // Test oracle. This is NOT a second source-of-truth table committed for use by
 // the effect; it is the expected set used only to prove the generated binding
 // matches the authorized parameter list.
-const Expectation kExpected[20] = {
+const Expectation kExpected[25] = {
     {1,   "FLOAT_SLIDER", false, true},   // contract.schemaVersion
     {2,   "FLOAT_SLIDER", false, true},   // contract.parameterCount
     {3,   "FLOAT_SLIDER", false, true},   // contract.bindingRevision
@@ -35,6 +35,11 @@ const Expectation kExpected[20] = {
     {52,  "FLOAT_SLIDER", false, false},  // transition.durationSeconds
     {53,  "FLOAT_SLIDER", false, false},  // transition.delaySeconds
     {54,  "FLOAT_SLIDER", true,  false},  // transition.manualProgress
+    {55,  "POPUP",        false, false},  // transition.easing
+    {56,  "FLOAT_SLIDER", false, false},  // transition.curveX1
+    {57,  "FLOAT_SLIDER", false, false},  // transition.curveY1
+    {58,  "FLOAT_SLIDER", false, false},  // transition.curveX2
+    {59,  "FLOAT_SLIDER", false, false},  // transition.curveY2
     {100, "POINT",        false, false},  // transform.position.a
     {101, "POINT",        false, false},  // transform.position.b
     {102, "FLOAT_SLIDER", false, false},  // transform.scaleX.a
@@ -66,9 +71,9 @@ int main() {
 
     const int n = static_cast<int>(sizeof(kBindings) / sizeof(kBindings[0]));
 
-    // Exactly 20 active custom contract entries.
-    check(n == 20, "exactly 20 active custom contract entries");
-    check(n == kParameterCount, "generated kParameterCount equals 20");
+    // Exactly 25 active custom contract entries (5 easing params added).
+    check(n == 25, "exactly 25 active custom contract entries");
+    check(n == kParameterCount, "generated kParameterCount equals 25");
 
     // No active disk ID is 0; all unique; none in reserved 150..399.
     bool seen[10000] = {false};
@@ -122,6 +127,7 @@ int main() {
             int expectedCount = 0;
             if (std::strcmp(b.enumRef, "ProgressMode") == 0) expectedCount = 7;
             else if (std::strcmp(b.enumRef, "AlignmentMode") == 0) expectedCount = 3;
+            else if (std::strcmp(b.enumRef, "EasingMode") == 0) expectedCount = 5;
             char buf[128];
             std::snprintf(buf, sizeof(buf),
                           "popup %s enum count %d matches %d",
@@ -130,10 +136,10 @@ int main() {
         }
     }
 
-    // Parameter-count metadata is 20; schema/binding revision match generated.
-    check(kParameterCount == 20, "parameter count metadata is 20");
+    // Parameter-count metadata is 25; schema/binding revision match generated.
+    check(kParameterCount == 25, "parameter count metadata is 25");
     check(kSchemaVersion == 1, "schema version matches generated contract (1)");
-    check(kBindingRevision == 1, "binding revision matches generated contract (1)");
+    check(kBindingRevision == 2, "binding revision matches generated contract (2)");
 
     // Metadata entries are hidden.
     for (int i = 0; i < 3; ++i) {
@@ -152,12 +158,12 @@ int main() {
     auto isFloat = [](int i) {
         return std::strcmp(kBindings[i].nativeType, "FLOAT_SLIDER") == 0;
     };
-    check(isPoint(8) && isPoint(9), "position.a/b remain POINT");
-    check(isPoint(16) && isPoint(17), "anchor.a/b remain POINT");
-    check(isAngle(14) && isAngle(15), "rotation.a/b remain ANGLE");
-    check(isFloat(10) && isFloat(11) && isFloat(12) && isFloat(13),
+    check(isPoint(13) && isPoint(14), "position.a/b remain POINT");
+    check(isPoint(21) && isPoint(22), "anchor.a/b remain POINT");
+    check(isAngle(19) && isAngle(20), "rotation.a/b remain ANGLE");
+    check(isFloat(15) && isFloat(16) && isFloat(17) && isFloat(18),
           "scaleX/Y a/b remain FLOAT_SLIDER");
-    check(isFloat(18) && isFloat(19), "opacity.a/b remain FLOAT_SLIDER");
+    check(isFloat(23) && isFloat(24), "opacity.a/b remain FLOAT_SLIDER");
 
     // Only manual progress is time-varying.
     int keyframeableCount = 0;

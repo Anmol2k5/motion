@@ -46,7 +46,7 @@ int main() {
     check(std::abs(c1.positionNormX - 0.75) < 1e-9, "manual100 position=B");
     check(std::abs(c1.opacity - 0.5) < 1e-9, "manual100 opacity=B");
 
-    // Manual progress 50 -> midpoint (smoothstep(0.5)=0.5).
+    // Manual progress 50 -> exact midpoint (Manual bypasses easing; eased=0.5).
     ProgressInput in5 = host::buildProgressInput(0, 100, 100,
         ids::ProgressMode::Manual, ids::AlignmentMode::ClipStart, 0, 0, 50);
     auto e5 = evaluateProgress(in5);
@@ -54,7 +54,7 @@ int main() {
     check(std::abs(c5.positionNormX - 0.625) < 1e-9, "manual50 midpoint position");
     check(std::abs(c5.opacity - 0.75) < 1e-9, "manual50 midpoint opacity");
 
-    // Automatic AToB over entire clip: elapsed 0.5 of 1.0 -> q=0.5 -> smoothstep 0.5.
+    // Automatic AToB over entire clip: elapsed 0.5 of 1.0 -> q=0.5 -> EASE_IN_OUT -> 0.5.
     ProgressInput inA = host::buildProgressInput(30000, 60000, 60000,
         ids::ProgressMode::AToB, ids::AlignmentMode::EntireClip, 1.0, 0.0, 0.0);
     auto eA = evaluateProgress(inA);

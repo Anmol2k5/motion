@@ -56,8 +56,8 @@ function fakeBridgeWithContract(contract: { schemaVersion: number; bindingRevisi
     'transform.scaleX.b': 130,
     'transform.opacity.b': 100,
     'contract.schemaVersion': 1,
-    'contract.parameterCount': 20,
-    'contract.bindingRevision': 1,
+    'contract.parameterCount': 25,
+    'contract.bindingRevision': 2,
   }));
   const cfg = await adapter.readState({ clipId: 'c1' });
   assert.strictEqual(cfg.parameters['transition.manualProgress'], 0.5);
@@ -68,7 +68,7 @@ function fakeBridgeWithContract(contract: { schemaVersion: number; bindingRevisi
 })();
 
 (async () => {
-  const adapter = new PremiereAdapter(fakeBridgeWithContract({ schemaVersion: 2, bindingRevision: 1, parameterCount: 20 }));
+  const adapter = new PremiereAdapter(fakeBridgeWithContract({ schemaVersion: 2, bindingRevision: 2, parameterCount: 25 }));
   let threw = false;
   try { await adapter.readState({ clipId: 'c1' }); } catch (e) { threw = e instanceof ContractIncompatible; }
   assert.ok(threw);
