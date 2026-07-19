@@ -15,7 +15,7 @@ inline ProgressInput buildProgressInput(long current_time, long total_time, long
                                         ids::ProgressMode mode, ids::AlignmentMode alignment,
                                         double durationSeconds, double delaySeconds,
                                         double manualProgressNative,
-                                        ids::EasingMode easing = ids::EasingMode::EASE_IN_OUT,
+                                        EasingMode easing = EasingMode::EASE_IN_OUT,
                                         EasingCurve curve = {}) {
     ProgressInput in;
     const double scale = (time_scale > 0) ? static_cast<double>(time_scale) : 1.0;
