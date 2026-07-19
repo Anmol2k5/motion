@@ -76,7 +76,11 @@ export class LibraryView {
     // Grid / List
     const grid = el('div', { class: this.listMode ? 'sm-list' : 'sm-grid' });
     if (vm.presets.length === 0) {
-      showState(grid, '🔍', 'No presets found', 'Try a different search or filter.');
+      if (this.view.filter === FilterKind.Favorites) {
+        showState(grid, '⭐', 'No favorites yet', 'Favorite presets to keep them here.');
+      } else {
+        showState(grid, '🔍', 'No presets found', 'Try a different search or filter.');
+      }
     }
     for (const p of vm.presets) {
       grid.append(this.renderCard(p, vm.favoriteIds.has(p.presetId)));

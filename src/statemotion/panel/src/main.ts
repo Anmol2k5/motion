@@ -9,6 +9,8 @@ import { PremiereAdapter } from './host/premiereAdapter.ts';
 import { LibraryView } from './ui/library.ts';
 import { InspectorView } from './ui/inspector.ts';
 import { ManageView } from './ui/manage.ts';
+import { DiagnosticsView } from './ui/diagnosticsView.ts';
+import type { DiagnosticInput } from './domain/diagnostics.ts';
 import { BUNDLED_PRESETS } from './starter/bundledPresets.ts';
 import { toggleFavorite } from './domain/favorites.ts';
 import type { LibraryModel } from './domain/presetStorage.ts';
@@ -57,6 +59,17 @@ async function main(): Promise<void> {
   const manage = new ManageView(repo, getLibrary, setLibrary);
   manage.setContainer(views);
 
+  // Diagnostics: live snapshot. Host-dependent fields stay UNKNOWN / not-yet
+  // verified until an operator confirms them on real Premiere.
+  const diagnostics = new DiagnosticsView((): DiagnosticInput => ({
+    effectMatchName: 'AE.io.github.anmol2k5.statemotion.effect',
+    contractStatus: 'unknown',
+    selectionCount,
+    selectionStatus: selectionCount > 0 ? `${selectionCount} clip(s)` : 'none',
+    lastOperation: 'none',
+  }));
+  diagnostics.setContainer(views);
+
   let selectionCount = 0;
   async function refreshSelection() {
     selectionCount = (await adapter.detectSelection()).supported.length;
@@ -66,6 +79,7 @@ async function main(): Promise<void> {
     { id: 'library', label: 'Library', render: () => libraryView.render(views) },
     { id: 'inspector', label: 'Inspector', render: () => inspector.render(views) },
     { id: 'manage', label: 'Manage', render: () => manage.render(views) },
+    { id: 'diagnostics', label: 'About', render: () => diagnostics.render(views) },
   ];
   const tabBar = app.querySelector('.sm-tabs') as HTMLElement;
   let active = 'library';
