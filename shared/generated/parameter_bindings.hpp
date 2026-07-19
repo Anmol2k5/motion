@@ -26,17 +26,22 @@ struct ParameterBinding {
   const char* enumRef;    // POPUP enum name (else "")
 };
 
-inline constexpr char kContractDigest[] = "f878b5ac9d46b1658608532486ff26bd276a12e3f2103579bcb73b9718efdc23";
+inline constexpr char kContractDigest[] = "f2a192c2e529e9ed4f881ceae7c51f8604d4a6597bca6b9c027dac3e41d9b32e";
 
-inline constexpr ParameterBinding kBindings[20] = {
+inline constexpr ParameterBinding kBindings[25] = {
   {"contract.schemaVersion", 1, "SM Schema Version", "FLOAT_SLIDER", "metadata", "static", 1, 1, 9999, 1, 9999, 1, 2, 0, ""},
-  {"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 20, 1, 9999, 1, 9999, 17, 2, 0, ""},
+  {"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 25, 1, 9999, 1, 9999, 20, 2, 0, ""},
   {"contract.bindingRevision", 3, "SM Binding Rev", "FLOAT_SLIDER", "metadata", "static", 1, 1, 9999, 1, 9999, 1, 2, 0, ""},
   {"transition.mode", 50, "SM Mode", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 7, "ProgressMode"},
   {"transition.alignment", 51, "SM Alignment", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 3, "AlignmentMode"},
   {"transition.durationSeconds", 52, "SM Duration", "FLOAT_SLIDER", "transition", "static", 1, 0, 3600, 0, 10, 1, 3, 0, ""},
   {"transition.delaySeconds", 53, "SM Delay", "FLOAT_SLIDER", "transition", "static", 0, 0, 3600, 0, 10, 0, 3, 0, ""},
   {"transition.manualProgress", 54, "SM Manual Progress", "FLOAT_SLIDER", "transition", "keyframeable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"transition.easing", 55, "SM Easing", "POPUP", "transition", "static", 3, 0, 0, 0, 0, 3, 2, 5, "EasingMode"},
+  {"transition.curveX1", 56, "SM Curve X1", "FLOAT_SLIDER", "transition", "static", 0.3333333333333333, 0, 1, 0, 1, 0.3333333333333333, 2, 0, ""},
+  {"transition.curveY1", 57, "SM Curve Y1", "FLOAT_SLIDER", "transition", "static", 0, 0, 1, 0, 1, 0, 2, 0, ""},
+  {"transition.curveX2", 58, "SM Curve X2", "FLOAT_SLIDER", "transition", "static", 0.6666666666666667, 0, 1, 0, 1, 0.6666666666666667, 2, 0, ""},
+  {"transition.curveY2", 59, "SM Curve Y2", "FLOAT_SLIDER", "transition", "static", 1, 0, 1, 0, 1, 1, 2, 0, ""},
   {"transform.position.a", 100, "SM Position A", "POINT", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
   {"transform.position.b", 101, "SM Position B", "POINT", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
   {"transform.scaleX.a", 102, "SM Scale X A", "FLOAT_SLIDER", "A", "interpolatable", 100, 0.01, 10000, 0, 400, 100, 2, 0, ""},

@@ -17,9 +17,17 @@ export enum AlignmentMode {
   EntireClip = 2
 }
 
+export enum EasingMode {
+  Linear = 0,
+  EaseIn = 1,
+  EaseOut = 2,
+  EaseInOut = 3,
+  Custom = 4
+}
+
 export const SCHEMA_VERSION = 1;
-export const BINDING_REVISION = 1;
-export const PARAMETER_COUNT = 20;
+export const BINDING_REVISION = 2;
+export const PARAMETER_COUNT = 25;
 
 export const ContractSchemaVersion = 1;
 export const ContractParameterCount = 2;
@@ -29,6 +37,11 @@ export const TransitionAlignment = 51;
 export const TransitionDurationSeconds = 52;
 export const TransitionDelaySeconds = 53;
 export const TransitionManualProgress = 54;
+export const TransitionEasing = 55;
+export const TransitionCurveX1 = 56;
+export const TransitionCurveY1 = 57;
+export const TransitionCurveX2 = 58;
+export const TransitionCurveY2 = 59;
 export const TransformPositionA = 100;
 export const TransformPositionB = 101;
 export const TransformScaleXA = 102;

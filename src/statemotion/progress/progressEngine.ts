@@ -7,11 +7,7 @@
 // Knows nothing about Premiere / UXP / Adobe APIs.
 
 import { ProgressMode, AlignmentMode } from '../../../shared/generated/parameterIds.ts';
-
-export function smoothstep(t: number): number {
-  const x = Math.min(1, Math.max(0, t));
-  return x * x * (3 - 2 * x);
-}
+import { EasingMode, type EasingCurve, evaluateEasing } from './easing.ts';
 
 export type ProgressErrorCode = 'None' | 'NonFiniteInput';
 
@@ -23,6 +19,9 @@ export interface ProgressInput {
   alignment: AlignmentMode;
   mode: ProgressMode;
   manualProgress: number;
+  // Easing configuration. Named modes ignore `curve`; only CUSTOM uses it.
+  easing: EasingMode;
+  curve: EasingCurve;
 }
 
 export interface ProgressResult {
@@ -85,6 +84,9 @@ export function evaluateProgress(input: ProgressInput): ProgressOutput {
     return { ok: false, error: 'NonFiniteInput', result: { linearProgress: 0, easedProgress: 0 } };
   }
 
+  const easing = input.easing ?? EasingMode.EASE_IN_OUT;
+  const curve = input.curve ?? { x1: 1 / 3, y1: 0.0, x2: 2 / 3, y2: 1.0 };
+
   let linear: number;
   if (input.mode === ProgressMode.Manual) {
     linear = Math.min(1, Math.max(0, input.manualProgress));
@@ -101,23 +103,31 @@ export function evaluateProgress(input: ProgressInput): ProgressOutput {
   let eased = 0;
   switch (input.mode) {
     case ProgressMode.HoldA:
-      eased = 0;
+      eased = 0; // exact endpoint, never eased
       break;
     case ProgressMode.HoldB:
-      eased = 1;
+      eased = 1; // exact endpoint, never eased
       break;
     case ProgressMode.Manual:
+      // Manual mode bypasses automatic easing: manualProgress is the direct
+      // normalized progress between A and B (deterministic midpoint).
+      eased = linear;
+      break;
     case ProgressMode.AToB:
-      eased = smoothstep(linear);
+      eased = evaluateEasing(easing, curve, linear);
       break;
     case ProgressMode.BToA:
-      eased = 1 - smoothstep(linear);
+      eased = 1 - evaluateEasing(easing, curve, linear);
       break;
     case ProgressMode.AToBToA:
-      eased = linear <= 0.5 ? smoothstep(2 * linear) : 1 - smoothstep(2 * linear - 1);
+      eased = linear <= 0.5
+        ? evaluateEasing(easing, curve, 2 * linear)
+        : 1 - evaluateEasing(easing, curve, 2 * linear - 1);
       break;
     case ProgressMode.BToAToB:
-      eased = linear <= 0.5 ? 1 - smoothstep(2 * linear) : smoothstep(2 * linear - 1);
+      eased = linear <= 0.5
+        ? 1 - evaluateEasing(easing, curve, 2 * linear)
+        : evaluateEasing(easing, curve, 2 * linear - 1);
       break;
   }
   return { ok: true, error: 'None', result: { linearProgress: linear, easedProgress: eased } };

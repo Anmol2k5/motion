@@ -14,7 +14,9 @@ namespace statemotion { namespace host {
 inline ProgressInput buildProgressInput(long current_time, long total_time, long time_scale,
                                         ids::ProgressMode mode, ids::AlignmentMode alignment,
                                         double durationSeconds, double delaySeconds,
-                                        double manualProgressNative) {
+                                        double manualProgressNative,
+                                        ids::EasingMode easing = ids::EasingMode::EASE_IN_OUT,
+                                        EasingCurve curve = {}) {
     ProgressInput in;
     const double scale = (time_scale > 0) ? static_cast<double>(time_scale) : 1.0;
     in.visibleElapsedSeconds = static_cast<double>(current_time) / scale;
@@ -27,6 +29,8 @@ inline ProgressInput buildProgressInput(long current_time, long total_time, long
                         : (manualProgressNative > 100.0) ? 1.0
                                                         : manualProgressNative / 100.0;
     // Ignored by the progress engine unless mode == Manual.
+    in.easing = easing;
+    in.curve = curve;
     return in;
 }
 

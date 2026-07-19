@@ -2,7 +2,7 @@
   "product": "StateMotion",
   "description": "Phase 0.1 vertical slice parameter contract (transform-only). Source of truth for generated C++/TS bindings. Clean-room original.",
   "schemaVersion": 1,
-  "bindingRevision": 1,
+  "bindingRevision": 2,
   "diskIdRanges": {
     "metadata":        { "min": 1,   "max": 49,   "status": "active" },
     "progressCurve":   { "min": 50,  "max": 99,   "status": "active" },
@@ -34,6 +34,16 @@
         { "name": "ClipEnd", "value": 1 },
         { "name": "EntireClip", "value": 2 }
       ]
+    },
+    "EasingMode": {
+      "description": "Easing curve selector for A/B interpolation. Append-only; never reorder/reuse. Numeric identity is the persistence contract (not popup label).",
+      "values": [
+        { "name": "Linear", "value": 0 },
+        { "name": "EaseIn", "value": 1 },
+        { "name": "EaseOut", "value": 2 },
+        { "name": "EaseInOut", "value": 3 },
+        { "name": "Custom", "value": 4 }
+      ]
     }
   },
   "parameters": [
@@ -58,7 +68,7 @@
       "diskId": 2,
       "wireName": "SM Param Count",
       "nativeType": "FLOAT_SLIDER",
-      "default": 20,
+      "default": 25,
       "range": { "min": 1, "max": 9999 },
       "uiRange": { "min": 1, "max": 9999 },
       "introducedInSchema": 1,
@@ -67,7 +77,7 @@
       "fingerprint": false,
       "stateOwnership": "metadata",
       "canonical": "int",
-      "oldProjectDefault": 17
+      "oldProjectDefault": 20
     },
     {
       "logicalId": "contract.bindingRevision",
@@ -166,6 +176,87 @@
       "stateOwnership": "transition",
       "canonical": "normalized 0..1",
       "oldProjectDefault": 0
+    },
+    {
+      "logicalId": "transition.easing",
+      "diskId": 55,
+      "wireName": "SM Easing",
+      "nativeType": "POPUP",
+      "enumRef": "EasingMode",
+      "default": 3,
+      "range": null,
+      "uiRange": null,
+      "introducedInSchema": 1,
+      "timeVariance": "static",
+      "serialization": "diskId",
+      "fingerprint": false,
+      "stateOwnership": "transition",
+      "canonical": "EasingMode",
+      "oldProjectDefault": 3
+    },
+    {
+      "logicalId": "transition.curveX1",
+      "diskId": 56,
+      "wireName": "SM Curve X1",
+      "nativeType": "FLOAT_SLIDER",
+      "default": 0.3333333333333333,
+      "range": { "min": 0.0, "max": 1.0 },
+      "uiRange": { "min": 0.0, "max": 1.0 },
+      "introducedInSchema": 1,
+      "timeVariance": "static",
+      "serialization": "diskId",
+      "fingerprint": false,
+      "stateOwnership": "transition",
+      "canonical": "normalized 0..1 control point",
+      "oldProjectDefault": 0.3333333333333333
+    },
+    {
+      "logicalId": "transition.curveY1",
+      "diskId": 57,
+      "wireName": "SM Curve Y1",
+      "nativeType": "FLOAT_SLIDER",
+      "default": 0.0,
+      "range": { "min": 0.0, "max": 1.0 },
+      "uiRange": { "min": 0.0, "max": 1.0 },
+      "introducedInSchema": 1,
+      "timeVariance": "static",
+      "serialization": "diskId",
+      "fingerprint": false,
+      "stateOwnership": "transition",
+      "canonical": "normalized 0..1 control point",
+      "oldProjectDefault": 0.0
+    },
+    {
+      "logicalId": "transition.curveX2",
+      "diskId": 58,
+      "wireName": "SM Curve X2",
+      "nativeType": "FLOAT_SLIDER",
+      "default": 0.6666666666666667,
+      "range": { "min": 0.0, "max": 1.0 },
+      "uiRange": { "min": 0.0, "max": 1.0 },
+      "introducedInSchema": 1,
+      "timeVariance": "static",
+      "serialization": "diskId",
+      "fingerprint": false,
+      "stateOwnership": "transition",
+      "canonical": "normalized 0..1 control point",
+      "oldProjectDefault": 0.6666666666666667
+    },
+    {
+      "logicalId": "transition.curveY2",
+      "diskId": 59,
+      "wireName": "SM Curve Y2",
+      "nativeType": "FLOAT_SLIDER",
+      "default": 1.0,
+      "range": { "min": 0.0, "max": 1.0 },
+      "uiRange": { "min": 0.0, "max": 1.0 },
+      "introducedInSchema": 1,
+      "timeVariance": "static",
+      "serialization": "diskId",
+      "fingerprint": false,
+      "stateOwnership": "transition",
+      "canonical": "normalized 0..1 control point",
+      "oldProjectDefault": 1.0
     },
     {
       "logicalId": "transform.position.a",

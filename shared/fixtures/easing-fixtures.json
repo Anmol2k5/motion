@@ -1,0 +1,2466 @@
+{
+  "tolerance": 0.000001,
+  "named": [
+    {
+      "mode": "LINEAR",
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.05,
+      "eased": 0.05
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.1,
+      "eased": 0.1
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.15,
+      "eased": 0.15
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.2,
+      "eased": 0.2
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.25,
+      "eased": 0.25
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.3,
+      "eased": 0.3
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.35,
+      "eased": 0.35
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.4,
+      "eased": 0.4
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.45,
+      "eased": 0.45
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.5,
+      "eased": 0.5
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.55,
+      "eased": 0.55
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.6,
+      "eased": 0.6
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.65,
+      "eased": 0.65
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.7,
+      "eased": 0.7
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.75,
+      "eased": 0.75
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.8,
+      "eased": 0.8
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.85,
+      "eased": 0.85
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.9,
+      "eased": 0.9
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 0.95,
+      "eased": 0.95
+    },
+    {
+      "mode": "LINEAR",
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.05,
+      "eased": 0.0025000000000000005
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.1,
+      "eased": 0.010000000000000002
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.15,
+      "eased": 0.0225
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.2,
+      "eased": 0.04000000000000001
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.25,
+      "eased": 0.0625
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.3,
+      "eased": 0.09
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.35,
+      "eased": 0.12249999999999998
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.4,
+      "eased": 0.16000000000000003
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.45,
+      "eased": 0.2025
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.5,
+      "eased": 0.25
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.55,
+      "eased": 0.30250000000000005
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.6,
+      "eased": 0.36
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.65,
+      "eased": 0.42250000000000004
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.7,
+      "eased": 0.48999999999999994
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.75,
+      "eased": 0.5625
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.8,
+      "eased": 0.6400000000000001
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.85,
+      "eased": 0.7224999999999999
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.9,
+      "eased": 0.81
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 0.95,
+      "eased": 0.9025
+    },
+    {
+      "mode": "EASE_IN",
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.05,
+      "eased": 0.09750000000000003
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.1,
+      "eased": 0.18999999999999995
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.15,
+      "eased": 0.2775000000000001
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.2,
+      "eased": 0.3599999999999999
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.25,
+      "eased": 0.4375
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.3,
+      "eased": 0.51
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.35,
+      "eased": 0.5774999999999999
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.4,
+      "eased": 0.64
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.45,
+      "eased": 0.6975
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.5,
+      "eased": 0.75
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.55,
+      "eased": 0.7975000000000001
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.6,
+      "eased": 0.84
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.65,
+      "eased": 0.8775000000000001
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.7,
+      "eased": 0.9099999999999999
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.75,
+      "eased": 0.9375
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.8,
+      "eased": 0.96
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.85,
+      "eased": 0.9775
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.9,
+      "eased": 0.99
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 0.95,
+      "eased": 0.9974999999999999
+    },
+    {
+      "mode": "EASE_OUT",
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.05,
+      "eased": 0.007250000000000001
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.1,
+      "eased": 0.028000000000000004
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.15,
+      "eased": 0.06075
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.2,
+      "eased": 0.10400000000000002
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.25,
+      "eased": 0.15625
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.3,
+      "eased": 0.216
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.35,
+      "eased": 0.28174999999999994
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.4,
+      "eased": 0.3520000000000001
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.45,
+      "eased": 0.4252500000000001
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.5,
+      "eased": 0.5
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.55,
+      "eased": 0.5747500000000001
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.6,
+      "eased": 0.648
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.65,
+      "eased": 0.71825
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.7,
+      "eased": 0.7839999999999999
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.75,
+      "eased": 0.84375
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.8,
+      "eased": 0.8960000000000001
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.85,
+      "eased": 0.9392499999999999
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.9,
+      "eased": 0.972
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 0.95,
+      "eased": 0.99275
+    },
+    {
+      "mode": "EASE_IN_OUT",
+      "progress": 1,
+      "eased": 1
+    }
+  ],
+  "custom": [
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.05,
+      "eased": 0.05000000000054338
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.1,
+      "eased": 0.09999999999970731
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.15,
+      "eased": 0.1500000000004832
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.2,
+      "eased": 0.19999999999939488
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.25,
+      "eased": 0.2499999999998832
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.3,
+      "eased": 0.3000000000004849
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.35,
+      "eased": 0.35000000000046677
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.4,
+      "eased": 0.39999999999903596
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.45,
+      "eased": 0.45000000000011997
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.5,
+      "eased": 0.5
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.55,
+      "eased": 0.5499999999998798
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.6,
+      "eased": 0.6000000000009639
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.65,
+      "eased": 0.6499999999995332
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.7,
+      "eased": 0.6999999999995148
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.75,
+      "eased": 0.7500000000001168
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.8,
+      "eased": 0.8000000000006054
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.85,
+      "eased": 0.8499999999995167
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.9,
+      "eased": 0.9000000000002932
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 0.95,
+      "eased": 0.9499999999994566
+    },
+    {
+      "curve": "identity",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1,
+      "y2": 1,
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.05,
+      "eased": 0.0072499999999999995
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.1,
+      "eased": 0.028000000000000004
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.15,
+      "eased": 0.06074999999999999
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.2,
+      "eased": 0.10400000000000004
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.25,
+      "eased": 0.15625
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.3,
+      "eased": 0.21599999999999997
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.35,
+      "eased": 0.28174999999999994
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.4,
+      "eased": 0.352
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.45,
+      "eased": 0.42525
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.5,
+      "eased": 0.5
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.55,
+      "eased": 0.5747500000000001
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.6,
+      "eased": 0.648
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.65,
+      "eased": 0.71825
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.7,
+      "eased": 0.7839999999999998
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.75,
+      "eased": 0.84375
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.8,
+      "eased": 0.8960000000000001
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.85,
+      "eased": 0.9392499999999999
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.9,
+      "eased": 0.9720000000000001
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.95,
+      "eased": 0.99275
+    },
+    {
+      "curve": "smoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.05,
+      "eased": 0.3685355490144784
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.1,
+      "eased": 0.5852730721148867
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.15,
+      "eased": 0.7130874646465098
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.2,
+      "eased": 0.7943936906120945
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.25,
+      "eased": 0.8494695047480619
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.3,
+      "eased": 0.8884564074515048
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.35,
+      "eased": 0.9169006683910963
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.4,
+      "eased": 0.9380834777895761
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.45,
+      "eased": 0.9540722271851848
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.5,
+      "eased": 0.9662364338971082
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.55,
+      "eased": 0.975520564577349
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.6,
+      "eased": 0.9825976630219193
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.65,
+      "eased": 0.9879605220646082
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.7,
+      "eased": 0.9919782301930883
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.75,
+      "eased": 0.9949325787040997
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.8,
+      "eased": 0.9970422641942407
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.85,
+      "eased": 0.9984794285083741
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.9,
+      "eased": 0.999381237559009
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 0.95,
+      "eased": 0.9998581602987398
+    },
+    {
+      "curve": "easeOutStrong",
+      "x1": 0.1,
+      "y1": 0.9,
+      "x2": 0.2,
+      "y2": 1,
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.05,
+      "eased": 0.0001418397012603205
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.1,
+      "eased": 0.000618762440991027
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.15,
+      "eased": 0.0015205714916259562
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.2,
+      "eased": 0.0029577358057593143
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.25,
+      "eased": 0.005067421295900329
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.3,
+      "eased": 0.008021769806911768
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.35,
+      "eased": 0.012039477935391892
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.4,
+      "eased": 0.017402336978080732
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.45,
+      "eased": 0.02447943542265103
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.5,
+      "eased": 0.03376356610289173
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.55,
+      "eased": 0.04592777281481514
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.6,
+      "eased": 0.06191652221042392
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.65,
+      "eased": 0.08309933160890375
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.7,
+      "eased": 0.11154359254849519
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.75,
+      "eased": 0.15053049525193804
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.8,
+      "eased": 0.2056063093879053
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.85,
+      "eased": 0.28691253535349037
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.9,
+      "eased": 0.41472692788511356
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 0.95,
+      "eased": 0.6314644509855217
+    },
+    {
+      "curve": "easeInStrong",
+      "x1": 0.8,
+      "y1": 0,
+      "x2": 0.9,
+      "y2": 0.1,
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.05,
+      "eased": 0.04999999999979072
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.1,
+      "eased": 0.0999999999990949
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.15,
+      "eased": 0.14999999999972333
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.2,
+      "eased": 0.1999999999996551
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.25,
+      "eased": 0.2500000000000659
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.3,
+      "eased": 0.30000000000016624
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.35,
+      "eased": 0.3499999999999735
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.4,
+      "eased": 0.40000000000037933
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.45,
+      "eased": 0.45000000000011736
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.5,
+      "eased": 0.5
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.55,
+      "eased": 0.5499999999998826
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.6,
+      "eased": 0.5999999999996207
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.65,
+      "eased": 0.6500000000000266
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.7,
+      "eased": 0.6999999999998338
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.75,
+      "eased": 0.749999999999934
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.8,
+      "eased": 0.8000000000003451
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.85,
+      "eased": 0.8500000000002768
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.9,
+      "eased": 0.9000000000009052
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 0.95,
+      "eased": 0.9500000000002093
+    },
+    {
+      "curve": "symmetricMid",
+      "x1": 0.25,
+      "y1": 0.25,
+      "x2": 0.75,
+      "y2": 0.75,
+      "progress": 1,
+      "eased": 1
+    }
+  ],
+  "invalid": [
+    {
+      "invalid": true,
+      "curve": "nanX1",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "invalid": true,
+      "curve": "nanX1",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.25,
+      "eased": 0.25
+    },
+    {
+      "invalid": true,
+      "curve": "nanX1",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.5,
+      "eased": 0.5
+    },
+    {
+      "invalid": true,
+      "curve": "nanX1",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "invalid": true,
+      "curve": "negX1",
+      "x1": -0.5,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "invalid": true,
+      "curve": "negX1",
+      "x1": -0.5,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.25,
+      "eased": 0.25
+    },
+    {
+      "invalid": true,
+      "curve": "negX1",
+      "x1": -0.5,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.5,
+      "eased": 0.5
+    },
+    {
+      "invalid": true,
+      "curve": "negX1",
+      "x1": -0.5,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 1,
+      "eased": 1
+    }
+  ],
+  "regression": [
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0,
+      "eased": 0,
+      "smoothstep": 0
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.01,
+      "eased": 0.000298,
+      "smoothstep": 0.00029800000000000003
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.02,
+      "eased": 0.001184,
+      "smoothstep": 0.001184
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.03,
+      "eased": 0.002646,
+      "smoothstep": 0.002646
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.04,
+      "eased": 0.004672,
+      "smoothstep": 0.004672
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.05,
+      "eased": 0.0072499999999999995,
+      "smoothstep": 0.007250000000000001
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.06,
+      "eased": 0.010367999999999999,
+      "smoothstep": 0.010367999999999999
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.07,
+      "eased": 0.014014000000000002,
+      "smoothstep": 0.014014000000000002
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.08,
+      "eased": 0.018176,
+      "smoothstep": 0.018176
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.09,
+      "eased": 0.022842,
+      "smoothstep": 0.022841999999999998
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.1,
+      "eased": 0.028000000000000004,
+      "smoothstep": 0.028000000000000004
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.11,
+      "eased": 0.033638,
+      "smoothstep": 0.033637999999999994
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.12,
+      "eased": 0.039744,
+      "smoothstep": 0.039743999999999995
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.13,
+      "eased": 0.046306,
+      "smoothstep": 0.04630600000000001
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.14,
+      "eased": 0.05331200000000001,
+      "smoothstep": 0.053312000000000005
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.15,
+      "eased": 0.06074999999999999,
+      "smoothstep": 0.06075
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.16,
+      "eased": 0.068608,
+      "smoothstep": 0.068608
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.17,
+      "eased": 0.07687400000000001,
+      "smoothstep": 0.07687400000000003
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.18,
+      "eased": 0.085536,
+      "smoothstep": 0.085536
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.19,
+      "eased": 0.09458200000000001,
+      "smoothstep": 0.094582
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.2,
+      "eased": 0.10400000000000004,
+      "smoothstep": 0.10400000000000002
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.21,
+      "eased": 0.11377799999999999,
+      "smoothstep": 0.11377799999999999
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.22,
+      "eased": 0.12390399999999999,
+      "smoothstep": 0.123904
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.23,
+      "eased": 0.134366,
+      "smoothstep": 0.134366
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.24,
+      "eased": 0.145152,
+      "smoothstep": 0.145152
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.25,
+      "eased": 0.15625,
+      "smoothstep": 0.15625
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.26,
+      "eased": 0.167648,
+      "smoothstep": 0.16764800000000002
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.27,
+      "eased": 0.17933400000000002,
+      "smoothstep": 0.17933400000000002
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.28,
+      "eased": 0.19129600000000005,
+      "smoothstep": 0.19129600000000002
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.29,
+      "eased": 0.20352199999999995,
+      "smoothstep": 0.20352199999999998
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.3,
+      "eased": 0.21599999999999997,
+      "smoothstep": 0.216
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.31,
+      "eased": 0.228718,
+      "smoothstep": 0.228718
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.32,
+      "eased": 0.24166400000000005,
+      "smoothstep": 0.241664
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.33,
+      "eased": 0.254826,
+      "smoothstep": 0.254826
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.34,
+      "eased": 0.26819200000000004,
+      "smoothstep": 0.26819200000000004
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.35,
+      "eased": 0.28174999999999994,
+      "smoothstep": 0.28174999999999994
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.36,
+      "eased": 0.295488,
+      "smoothstep": 0.29548800000000003
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.37,
+      "eased": 0.309394,
+      "smoothstep": 0.30939399999999995
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.38,
+      "eased": 0.32345599999999997,
+      "smoothstep": 0.323456
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.39,
+      "eased": 0.337662,
+      "smoothstep": 0.337662
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.4,
+      "eased": 0.352,
+      "smoothstep": 0.3520000000000001
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.41,
+      "eased": 0.36645799999999995,
+      "smoothstep": 0.36645799999999995
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.42,
+      "eased": 0.38102400000000003,
+      "smoothstep": 0.381024
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.43,
+      "eased": 0.39568600000000004,
+      "smoothstep": 0.395686
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.44,
+      "eased": 0.410432,
+      "smoothstep": 0.410432
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.45,
+      "eased": 0.42525,
+      "smoothstep": 0.4252500000000001
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.46,
+      "eased": 0.4401280000000001,
+      "smoothstep": 0.440128
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.47,
+      "eased": 0.45505399999999996,
+      "smoothstep": 0.45505399999999996
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.48,
+      "eased": 0.470016,
+      "smoothstep": 0.470016
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.49,
+      "eased": 0.485002,
+      "smoothstep": 0.485002
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.5,
+      "eased": 0.5,
+      "smoothstep": 0.5
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.51,
+      "eased": 0.5149980000000001,
+      "smoothstep": 0.514998
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.52,
+      "eased": 0.529984,
+      "smoothstep": 0.529984
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.53,
+      "eased": 0.544946,
+      "smoothstep": 0.544946
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.54,
+      "eased": 0.559872,
+      "smoothstep": 0.559872
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.55,
+      "eased": 0.5747500000000001,
+      "smoothstep": 0.5747500000000001
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.56,
+      "eased": 0.5895680000000001,
+      "smoothstep": 0.5895680000000001
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.57,
+      "eased": 0.6043139999999999,
+      "smoothstep": 0.604314
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.58,
+      "eased": 0.618976,
+      "smoothstep": 0.618976
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.59,
+      "eased": 0.6335419999999998,
+      "smoothstep": 0.6335419999999999
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.6,
+      "eased": 0.648,
+      "smoothstep": 0.648
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.61,
+      "eased": 0.6623379999999999,
+      "smoothstep": 0.662338
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.62,
+      "eased": 0.676544,
+      "smoothstep": 0.676544
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.63,
+      "eased": 0.690606,
+      "smoothstep": 0.690606
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.64,
+      "eased": 0.704512,
+      "smoothstep": 0.704512
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.65,
+      "eased": 0.71825,
+      "smoothstep": 0.71825
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.66,
+      "eased": 0.731808,
+      "smoothstep": 0.731808
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.67,
+      "eased": 0.745174,
+      "smoothstep": 0.7451740000000001
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.68,
+      "eased": 0.7583360000000001,
+      "smoothstep": 0.7583360000000001
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.69,
+      "eased": 0.7712819999999999,
+      "smoothstep": 0.7712819999999999
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.7,
+      "eased": 0.7839999999999998,
+      "smoothstep": 0.7839999999999999
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.71,
+      "eased": 0.796478,
+      "smoothstep": 0.796478
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.72,
+      "eased": 0.808704,
+      "smoothstep": 0.808704
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.73,
+      "eased": 0.8206659999999999,
+      "smoothstep": 0.8206659999999999
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.74,
+      "eased": 0.832352,
+      "smoothstep": 0.832352
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.75,
+      "eased": 0.84375,
+      "smoothstep": 0.84375
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.76,
+      "eased": 0.854848,
+      "smoothstep": 0.8548479999999999
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.77,
+      "eased": 0.865634,
+      "smoothstep": 0.8656339999999999
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.78,
+      "eased": 0.876096,
+      "smoothstep": 0.8760960000000001
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.79,
+      "eased": 0.8862220000000001,
+      "smoothstep": 0.8862220000000001
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.8,
+      "eased": 0.8960000000000001,
+      "smoothstep": 0.8960000000000001
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.81,
+      "eased": 0.9054180000000001,
+      "smoothstep": 0.9054180000000001
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.82,
+      "eased": 0.9144639999999999,
+      "smoothstep": 0.9144639999999999
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.83,
+      "eased": 0.9231259999999999,
+      "smoothstep": 0.923126
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.84,
+      "eased": 0.931392,
+      "smoothstep": 0.9313919999999999
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.85,
+      "eased": 0.9392499999999999,
+      "smoothstep": 0.9392499999999999
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.86,
+      "eased": 0.946688,
+      "smoothstep": 0.946688
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.87,
+      "eased": 0.953694,
+      "smoothstep": 0.953694
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.88,
+      "eased": 0.960256,
+      "smoothstep": 0.960256
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.89,
+      "eased": 0.966362,
+      "smoothstep": 0.966362
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.9,
+      "eased": 0.9720000000000001,
+      "smoothstep": 0.972
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.91,
+      "eased": 0.977158,
+      "smoothstep": 0.977158
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.92,
+      "eased": 0.981824,
+      "smoothstep": 0.981824
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.93,
+      "eased": 0.985986,
+      "smoothstep": 0.985986
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.94,
+      "eased": 0.989632,
+      "smoothstep": 0.9896320000000001
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.95,
+      "eased": 0.99275,
+      "smoothstep": 0.99275
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.96,
+      "eased": 0.9953280000000001,
+      "smoothstep": 0.995328
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.97,
+      "eased": 0.9973540000000001,
+      "smoothstep": 0.997354
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.98,
+      "eased": 0.9988159999999999,
+      "smoothstep": 0.9988159999999999
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 0.99,
+      "eased": 0.999702,
+      "smoothstep": 0.999702
+    },
+    {
+      "case": "customBezierEqualsSmoothstep",
+      "x1": 0.3333333333333333,
+      "y1": 0,
+      "x2": 0.6666666666666666,
+      "y2": 1,
+      "progress": 1,
+      "eased": 1,
+      "smoothstep": 1
+    }
+  ]
+}

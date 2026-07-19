@@ -3,12 +3,14 @@
 // Run: ./tr_test   -> prints PASS/FAIL per case; exit code 1 on any failure.
 
 #include "transform_render.h"
+#include "../progress/easing.hpp"
 
 #include <cmath>
 #include <cstdio>
 #include <vector>
 
 namespace {
+    const statemotion::EasingCurve legacy{1.0 / 3.0, 0.0, 2.0 / 3.0, 1.0};
 
 using statemotion::Pixel;
 using statemotion::RendererTransformState;
@@ -212,12 +214,14 @@ int main() {
         delete[] src;
     }
 
-    // --- AC8: curve eval pure + monotonic + endpoints ---
+    // --- AC8: curve eval pure + monotonic + endpoints (via shared easing) ---
     {
-        bool ok = std::abs(statemotion::evaluateCurve(0.0)) < 1e-12 &&
-                  std::abs(statemotion::evaluateCurve(1.0) - 1.0) < 1e-12 &&
-                  statemotion::evaluateCurve(0.25) < statemotion::evaluateCurve(0.75) &&
-                  std::abs(statemotion::evaluateCurve(2.0) - 1.0) < 1e-12;
+        statemotion::EasingCurve legacy{1.0 / 3.0, 0.0, 2.0 / 3.0, 1.0};
+        bool ok = std::abs(statemotion::evaluateEasing(statemotion::EasingMode::EASE_IN_OUT, legacy, 0.0)) < 1e-12 &&
+                  std::abs(statemotion::evaluateEasing(statemotion::EasingMode::EASE_IN_OUT, legacy, 1.0) - 1.0) < 1e-12 &&
+                  statemotion::evaluateEasing(statemotion::EasingMode::EASE_IN_OUT, legacy, 0.25) <
+                      statemotion::evaluateEasing(statemotion::EasingMode::EASE_IN_OUT, legacy, 0.75) &&
+                  std::abs(statemotion::evaluateEasing(statemotion::EasingMode::EASE_IN_OUT, legacy, 2.0) - 1.0) < 1e-12;
         check(ok, "AC8 curve eval endpoints/monotonic/clamped");
     }
 

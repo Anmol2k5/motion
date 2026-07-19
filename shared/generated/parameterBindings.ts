@@ -19,20 +19,25 @@ export interface ParameterBinding {
   oldDefault: number | string;
 }
 
-export const CONTRACT_DIGEST = "f878b5ac9d46b1658608532486ff26bd276a12e3f2103579bcb73b9718efdc23";
+export const CONTRACT_DIGEST = "f2a192c2e529e9ed4f881ceae7c51f8604d4a6597bca6b9c027dac3e41d9b32e";
 export const SCHEMA_VERSION = 1;
-export const BINDING_REVISION = 1;
-export const PARAMETER_COUNT = 20;
+export const BINDING_REVISION = 2;
+export const PARAMETER_COUNT = 25;
 
 export const BINDINGS: ParameterBinding[] = [
   { logicalId: "contract.schemaVersion", diskId: 1, wireName: "SM Schema Version", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 1, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 1 },
-  { logicalId: "contract.parameterCount", diskId: 2, wireName: "SM Param Count", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 20, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 17 },
+  { logicalId: "contract.parameterCount", diskId: 2, wireName: "SM Param Count", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 25, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 20 },
   { logicalId: "contract.bindingRevision", diskId: 3, wireName: "SM Binding Rev", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 1, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 1 },
   { logicalId: "transition.mode", diskId: 50, wireName: "SM Mode", nativeType: "POPUP", stateOwnership: "transition", timeVariance: "static", defaultVal: 0, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "ProgressMode", oldDefault: 0 },
   { logicalId: "transition.alignment", diskId: 51, wireName: "SM Alignment", nativeType: "POPUP", stateOwnership: "transition", timeVariance: "static", defaultVal: 0, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "AlignmentMode", oldDefault: 0 },
   { logicalId: "transition.durationSeconds", diskId: 52, wireName: "SM Duration", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 1, validMin: 0, validMax: 3600, uiMin: 0, uiMax: 10, enumRef: "", oldDefault: 1 },
   { logicalId: "transition.delaySeconds", diskId: 53, wireName: "SM Delay", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 0, validMin: 0, validMax: 3600, uiMin: 0, uiMax: 10, enumRef: "", oldDefault: 0 },
   { logicalId: "transition.manualProgress", diskId: 54, wireName: "SM Manual Progress", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "keyframeable", defaultVal: 0, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 0 },
+  { logicalId: "transition.easing", diskId: 55, wireName: "SM Easing", nativeType: "POPUP", stateOwnership: "transition", timeVariance: "static", defaultVal: 3, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "EasingMode", oldDefault: 3 },
+  { logicalId: "transition.curveX1", diskId: 56, wireName: "SM Curve X1", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 0.3333333333333333, validMin: 0, validMax: 1, uiMin: 0, uiMax: 1, enumRef: "", oldDefault: 0.3333333333333333 },
+  { logicalId: "transition.curveY1", diskId: 57, wireName: "SM Curve Y1", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 0, validMin: 0, validMax: 1, uiMin: 0, uiMax: 1, enumRef: "", oldDefault: 0 },
+  { logicalId: "transition.curveX2", diskId: 58, wireName: "SM Curve X2", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 0.6666666666666667, validMin: 0, validMax: 1, uiMin: 0, uiMax: 1, enumRef: "", oldDefault: 0.6666666666666667 },
+  { logicalId: "transition.curveY2", diskId: 59, wireName: "SM Curve Y2", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 1, validMin: 0, validMax: 1, uiMin: 0, uiMax: 1, enumRef: "", oldDefault: 1 },
   { logicalId: "transform.position.a", diskId: 100, wireName: "SM Position A", nativeType: "POINT", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: "frameCenter", validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: "frameCenter" },
   { logicalId: "transform.position.b", diskId: 101, wireName: "SM Position B", nativeType: "POINT", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: "frameCenter", validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: "frameCenter" },
   { logicalId: "transform.scaleX.a", diskId: 102, wireName: "SM Scale X A", nativeType: "FLOAT_SLIDER", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: 100, validMin: 0.01, validMax: 10000, uiMin: 0, uiMax: 400, enumRef: "", oldDefault: 100 },

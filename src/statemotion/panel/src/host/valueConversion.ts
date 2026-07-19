@@ -25,6 +25,8 @@ const CONVERSION_KIND: Record<string, Kind> = {};
 for (const id of LOGICAL_IDS) {
   if (id.startsWith('contract.')) CONVERSION_KIND[id] = 'identity';
   else if (id === 'transition.mode' || id === 'transition.alignment') CONVERSION_KIND[id] = 'identity';
+  else if (id === 'transition.easing') CONVERSION_KIND[id] = 'identity';
+  else if (id.startsWith('transition.curve')) CONVERSION_KIND[id] = 'identity';
   else if (id === 'transition.durationSeconds' || id === 'transition.delaySeconds') CONVERSION_KIND[id] = 'identity';
   else if (id === 'transition.manualProgress') CONVERSION_KIND[id] = 'percent';
   else if (id.startsWith('transform.scale')) CONVERSION_KIND[id] = 'percent';

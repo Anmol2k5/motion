@@ -11,9 +11,9 @@ let passed = 0;
 function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
 
 const PRESETS: StateMotionPreset[] = [
-  { presetId: 'a', name: 'Soft Arrival', description: '', author: 'S', createdAt: '2026-01-01T00:00:00Z', tags: ['entrance'], category: 'Entrances', collectionIds: [], compatibleContract: { schemaVersion: 1, bindingRevision: 1, parameterCount: 20 }, parameters: {}, preview: { kind: 'generated' }, formatId: 'x', schemaVersion: 1 } as any,
-  { presetId: 'b', name: 'Quick Drift', description: '', author: 'S', createdAt: '2026-03-01T00:00:00Z', tags: ['exit'], category: 'Exits', collectionIds: [], compatibleContract: { schemaVersion: 1, bindingRevision: 1, parameterCount: 20 }, parameters: {}, preview: { kind: 'generated' }, formatId: 'x', schemaVersion: 1 } as any,
-  { presetId: 'c', name: 'Center Bloom', description: '', author: 'S', createdAt: '2026-02-01T00:00:00Z', tags: ['zoom'], category: 'Zooms', collectionIds: [], compatibleContract: { schemaVersion: 1, bindingRevision: 1, parameterCount: 20 }, parameters: {}, preview: { kind: 'generated' }, formatId: 'x', schemaVersion: 1 } as any,
+  { presetId: 'a', name: 'Soft Arrival', description: '', author: 'S', createdAt: '2026-01-01T00:00:00Z', tags: ['entrance'], category: 'Entrances', collectionIds: [], compatibleContract: { schemaVersion: 1, bindingRevision: 2, parameterCount: 25 }, parameters: {}, preview: { kind: 'generated' }, formatId: 'x', schemaVersion: 1 } as any,
+  { presetId: 'b', name: 'Quick Drift', description: '', author: 'S', createdAt: '2026-03-01T00:00:00Z', tags: ['exit'], category: 'Exits', collectionIds: [], compatibleContract: { schemaVersion: 1, bindingRevision: 2, parameterCount: 25 }, parameters: {}, preview: { kind: 'generated' }, formatId: 'x', schemaVersion: 1 } as any,
+  { presetId: 'c', name: 'Center Bloom', description: '', author: 'S', createdAt: '2026-02-01T00:00:00Z', tags: ['zoom'], category: 'Zooms', collectionIds: [], compatibleContract: { schemaVersion: 1, bindingRevision: 2, parameterCount: 25 }, parameters: {}, preview: { kind: 'generated' }, formatId: 'x', schemaVersion: 1 } as any,
 ];
 
 const CATS = ['Entrances', 'Exits', 'Zooms'];

@@ -8,11 +8,6 @@
 
 namespace statemotion {
 
-double evaluateCurve(double t) {
-    double x = std::clamp(t, 0.0, 1.0);
-    return x * x * (3.0 - 2.0 * x);  // smoothstep
-}
-
 double safeScale(double value) {
     constexpr double epsilon = 1e-4;
     if (std::abs(value) >= epsilon) return value;

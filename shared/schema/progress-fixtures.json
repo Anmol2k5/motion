@@ -531,7 +531,7 @@
       },
       "expected": {
         "linearProgress": 0.25,
-        "easedProgress": 0.15625
+        "easedProgress": 0.25
       }
     },
     {
@@ -563,7 +563,7 @@
       },
       "expected": {
         "linearProgress": 0.75,
-        "easedProgress": 0.84375
+        "easedProgress": 0.75
       }
     },
     {
@@ -1123,7 +1123,7 @@
       },
       "expected": {
         "linearProgress": 0.3,
-        "easedProgress": 0.216
+        "easedProgress": 0.3
       }
     },
     {
@@ -1139,7 +1139,7 @@
       },
       "expected": {
         "linearProgress": 0.7,
-        "easedProgress": 0.7839999999999999
+        "easedProgress": 0.7
       }
     },
     {

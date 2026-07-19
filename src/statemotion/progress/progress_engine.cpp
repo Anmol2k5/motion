@@ -73,27 +73,29 @@ ProgressOutput evaluateProgress(const ProgressInput& input) {
     double eased = 0.0;
     switch (input.mode) {
         case ids::ProgressMode::HoldA:
-            eased = 0.0;
+            eased = 0.0;  // exact endpoint, never eased
             break;
         case ids::ProgressMode::HoldB:
-            eased = 1.0;
+            eased = 1.0;  // exact endpoint, never eased
             break;
         case ids::ProgressMode::Manual:
-            eased = smoothstep(linear);
+            // Manual mode bypasses automatic easing: manualProgress is the direct
+            // normalized progress between A and B (deterministic midpoint).
+            eased = linear;
             break;
         case ids::ProgressMode::AToB:
-            eased = smoothstep(linear);
+            eased = evaluateEasing(input.easing, input.curve, linear);
             break;
         case ids::ProgressMode::BToA:
-            eased = 1.0 - smoothstep(linear);
+            eased = 1.0 - evaluateEasing(input.easing, input.curve, linear);
             break;
         case ids::ProgressMode::AToBToA:  // two independently-eased halves, never one triangle
-            eased = (linear <= 0.5) ? smoothstep(2.0 * linear)
-                                    : 1.0 - smoothstep(2.0 * linear - 1.0);
+            eased = (linear <= 0.5) ? evaluateEasing(input.easing, input.curve, 2.0 * linear)
+                                    : 1.0 - evaluateEasing(input.easing, input.curve, 2.0 * linear - 1.0);
             break;
         case ids::ProgressMode::BToAToB:
-            eased = (linear <= 0.5) ? 1.0 - smoothstep(2.0 * linear)
-                                    : smoothstep(2.0 * linear - 1.0);
+            eased = (linear <= 0.5) ? 1.0 - evaluateEasing(input.easing, input.curve, 2.0 * linear)
+                                    : evaluateEasing(input.easing, input.curve, 2.0 * linear - 1.0);
             break;
     }
     out.result.easedProgress = eased;

@@ -40,10 +40,6 @@ struct RendererTransformState {
     double opacity = 1.0;
 };
 
-// Approved first-slice easing (handoff 2.4). Smoothstep is the single supported
-// curve for this slice; no curve-menu scaffolding. t is clamped to [0,1] by caller.
-double evaluateCurve(double t);
-
 // Clamp near-zero scale to +/-epsilon to avoid singular transforms, preserving
 // overshoot. Negative scale stays valid for mirroring (handoff 3, 018).
 double safeScale(double value);

@@ -127,6 +127,8 @@ registerStateMotionParameters(
                 items = "AToB|BToA|AToBToA|BToAToB|HoldA|HoldB|Manual";
             } else if (::strcmp(b.enumRef, "AlignmentMode") == 0) {
                 items = "ClipStart|ClipEnd|EntireClip";
+            } else if (::strcmp(b.enumRef, "EasingMode") == 0) {
+                items = "Linear|EaseIn|EaseOut|EaseInOut|Custom";
             }
             def.u.pd.num_choices = static_cast<A_short>(b.enumCount);
             def.u.pd.dephault = static_cast<A_short>(b.defaultNum);
@@ -272,6 +274,11 @@ Render(
     const double dur = SM_RD(kTransitionDurationSeconds)->u.fs_d.value;
     const double delay = SM_RD(kTransitionDelaySeconds)->u.fs_d.value;
     const double manual = SM_RD(kTransitionManualProgress)->u.fs_d.value;
+    const int easingIdx = static_cast<int>(SM_RD(kTransitionEasing)->u.pd.value);
+    const double cx1 = SM_RD(kTransitionCurveX1)->u.fs_d.value;
+    const double cy1 = SM_RD(kTransitionCurveY1)->u.fs_d.value;
+    const double cx2 = SM_RD(kTransitionCurveX2)->u.fs_d.value;
+    const double cy2 = SM_RD(kTransitionCurveY2)->u.fs_d.value;
     const PF_PointDef &pa = SM_RD(kTransformPositionA)->u.td;
     const PF_PointDef &pb = SM_RD(kTransformPositionB)->u.td;
     const double sxa = SM_RD(kTransformScaleXA)->u.fs_d.value;
@@ -302,7 +309,9 @@ Render(
         in_data->current_time, in_data->total_time, in_data->time_scale,
         statemotion::native::modeFromPopup(modeIdx),
         statemotion::native::alignmentFromPopup(alignIdx),
-        dur, delay, manual);
+        dur, delay, manual,
+        static_cast<ids::EasingMode>(easingIdx),
+        {cx1, cy1, cx2, cy2});
 
     // 4. Progress -> canonical interpolation.
     auto pe = statemotion::evaluateProgress(pin);

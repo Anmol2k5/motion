@@ -6,7 +6,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import { evaluateProgress, smoothstep } from './progressEngine.ts';
+import { evaluateProgress } from './progressEngine.ts';
+import { evaluateEasing, EasingMode, type EasingCurve } from './easing.ts';
 import { ProgressMode, AlignmentMode } from '../../../shared/generated/parameterIds.ts';
 
 let failures = 0;
@@ -122,10 +123,30 @@ for (let i = 0; i < samples; i++) {
     manualProgress: 0,
   });
   if (!out.ok || !Number.isFinite(out.result.easedProgress)) { allFinite = false; break; }
-  worst = Math.max(worst, maxErr(out.result.easedProgress, smoothstep(q)));
+  const ref = evaluateEasing(EasingMode.EASE_IN_OUT, { x1: 1 / 3, y1: 0, x2: 2 / 3, y2: 1 }, q);
+  worst = Math.max(worst, maxErr(out.result.easedProgress, ref));
 }
-check(allFinite && worst < tol, `dense ${samples}-sample finite + smoothstep within tolerance`);
+check(allFinite && worst < tol, `dense ${samples}-sample finite + easing within tolerance`);
 console.log(`    (worst abs err ${worst.toExponential(2)})`);
+
+// ---- regression: CUSTOM bezier (1/3,0,2/3,1) == 3x²-2x³, == EASE_IN_OUT ----
+console.log('== easing regression: custom bezier equals legacy smoothstep (TS) ==');
+{
+  const easingFixturePath = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    '../../../shared/fixtures/easing-fixtures.json',
+  );
+  const fx: Json = JSON.parse(fs.readFileSync(easingFixturePath, 'utf8'));
+  const legacy: EasingCurve = { x1: 1 / 3, y1: 0, x2: 2 / 3, y2: 1 };
+  let idx = 0;
+  for (const c of fx.regression as Json[]) {
+    const got = evaluateEasing(EasingMode.CUSTOM, legacy, c.progress);
+    check(maxErr(got, c.smoothstep) <= 1e-6, `custom bezier == smoothstep ${idx}`);
+    const named = evaluateEasing(EasingMode.EASE_IN_OUT, legacy, c.progress);
+    check(maxErr(named, c.smoothstep) <= 1e-6, `EASE_IN_OUT == smoothstep ${idx}`);
+    idx++;
+  }
+}
 
 console.log(`\n${failures ? 'FAILED' : 'ALL PASSED'}: ${failures} failures`);
 process.exit(failures ? 1 : 0);
