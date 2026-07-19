@@ -85,7 +85,7 @@ export function evaluateProgress(input: ProgressInput): ProgressOutput {
   }
 
   const easing = input.easing ?? EasingMode.EASE_IN_OUT;
-  const curve = input.curve ?? { x1: 0.42, y1: 0.0, x2: 0.58, y2: 1.0 };
+  const curve = input.curve ?? { x1: 1 / 3, y1: 0.0, x2: 2 / 3, y2: 1.0 };
 
   let linear: number;
   if (input.mode === ProgressMode.Manual) {

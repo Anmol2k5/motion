@@ -56,7 +56,7 @@ function refEased(mode, curve, lin) {
   }
 }
 
-const fixture = { tolerance: 1e-6, named: [], custom: [], invalid: [] };
+const fixture = { tolerance: 1e-6, named: [], custom: [], invalid: [], regression: [] };
 
 // Named modes across a dense + boundary sweep.
 const namedModes = ['LINEAR', 'EASE_IN', 'EASE_OUT', 'EASE_IN_OUT'];
@@ -67,10 +67,11 @@ for (const mode of namedModes) {
   }
 }
 
-// Custom curves: identity (linear), symmetric-legacy, asymmetric, shallow, steep.
+// Custom curves: identity (linear), smoothstep-equivalent (the legacy curve
+// that MUST equal 3x²-2x³), asymmetric, shallow, steep.
 const customCurves = [
   { name: 'identity', x1: 0.0, y1: 0.0, x2: 1.0, y2: 1.0 },
-  { name: 'legacy', x1: 0.42, y1: 0.0, x2: 0.58, y2: 1.0 },
+  { name: 'smoothstep', x1: 1 / 3, y1: 0.0, x2: 2 / 3, y2: 1.0 },
   { name: 'easeOutStrong', x1: 0.1, y1: 0.9, x2: 0.2, y2: 1.0 },
   { name: 'easeInStrong', x1: 0.8, y1: 0.0, x2: 0.9, y2: 0.1 },
   { name: 'symmetricMid', x1: 0.25, y1: 0.25, x2: 0.75, y2: 0.75 },
@@ -87,13 +88,29 @@ for (const c of customCurves) {
 // kept finite in JSON; the `invalid:true` flag tells the test to feed a
 // non-finite value (NaN) to the evaluator to exercise the fallback path.
 const invalidCurves = [
-  { name: 'nanX1', x1: 0.42, y1: 0.0, x2: 0.58, y2: 1.0 },
-  { name: 'negX1', x1: -0.5, y1: 0.0, x2: 0.58, y2: 1.0 },
+  { name: 'nanX1', x1: 1 / 3, y1: 0.0, x2: 2 / 3, y2: 1.0 },
+  { name: 'negX1', x1: -0.5, y1: 0.0, x2: 2 / 3, y2: 1.0 },
 ];
 for (const c of invalidCurves) {
   for (const p of [0.0, 0.25, 0.5, 1.0]) {
     fixture.invalid.push({ invalid: true, curve: c.name, x1: c.x1, y1: c.y1, x2: c.x2, y2: c.y2, progress: p, eased: clamp01(p) });
   }
+}
+
+// Regression: CUSTOM curve (1/3,0,2/3,1) MUST equal 3x²-2x³ (legacy smoothstep)
+// within strict tolerance. Driven independently; asserts the bezier solver and
+// the named EASE_IN_OUT mode agree on the legacy visual behavior.
+const smoothstep = (p) => { const x = clamp01(p); return x * x * (3 - 2 * x); };
+const regressionCurve = { x1: 1 / 3, y1: 0.0, x2: 2 / 3, y2: 1.0 };
+for (let i = 0; i <= 100; i++) {
+  const p = i / 100;
+  fixture.regression.push({
+    case: 'customBezierEqualsSmoothstep',
+    x1: regressionCurve.x1, y1: regressionCurve.y1, x2: regressionCurve.x2, y2: regressionCurve.y2,
+    progress: p,
+    eased: refEased('CUSTOM', regressionCurve, p),
+    smoothstep: smoothstep(p),
+  });
 }
 
 fs.mkdirSync(path.dirname(OUT), { recursive: true });

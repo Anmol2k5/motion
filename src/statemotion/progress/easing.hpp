@@ -23,9 +23,9 @@ enum class EasingMode {
 };
 
 struct EasingCurve {
-    double x1 = 0.42;
+    double x1 = 1.0 / 3.0;  // legacy smoothstep-equivalent (BezierX=t), see easing-system-design.md
     double y1 = 0.0;
-    double x2 = 0.58;
+    double x2 = 2.0 / 3.0;
     double y2 = 1.0;
 };
 

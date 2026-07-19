@@ -91,6 +91,7 @@ struct Parser {
 struct NamedCase { EasingMode mode; double progress; double eased; };
 struct CustomCase { double x1, y1, x2, y2; double progress; double eased; };
 struct InvalidCase { double x1, y1, x2, y2; double progress; double eased; };
+struct RegressionCase { double x1, y1, x2, y2; double progress; double eased; double smoothstep; };
 
 EasingMode modeFromName(const std::string& s) {
     if (s == "LINEAR") return EasingMode::LINEAR;
@@ -102,7 +103,7 @@ EasingMode modeFromName(const std::string& s) {
 }
 
 int loadFixture(const char* path, std::vector<NamedCase>& named, std::vector<CustomCase>& custom,
-                std::vector<InvalidCase>& invalid, double& tol) {
+                std::vector<InvalidCase>& invalid, std::vector<RegressionCase>& regression, double& tol) {
     FILE* f = std::fopen(path, "rb");
     if (!f) { std::printf("fixture open failed: %s\n", path); return 1; }
     std::string buf; char c;
@@ -122,6 +123,10 @@ int loadFixture(const char* path, std::vector<NamedCase>& named, std::vector<Cus
         invalid.push_back({ e.obj.at("x1").num, e.obj.at("y1").num, e.obj.at("x2").num, e.obj.at("y2").num,
                             e.obj.at("progress").num, e.obj.at("eased").num });
     }
+    for (const auto& e : root.obj["regression"].arr) {
+        regression.push_back({ e.obj.at("x1").num, e.obj.at("y1").num, e.obj.at("x2").num, e.obj.at("y2").num,
+                               e.obj.at("progress").num, e.obj.at("eased").num, e.obj.at("smoothstep").num });
+    }
     return 0;
 }
 
@@ -137,7 +142,8 @@ int main() {
     std::vector<NamedCase> named;
     std::vector<CustomCase> custom;
     std::vector<InvalidCase> invalid;
-    if (loadFixture("shared/fixtures/easing-fixtures.json", named, custom, invalid, tol)) return 1;
+    std::vector<RegressionCase> regression;
+    if (loadFixture("shared/fixtures/easing-fixtures.json", named, custom, invalid, regression, tol)) return 1;
 
     // Named modes vs fixture.
     for (const auto& c : named) {
@@ -179,6 +185,21 @@ int main() {
         EasingCurve curve;
         double got = statemotion::evaluateEasing(EasingMode::EASE_IN_OUT, curve, NAN);
         check(std::isfinite(got), "nonfinite input finite");
+    }
+
+    // Regression: CUSTOM bezier (1/3,0,2/3,1) MUST equal 3x²-2x³ (legacy
+    // smoothstep) within strict tolerance, and agree with named EASE_IN_OUT.
+    {
+        EasingCurve legacy{ 1.0 / 3.0, 0.0, 2.0 / 3.0, 1.0 };
+        int idx = 0;
+        for (const auto& c : regression) {
+            double got = statemotion::evaluateEasing(EasingMode::CUSTOM, legacy, c.progress);
+            check(std::abs(got - c.smoothstep) <= tol, ("custom bezier == smoothstep " + std::to_string(idx)).c_str());
+            // named EASE_IN_OUT must also equal the smoothstep reference exactly
+            double named = statemotion::evaluateEasing(EasingMode::EASE_IN_OUT, legacy, c.progress);
+            check(std::abs(named - c.smoothstep) <= tol, ("EASE_IN_OUT == smoothstep " + std::to_string(idx)).c_str());
+            idx++;
+        }
     }
 
     if (failures) { std::printf("\nFAILED: %d failures\n", failures); return 1; }

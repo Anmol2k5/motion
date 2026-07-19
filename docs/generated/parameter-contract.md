@@ -3,7 +3,7 @@
 - schemaVersion: 1
 - bindingRevision: 2
 - parameterCount: 25
-- SHA-256: `cad16d90a5b04ec13c366db2d2a241a95b44c99ae611934e5a40d5487919aea6`
+- SHA-256: `f2a192c2e529e9ed4f881ceae7c51f8604d4a6597bca6b9c027dac3e41d9b32e`
 
 > GENERATED from shared/schema/parameter-contract.json. Do not edit by hand.
 
@@ -43,9 +43,9 @@
 | transition.delaySeconds | 53 | SM Delay | FLOAT_SLIDER | 0 | 0..3600 | static | transition |
 | transition.manualProgress | 54 | SM Manual Progress | FLOAT_SLIDER | 0 | 0..100 | keyframeable | transition |
 | transition.easing | 55 | SM Easing | POPUP | 3 | EasingMode | static | transition |
-| transition.curveX1 | 56 | SM Curve X1 | FLOAT_SLIDER | 0.42 | 0..1 | static | transition |
+| transition.curveX1 | 56 | SM Curve X1 | FLOAT_SLIDER | 0.3333333333333333 | 0..1 | static | transition |
 | transition.curveY1 | 57 | SM Curve Y1 | FLOAT_SLIDER | 0 | 0..1 | static | transition |
-| transition.curveX2 | 58 | SM Curve X2 | FLOAT_SLIDER | 0.58 | 0..1 | static | transition |
+| transition.curveX2 | 58 | SM Curve X2 | FLOAT_SLIDER | 0.6666666666666667 | 0..1 | static | transition |
 | transition.curveY2 | 59 | SM Curve Y2 | FLOAT_SLIDER | 1 | 0..1 | static | transition |
 | transform.position.a | 100 | SM Position A | POINT | "frameCenter" | n/a | interpolatable | A |
 | transform.position.b | 101 | SM Position B | POINT | "frameCenter" | n/a | interpolatable | B |

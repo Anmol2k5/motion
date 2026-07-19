@@ -19,7 +19,7 @@ export interface ParameterBinding {
   oldDefault: number | string;
 }
 
-export const CONTRACT_DIGEST = "cad16d90a5b04ec13c366db2d2a241a95b44c99ae611934e5a40d5487919aea6";
+export const CONTRACT_DIGEST = "f2a192c2e529e9ed4f881ceae7c51f8604d4a6597bca6b9c027dac3e41d9b32e";
 export const SCHEMA_VERSION = 1;
 export const BINDING_REVISION = 2;
 export const PARAMETER_COUNT = 25;
@@ -34,9 +34,9 @@ export const BINDINGS: ParameterBinding[] = [
   { logicalId: "transition.delaySeconds", diskId: 53, wireName: "SM Delay", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 0, validMin: 0, validMax: 3600, uiMin: 0, uiMax: 10, enumRef: "", oldDefault: 0 },
   { logicalId: "transition.manualProgress", diskId: 54, wireName: "SM Manual Progress", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "keyframeable", defaultVal: 0, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 0 },
   { logicalId: "transition.easing", diskId: 55, wireName: "SM Easing", nativeType: "POPUP", stateOwnership: "transition", timeVariance: "static", defaultVal: 3, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "EasingMode", oldDefault: 3 },
-  { logicalId: "transition.curveX1", diskId: 56, wireName: "SM Curve X1", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 0.42, validMin: 0, validMax: 1, uiMin: 0, uiMax: 1, enumRef: "", oldDefault: 0.42 },
+  { logicalId: "transition.curveX1", diskId: 56, wireName: "SM Curve X1", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 0.3333333333333333, validMin: 0, validMax: 1, uiMin: 0, uiMax: 1, enumRef: "", oldDefault: 0.3333333333333333 },
   { logicalId: "transition.curveY1", diskId: 57, wireName: "SM Curve Y1", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 0, validMin: 0, validMax: 1, uiMin: 0, uiMax: 1, enumRef: "", oldDefault: 0 },
-  { logicalId: "transition.curveX2", diskId: 58, wireName: "SM Curve X2", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 0.58, validMin: 0, validMax: 1, uiMin: 0, uiMax: 1, enumRef: "", oldDefault: 0.58 },
+  { logicalId: "transition.curveX2", diskId: 58, wireName: "SM Curve X2", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 0.6666666666666667, validMin: 0, validMax: 1, uiMin: 0, uiMax: 1, enumRef: "", oldDefault: 0.6666666666666667 },
   { logicalId: "transition.curveY2", diskId: 59, wireName: "SM Curve Y2", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 1, validMin: 0, validMax: 1, uiMin: 0, uiMax: 1, enumRef: "", oldDefault: 1 },
   { logicalId: "transform.position.a", diskId: 100, wireName: "SM Position A", nativeType: "POINT", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: "frameCenter", validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: "frameCenter" },
   { logicalId: "transform.position.b", diskId: 101, wireName: "SM Position B", nativeType: "POINT", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: "frameCenter", validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: "frameCenter" },

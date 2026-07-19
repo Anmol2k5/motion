@@ -10,7 +10,7 @@
 #include <vector>
 
 namespace {
-    const statemotion::EasingCurve legacy{0.42, 0.0, 0.58, 1.0};
+    const statemotion::EasingCurve legacy{1.0 / 3.0, 0.0, 2.0 / 3.0, 1.0};
 
 using statemotion::Pixel;
 using statemotion::RendererTransformState;
@@ -216,7 +216,7 @@ int main() {
 
     // --- AC8: curve eval pure + monotonic + endpoints (via shared easing) ---
     {
-        statemotion::EasingCurve legacy{0.42, 0.0, 0.58, 1.0};
+        statemotion::EasingCurve legacy{1.0 / 3.0, 0.0, 2.0 / 3.0, 1.0};
         bool ok = std::abs(statemotion::evaluateEasing(statemotion::EasingMode::EASE_IN_OUT, legacy, 0.0)) < 1e-12 &&
                   std::abs(statemotion::evaluateEasing(statemotion::EasingMode::EASE_IN_OUT, legacy, 1.0) - 1.0) < 1e-12 &&
                   statemotion::evaluateEasing(statemotion::EasingMode::EASE_IN_OUT, legacy, 0.25) <

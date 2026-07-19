@@ -26,7 +26,7 @@ struct ParameterBinding {
   const char* enumRef;    // POPUP enum name (else "")
 };
 
-inline constexpr char kContractDigest[] = "cad16d90a5b04ec13c366db2d2a241a95b44c99ae611934e5a40d5487919aea6";
+inline constexpr char kContractDigest[] = "f2a192c2e529e9ed4f881ceae7c51f8604d4a6597bca6b9c027dac3e41d9b32e";
 
 inline constexpr ParameterBinding kBindings[25] = {
   {"contract.schemaVersion", 1, "SM Schema Version", "FLOAT_SLIDER", "metadata", "static", 1, 1, 9999, 1, 9999, 1, 2, 0, ""},
@@ -38,9 +38,9 @@ inline constexpr ParameterBinding kBindings[25] = {
   {"transition.delaySeconds", 53, "SM Delay", "FLOAT_SLIDER", "transition", "static", 0, 0, 3600, 0, 10, 0, 3, 0, ""},
   {"transition.manualProgress", 54, "SM Manual Progress", "FLOAT_SLIDER", "transition", "keyframeable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
   {"transition.easing", 55, "SM Easing", "POPUP", "transition", "static", 3, 0, 0, 0, 0, 3, 2, 5, "EasingMode"},
-  {"transition.curveX1", 56, "SM Curve X1", "FLOAT_SLIDER", "transition", "static", 0.42, 0, 1, 0, 1, 0.42, 2, 0, ""},
+  {"transition.curveX1", 56, "SM Curve X1", "FLOAT_SLIDER", "transition", "static", 0.3333333333333333, 0, 1, 0, 1, 0.3333333333333333, 2, 0, ""},
   {"transition.curveY1", 57, "SM Curve Y1", "FLOAT_SLIDER", "transition", "static", 0, 0, 1, 0, 1, 0, 2, 0, ""},
-  {"transition.curveX2", 58, "SM Curve X2", "FLOAT_SLIDER", "transition", "static", 0.58, 0, 1, 0, 1, 0.58, 2, 0, ""},
+  {"transition.curveX2", 58, "SM Curve X2", "FLOAT_SLIDER", "transition", "static", 0.6666666666666667, 0, 1, 0, 1, 0.6666666666666667, 2, 0, ""},
   {"transition.curveY2", 59, "SM Curve Y2", "FLOAT_SLIDER", "transition", "static", 1, 0, 1, 0, 1, 1, 2, 0, ""},
   {"transform.position.a", 100, "SM Position A", "POINT", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
   {"transform.position.b", 101, "SM Position B", "POINT", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},

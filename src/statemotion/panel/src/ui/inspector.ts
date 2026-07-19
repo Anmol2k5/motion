@@ -78,7 +78,7 @@ export class InspectorView {
     const CURVE_IDS = ['transition.curveX1', 'transition.curveY1', 'transition.curveX2', 'transition.curveY2'] as const;
 
     let easing = 3;
-    let curve = [0.42, 0.0, 0.58, 1.0];
+    let curve = [1 / 3, 0.0, 2 / 3, 1.0];
     try {
       const cfg = await this.adapter.readState({ clipId });
       if (typeof cfg.parameters['transition.easing'] === 'number') easing = cfg.parameters['transition.easing'] as number;

@@ -69,9 +69,9 @@ Disk IDs 55–59 added inside `progressCurve` range (50–99), confirmed free.
 | logicalId | diskId | wireName | nativeType | default | oldProjectDefault | range |
 |---|---|---|---|---|---|---|
 | `transition.easing` | 55 | `SM Easing` | POPUP (enumRef `EasingMode`) | 3 (EASE_IN_OUT) | 3 | — |
-| `transition.curveX1` | 56 | `SM Curve X1` | FLOAT_SLIDER | 0.42 | 0.42 | 0..1 |
+| `transition.curveX1` | 56 | `SM Curve X1` | FLOAT_SLIDER | 1/3 | 1/3 | 0..1 |
 | `transition.curveY1` | 57 | `SM Curve Y1` | FLOAT_SLIDER | 0.0 | 0.0 | 0..1 |
-| `transition.curveX2` | 58 | `SM Curve X2` | FLOAT_SLIDER | 0.58 | 0.58 | 0..1 |
+| `transition.curveX2` | 58 | `SM Curve X2` | FLOAT_SLIDER | 2/3 | 2/3 | 0..1 |
 | `transition.curveY2` | 59 | `SM Curve Y2` | FLOAT_SLIDER | 1.0 | 1.0 | 0..1 |
 
 - `parameterCount` 20 → 25; `bindingRevision` 1 → 2.
@@ -112,15 +112,16 @@ label order `Linear|Ease In|Ease Out|Ease In Out|Custom`, FLOAT_SLIDER for the f
 curve values). Controls are kept visible (no dynamic show/hide this milestone).
 The effect reads them into `ProgressInput` (`buildProgressInput` extended). Default
 effect value for `transition.easing` = EASE_IN_OUT, curve defaults = legacy
-`(0.42,0,0.58,1.0)`.
+  `(1/3,0,2/3,1)`.
 
 ## 9. Preset schema + migration
 
 - `CanonicalStateMotionConfig` and preset `parameters` include `transition.easing`
   (always) + the four `transition.curve*` (always, default legacy curve).
 - Old `.stmpreset` files without easing fields → migrated to
-  `EASE_IN_OUT` with legacy curve `(0.42,0,0.58,1.0)` (preserves prior smoothstep
-  visual behavior). Migration is pure/unit-tested.
+  `EASE_IN_OUT` with legacy curve `(1/3,0,2/3,1)` (preserves prior smoothstep
+  visual behavior exactly: with x control points 1/3 and 2/3, `BezierX(t)=t` and
+  `BezierY(t)=3t²-2t³`). Migration is pure/unit-tested.
 - No runtime index, diskId, or metadata stored in creative preset values.
 
 ## 10. Panel UI

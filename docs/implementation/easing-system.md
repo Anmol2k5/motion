@@ -25,14 +25,15 @@ Inside the `progressCurve` disk-ID range (50–99), IDs 55–59 are reserved (co
 | diskId | logical ID            | native   | range | default            |
 |--------|-----------------------|----------|-------|--------------------|
 | 55     | `transition.easing`   | POPUP    | —     | 3 (EASE_IN_OUT)    |
-| 56     | `transition.curveX1`  | FLOAT    | 0..1  | 0.42               |
+| 56     | `transition.curveX1`  | FLOAT    | 0..1  | 1/3 (0.333…)        |
 | 57     | `transition.curveY1`  | FLOAT    | 0..1  | 0.0                |
-| 58     | `transition.curveX2`  | FLOAT    | 0..1  | 0.58               |
+| 58     | `transition.curveX2`  | FLOAT    | 0..1  | 2/3 (0.666…)        |
 | 59     | `transition.curveY2`  | FLOAT    | 0..1  | 1.0                |
 
 `parameterCount` 20 → 25, `bindingRevision` 1 → 2. `oldProjectDefault` for the new params
-is the legacy EASE_IN_OUT-equivalent (3 / 0.42 / 0.0 / 0.58 / 1.0), matching the previous
-`smoothstep` behavior.
+is the legacy EASE_IN_OUT-equivalent (3 / 1/3 / 0.0 / 2/3 / 1.0). With control x-points
+1/3 and 2/3, the cubic-bezier `BezierX(t) = t`, so `BezierY(t) = 3t²-2t³` — exactly the
+prior `smoothstep` behavior. `0.42/0.58` is NOT the legacy equivalent and must not be used.
 
 ## Implementation
 
