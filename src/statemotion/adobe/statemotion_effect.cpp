@@ -14,6 +14,35 @@
 #include "statemotion_point_default.hpp"
 #include "statemotion_world_pixels.hpp"
 
+// ---------------------------------------------------------------------------
+// TEMPORARY diagnostics (systematic-debugging). Compile-time gated; NO logging
+// framework, no user/media data. Enable per build:
+//   /D SM_DIAG=1            -> emit numeric stage trace via OutputDebugStringA
+//   /D SM_FORCE_IDENTITY=1  -> Render() runs a depth-agnostic raw identity copy
+//                             ONLY (no params/progress/interp/renderer)
+// Both default OFF so the production TU is unchanged.
+// ---------------------------------------------------------------------------
+#ifndef SM_DIAG
+#define SM_DIAG 0
+#endif
+#ifndef SM_FORCE_IDENTITY
+#define SM_FORCE_IDENTITY 0
+#endif
+
+#if SM_DIAG
+static void smTrace(const char *msg) { OutputDebugStringA(msg); }
+static void smTraceNum(const char *tag, long v) {
+    char buf[128];
+    ::sprintf(buf, "StateMotion %s=%ld\n", tag, v);
+    OutputDebugStringA(buf);
+}
+#define SM_TRACE(m)       smTrace("StateMotion " m "\n")
+#define SM_TRACE_NUM(t,v) smTraceNum((t), static_cast<long>(v))
+#else
+#define SM_TRACE(m)       ((void)0)
+#define SM_TRACE_NUM(t,v) ((void)0)
+#endif
+
 // Minimal error-propagation macro: run the call and return on the first error.
 #define SM_ERR(x)                    \
     do {                             \
@@ -205,11 +234,39 @@ smParamIndex(int diskId)
     return -1;
 }
 
-// The legacy PF_Cmd_RENDER path hands an 8-bit world when no depth capability is
-// declared (out_flags = 0), or a 16-bit world under DEEP_COLOR_AWARE. Float
-// worlds only arrive on the SmartFX path, which this effect does not implement.
-// Reading the world at the wrong depth (the prior float-only cast) over-reads
-// past every row and the buffer end -> host low-level exception (AEVideoFilter).
+// Query the ACTUAL host pixel format via PF_WorldSuite2 rather than guessing
+// from world flags. Premiere's basic AE-effect path is ARGB32 (8u); ARGB64 is
+// 16u; ARGB128 is 32-bit float. Returns true and sets depth on success. On any
+// failure (suite/callback unavailable) falls back to PF_WORLD_IS_DEEP, and the
+// caller can still choose a safe path.
+static bool
+smQueryWorldDepth(PF_InData *in_data, const PF_EffectWorld *world,
+                  statemotion::world::WorldDepth &depthOut, long *rawFormatOut)
+{
+    if (rawFormatOut) *rawFormatOut = -1;
+    if (!in_data || !in_data->pica_basicP) return false;
+
+    const void *wsRaw = nullptr;
+    SPErr sp = in_data->pica_basicP->AcquireSuite(
+        kPFWorldSuite, kPFWorldSuiteVersion2, &wsRaw);
+    const PF_WorldSuite2 *ws = static_cast<const PF_WorldSuite2 *>(wsRaw);
+    if (sp != 0 || !ws || !ws->PF_GetPixelFormat) return false;
+
+    PF_PixelFormat fmt = PF_PixelFormat_INVALID;
+    PF_Err ferr = ws->PF_GetPixelFormat(world, &fmt);
+    in_data->pica_basicP->ReleaseSuite(kPFWorldSuite, kPFWorldSuiteVersion2);
+    if (ferr != PF_Err_NONE) return false;
+
+    if (rawFormatOut) *rawFormatOut = static_cast<long>(fmt);
+    switch (fmt) {
+        case PF_PixelFormat_ARGB32:  depthOut = statemotion::world::WorldDepth::Eight;   return true;
+        case PF_PixelFormat_ARGB64:  depthOut = statemotion::world::WorldDepth::Sixteen; return true;
+        case PF_PixelFormat_ARGB128: depthOut = statemotion::world::WorldDepth::Float;   return true;
+        default: return false;  // unknown/Premiere-native format: caller falls back
+    }
+}
+
+// Legacy fallback only. Prefer smQueryWorldDepth.
 static statemotion::world::WorldDepth
 smWorldDepth(const PF_EffectWorld *world)
 {
@@ -218,37 +275,20 @@ smWorldDepth(const PF_EffectWorld *world)
         : statemotion::world::WorldDepth::Eight;
 }
 
+// Depth-agnostic, format-agnostic identity: copy the raw overlapping bytes of
+// each scanline respecting BOTH rowbytes. Never assumes bytes-per-pixel, never
+// writes past either row. This is the known-good baseline pass-through.
 static void
-smWorldToPixels(const PF_EffectWorld *world, std::vector<statemotion::Pixel> &out)
+smRawIdentityCopy(const PF_EffectWorld *src, PF_EffectWorld *dst)
 {
-    statemotion::world::worldToPixels(
-        world->data, world->width, world->height,
-        static_cast<std::ptrdiff_t>(world->rowbytes), smWorldDepth(world), out);
-}
-
-static void
-smPixelsToWorld(const std::vector<statemotion::Pixel> &in, PF_EffectWorld *world)
-{
-    statemotion::world::pixelsToWorld(
-        in, world->data, world->width, world->height,
-        static_cast<std::ptrdiff_t>(world->rowbytes), smWorldDepth(world));
-}
-
-// Safe identity copy respecting per-world rowbytes. Copies only the overlapping
-// region so a src/dst dimension or stride mismatch can never over-read/write.
-static void
-smIdentityCopy(const PF_EffectWorld *src, PF_EffectWorld *dst)
-{
-    const int w = src->width < dst->width ? src->width : dst->width;
     const int h = src->height < dst->height ? src->height : dst->height;
-    const A_long srb = src->rowbytes;
-    const A_long drb = dst->rowbytes;
-    const size_t bpp = statemotion::world::bytesPerPixel(smWorldDepth(dst));
-    const size_t bytesPerRow = static_cast<size_t>(w) * bpp;
+    const A_long srb = src->rowbytes < 0 ? -src->rowbytes : src->rowbytes;
+    const A_long drb = dst->rowbytes < 0 ? -dst->rowbytes : dst->rowbytes;
+    const size_t rowCopy = static_cast<size_t>(srb < drb ? srb : drb);
     for (int y = 0; y < h; ++y) {
-        const char *s = reinterpret_cast<const char *>(src->data) + static_cast<ptrdiff_t>(y) * srb;
-        char *d = reinterpret_cast<char *>(dst->data) + static_cast<ptrdiff_t>(y) * drb;
-        ::memcpy(d, s, bytesPerRow);
+        const char *s = reinterpret_cast<const char *>(src->data) + static_cast<ptrdiff_t>(y) * src->rowbytes;
+        char *d = reinterpret_cast<char *>(dst->data) + static_cast<ptrdiff_t>(y) * dst->rowbytes;
+        ::memcpy(d, s, rowCopy);
     }
 }
 
@@ -261,15 +301,43 @@ Render(
 {
     PF_Err err = PF_Err_NONE;
 
+    SM_TRACE("SM_RENDER_00_ENTER");
     if (!in_data || !output || !params) return PF_Err_BAD_CALLBACK_PARAM;
     PF_EffectWorld *src = &params[STATEMOTION_INPUT]->u.ld;
     PF_EffectWorld *dst = output;
     if (!src->data || !dst->data) return PF_Err_BAD_CALLBACK_PARAM;
+    SM_TRACE("SM_RENDER_01_WORLDS_VALID");
 
     const int W = output->width;
     const int H = output->height;
     const int SW = src->width;
     const int SH = src->height;
+
+    // Query and log the ACTUAL host pixel format + geometry (numeric only).
+    {
+        long inFmt = -1, outFmt = -1;
+        statemotion::world::WorldDepth d;
+        smQueryWorldDepth(in_data, src, d, &inFmt);
+        smQueryWorldDepth(in_data, dst, d, &outFmt);
+        SM_TRACE_NUM("in_fmt", inFmt);
+        SM_TRACE_NUM("out_fmt", outFmt);
+        SM_TRACE_NUM("in_w", SW);
+        SM_TRACE_NUM("in_h", SH);
+        SM_TRACE_NUM("in_rowbytes", src->rowbytes);
+        SM_TRACE_NUM("out_w", W);
+        SM_TRACE_NUM("out_h", H);
+        SM_TRACE_NUM("out_rowbytes", dst->rowbytes);
+        (void)d;
+    }
+    SM_TRACE("SM_RENDER_02_PIXEL_FORMAT");
+
+#if SM_FORCE_IDENTITY
+    // Diagnostic: known-good, format-agnostic raw identity pass-through ONLY.
+    smRawIdentityCopy(src, dst);
+    SM_TRACE("SM_RENDER_FORCED_IDENTITY_DONE");
+    (void)out_data;
+    return err;
+#else
 
     // 1. Read registered params by disk ID (runtime index resolved via smParamIndex).
     #define SM_RD(did) params[smParamIndex(statemotion::ids::did)]
@@ -296,6 +364,7 @@ Render(
     const double oa = SM_RD(kTransformOpacityA)->u.fs_d.value;
     const double ob = SM_RD(kTransformOpacityB)->u.fs_d.value;
     #undef SM_RD
+    SM_TRACE("SM_RENDER_03_PARAMS");
 
     // Native POINT is percent (fixed 16.16); convert to a percent double.
     auto pct = [](PF_Fixed v) { return static_cast<double>(v) / 65536.0; };
@@ -316,15 +385,18 @@ Render(
         dur, delay, manual,
         static_cast<statemotion::EasingMode>(easingIdx),
         {cx1, cy1, cx2, cy2});
+    SM_TRACE("SM_RENDER_04_HOST_TIME");
 
     // 4. Progress -> canonical interpolation.
     auto pe = statemotion::evaluateProgress(pin);
     if (!pe.ok) {
         // Non-finite input: fail safe to identity copy.
-        smIdentityCopy(src, dst);
+        smRawIdentityCopy(src, dst);
         return err;
     }
+    SM_TRACE("SM_RENDER_05_PROGRESS");
     auto canon = statemotion::interpolateCanonical(A, B, pe.result.easedProgress);
+    SM_TRACE("SM_RENDER_07_INTERPOLATE");
 
     // 5. Canonical -> renderer-native units (single boundary conversion, after interp).
     statemotion::raster::RenderDimensions dims{W, H, SW, SH};
@@ -332,14 +404,23 @@ Render(
 
     // 6. Identity fast path (true no-op only).
     auto plan = statemotion::plan(rt, SW, SH);
+    SM_TRACE("SM_RENDER_08_RENDER_PLAN");
     if (plan.identityTransform) {
-        smIdentityCopy(src, dst);
+        smRawIdentityCopy(src, dst);
+        SM_TRACE("SM_RENDER_IDENTITY_FASTPATH_DONE");
         return err;
     }
 
-    // 7. Render via the existing verified CPU renderer.
+    // 7. Render via the existing verified CPU renderer, using the ACTUAL host
+    //    pixel format queried from the world (fallback: flag heuristic).
+    statemotion::world::WorldDepth srcDepth, dstDepth;
+    if (!smQueryWorldDepth(in_data, src, srcDepth, nullptr)) srcDepth = smWorldDepth(src);
+    if (!smQueryWorldDepth(in_data, dst, dstDepth, nullptr)) dstDepth = smWorldDepth(dst);
+
     std::vector<statemotion::Pixel> srcPix, dstPix;
-    smWorldToPixels(src, srcPix);
+    statemotion::world::worldToPixels(
+        src->data, SW, SH, static_cast<std::ptrdiff_t>(src->rowbytes), srcDepth, srcPix);
+    SM_TRACE("SM_RENDER_09_CPU_RENDER_BEGIN");
     struct Ctx { const std::vector<statemotion::Pixel> *buf; int w; };
     Ctx ctx{&srcPix, SW};
     auto sample = [](void *user, int x, int y) -> statemotion::Pixel {
@@ -348,11 +429,15 @@ Render(
     };
     dstPix.resize(static_cast<size_t>(W) * H);
     statemotion::render(plan, sample, &ctx, W, H, dstPix.data());
-    smPixelsToWorld(dstPix, dst);
+    SM_TRACE("SM_RENDER_10_CPU_RENDER_END");
+    statemotion::world::pixelsToWorld(
+        dstPix, dst->data, W, H, static_cast<std::ptrdiff_t>(dst->rowbytes), dstDepth);
 
     (void)out_data;
+    SM_TRACE("SM_RENDER_11_EXIT");
 
     return err;
+#endif  // SM_FORCE_IDENTITY
 }
 
 DllExport PF_Err
