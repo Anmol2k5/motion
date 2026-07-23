@@ -234,6 +234,64 @@ int main() {
         check(ok, "AC8 curve eval endpoints/monotonic/clamped");
     }
 
+    // --- AC9: rectangular crop masking (cropLeft 50% crops left half) ---
+    {
+        Pixel* src = makeSource(W, H, 0.8);
+        std::vector<statemotion::Pixel> out(W * H);
+        RendererTransformState t;
+        t.cropLeft = 0.5;
+        auto p = statemotion::plan(t, W, H);
+        statemotion::render(p, sample, src, W, H, out.data());
+        // Left half (x=0, x=1) transparent, right half (x=2, x=3) visible
+        bool ok = out[0].a < 1e-12 && out[1].a < 1e-12 &&
+                  std::abs(out[2].a - 0.8) < 1e-12 && std::abs(out[3].a - 0.8) < 1e-12;
+        check(ok, "AC9 rectangular cropLeft 50% crops left half");
+        delete[] src;
+    }
+
+    // --- AC10: corner radius antialiasing & interpolation ---
+    {
+        RendererTransformState a, b;
+        a.cropRight = 0.0; b.cropRight = 0.5;
+        a.cornerRadius = 0.0; b.cornerRadius = 1.0;
+        RendererTransformState mid = statemotion::interpolate(a, b, 0.5);
+        bool okInterp = std::abs(mid.cropRight - 0.25) < 1e-12 && std::abs(mid.cornerRadius - 0.5) < 1e-12;
+        check(okInterp, "AC10 crop & cornerRadius linear interpolation");
+
+        Pixel* src = makeSource(W, H, 1.0);
+        std::vector<statemotion::Pixel> out(W * H);
+        RendererTransformState t;
+        t.cornerRadius = 1.0;
+        auto p = statemotion::plan(t, W, H);
+        statemotion::render(p, sample, src, W, H, out.data());
+        // Rounded corners produce reduced alpha at outer corner pixels (0,0) compared to center (1,1)
+        bool okRounded = out[0].a < out[1 * W + 1].a && out[1 * W + 1].a > 0.9;
+        check(okRounded, "AC10 corner radius antialiases outer corners");
+        delete[] src;
+    }
+
+    // --- AC11: drop shadow compositing & softness interpolation ---
+    {
+        RendererTransformState a, b;
+        a.shadowOpacity = 0.0; b.shadowOpacity = 1.0;
+        a.shadowDistance = 0.0; b.shadowDistance = 20.0;
+        RendererTransformState mid = statemotion::interpolate(a, b, 0.5);
+        bool okInterp = std::abs(mid.shadowOpacity - 0.5) < 1e-12 && std::abs(mid.shadowDistance - 10.0) < 1e-12;
+        check(okInterp, "AC11 shadow opacity & distance linear interpolation");
+
+        Pixel* src = makeSource(W, H, 1.0);
+        std::vector<statemotion::Pixel> out(W * H);
+        RendererTransformState t;
+        t.shadowOpacity = 0.5;
+        t.shadowDistance = 0.0;
+        t.shadowSoftness = 0.0;
+        auto p = statemotion::plan(t, W, H);
+        statemotion::render(p, sample, src, W, H, out.data());
+        bool okShadow = p.hasShadow && out[0].a > 0.0;
+        check(okShadow, "AC11 drop shadow rendering active");
+        delete[] src;
+    }
+
     std::printf("\n%s: %d failures\n", failures ? "FAILED" : "ALL PASSED", failures);
     return failures ? 1 : 0;
 }

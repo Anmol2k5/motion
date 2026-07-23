@@ -26,6 +26,15 @@ RendererTransformState interpolate(const RendererTransformState& a, const Render
     r.anchorX = a.anchorX + (b.anchorX - a.anchorX) * t;
     r.anchorY = a.anchorY + (b.anchorY - a.anchorY) * t;
     r.opacity = a.opacity + (b.opacity - a.opacity) * t;
+    r.cropLeft = a.cropLeft + (b.cropLeft - a.cropLeft) * t;
+    r.cropRight = a.cropRight + (b.cropRight - a.cropRight) * t;
+    r.cropTop = a.cropTop + (b.cropTop - a.cropTop) * t;
+    r.cropBottom = a.cropBottom + (b.cropBottom - a.cropBottom) * t;
+    r.cornerRadius = a.cornerRadius + (b.cornerRadius - a.cornerRadius) * t;
+    r.shadowOpacity = a.shadowOpacity + (b.shadowOpacity - a.shadowOpacity) * t;
+    r.shadowAngleDeg = a.shadowAngleDeg + (b.shadowAngleDeg - a.shadowAngleDeg) * t;
+    r.shadowDistance = a.shadowDistance + (b.shadowDistance - a.shadowDistance) * t;
+    r.shadowSoftness = a.shadowSoftness + (b.shadowSoftness - a.shadowSoftness) * t;
     return r;
 }
 
@@ -44,8 +53,47 @@ CpuRenderPlan plan(const RendererTransformState& t, int srcW, int srcH) {
     p.anchorY = t.anchorY;
     p.translateX = t.positionX;
     p.translateY = t.positionY;
+
+    // Crop calculation
+    const double cl = std::clamp(t.cropLeft, 0.0, 1.0);
+    const double cr = std::clamp(t.cropRight, 0.0, 1.0);
+    const double ct = std::clamp(t.cropTop, 0.0, 1.0);
+    const double cb = std::clamp(t.cropBottom, 0.0, 1.0);
+    const double crad = std::clamp(t.cornerRadius, 0.0, 1.0);
+
+    p.hasCropMask = (cl > 0.0 || cr > 0.0 || ct > 0.0 || cb > 0.0 || crad > 0.0);
+    p.cropMinX = cl * srcW;
+    p.cropMaxX = (1.0 - cr) * srcW;
+    p.cropMinY = ct * srcH;
+    p.cropMaxY = (1.0 - cb) * srcH;
+
+    const double cropW = p.cropMaxX - p.cropMinX;
+    const double cropH = p.cropMaxY - p.cropMinY;
+
+    if (cropW <= 0.0 || cropH <= 0.0) {
+        p.fullyTransparent = true;
+    } else if (p.hasCropMask) {
+        p.cropCenterX = 0.5 * (p.cropMinX + p.cropMaxX);
+        p.cropCenterY = 0.5 * (p.cropMinY + p.cropMaxY);
+        const double maxRadius = 0.5 * std::min(cropW, cropH);
+        p.cornerRadiusPx = crad * maxRadius;
+        p.cropHalfInnerW = std::max(0.0, 0.5 * cropW - p.cornerRadiusPx);
+        p.cropHalfInnerH = std::max(0.0, 0.5 * cropH - p.cornerRadiusPx);
+    }
+
+    // Shadow calculation
+    p.shadowOpacity = std::clamp(t.shadowOpacity, 0.0, 1.0);
+    p.shadowSoftnessPx = std::max(0.0, t.shadowSoftness);
+    p.hasShadow = (p.shadowOpacity > 0.0 && p.opacity > 0.0);
+    if (p.hasShadow) {
+        double radShadow = t.shadowAngleDeg * 3.14159265358979323846 / 180.0;
+        p.shadowOffsetX = std::cos(radShadow) * t.shadowDistance;
+        p.shadowOffsetY = std::sin(radShadow) * t.shadowDistance;
+    }
+
     p.identityTransform =
-        (std::abs(t.positionX - t.anchorX) < 1e-9 &&
+        (!p.hasCropMask && !p.hasShadow &&
+         std::abs(t.positionX - t.anchorX) < 1e-9 &&
          std::abs(t.positionY - t.anchorY) < 1e-9 &&
          std::abs(t.scaleX - 1.0) < 1e-9 && std::abs(t.scaleY - 1.0) < 1e-9 &&
          std::abs(t.rotationDeg) < 1e-9);
@@ -65,6 +113,46 @@ Pixel lerp(Pixel a, Pixel b, double f) {
 
 Pixel transparent() { return Pixel{}; }
 
+double evalCropMaskAlpha(const CpuRenderPlan& p, double sx, double sy) {
+    if (!p.hasCropMask) return 1.0;
+    const double px = std::abs(sx - p.cropCenterX) - p.cropHalfInnerW;
+    const double py = std::abs(sy - p.cropCenterY) - p.cropHalfInnerH;
+    const double dx = std::max(px, 0.0);
+    const double dy = std::max(py, 0.0);
+    const double distOut = std::sqrt(dx * dx + dy * dy);
+    const double distIn = std::min(std::max(px, py), 0.0);
+    const double sdf = distOut + distIn - p.cornerRadiusPx;
+    return std::clamp(0.5 - sdf, 0.0, 1.0);
+}
+
+double sampleTransformedAlphaAt(const CpuRenderPlan& p, Sampler sampler, void* user, double px, double py) {
+    double sx = px;
+    double sy = py;
+    if (!p.identityTransform) {
+        double dx = px - p.translateX;
+        double dy = py - p.translateY;
+        double rx = p.cosR * dx + p.sinR * dy;
+        double ry = -p.sinR * dx + p.cosR * dy;
+        sx = rx * p.invScaleX + p.anchorX;
+        sy = ry * p.invScaleY + p.anchorY;
+    }
+    const int x0 = static_cast<int>(std::floor(sx));
+    const int y0 = static_cast<int>(std::floor(sy));
+    const int x1 = x0 + 1;
+    const int y1 = y0 + 1;
+    double a = 0.0;
+    if (x0 >= 0 && y0 >= 0 && x1 < p.srcW && y1 < p.srcH) {
+        const double fx = sx - x0;
+        const double fy = sy - y0;
+        double topA = sampler(user, x0, y0).a + (sampler(user, x1, y0).a - sampler(user, x0, y0).a) * fx;
+        double botA = sampler(user, x0, y1).a + (sampler(user, x1, y1).a - sampler(user, x0, y1).a) * fx;
+        a = topA + (botA - topA) * fy;
+    } else if (p.identityTransform && px >= 0 && px < p.srcW && py >= 0 && py < p.srcH) {
+        a = sampler(user, static_cast<int>(px), static_cast<int>(py)).a;
+    }
+    return a * evalCropMaskAlpha(p, sx, sy) * p.opacity;
+}
+
 }  // namespace
 
 void render(const CpuRenderPlan& p, Sampler sampler, void* user,
@@ -76,6 +164,8 @@ void render(const CpuRenderPlan& p, Sampler sampler, void* user,
     for (int y = 0; y < outH; ++y) {
         for (int x = 0; x < outW; ++x) {
             Pixel result = transparent();
+            double sx = static_cast<double>(x);
+            double sy = static_cast<double>(y);
             if (!p.identityTransform) {
                 // Inverse of forward map out = R(theta)*((s-anchor)*scale) + position.
                 // Solve for source s. R(-theta) = [cos, sin; -sin, cos]. Deterministic;
@@ -84,8 +174,8 @@ void render(const CpuRenderPlan& p, Sampler sampler, void* user,
                 double dy = y - p.translateY;
                 double rx = p.cosR * dx + p.sinR * dy;
                 double ry = -p.sinR * dx + p.cosR * dy;
-                double sx = rx * p.invScaleX + p.anchorX;
-                double sy = ry * p.invScaleY + p.anchorY;
+                sx = rx * p.invScaleX + p.anchorX;
+                sy = ry * p.invScaleY + p.anchorY;
 
                 const int x0 = static_cast<int>(std::floor(sx));
                 const int y0 = static_cast<int>(std::floor(sy));
@@ -101,11 +191,44 @@ void render(const CpuRenderPlan& p, Sampler sampler, void* user,
             } else if (x >= 0 && x < p.srcW && y >= 0 && y < p.srcH) {
                 result = sampler(user, x, y);
             }
+
+            // Apply crop and rounded rectangle mask alpha.
+            const double maskAlpha = evalCropMaskAlpha(p, sx, sy);
+            const double effectiveOpacity = p.opacity * maskAlpha;
+
             // Premultiplied-alpha opacity (handoff 3).
-            result.r *= p.opacity;
-            result.g *= p.opacity;
-            result.b *= p.opacity;
-            result.a *= p.opacity;
+            result.r *= effectiveOpacity;
+            result.g *= effectiveOpacity;
+            result.b *= effectiveOpacity;
+            result.a *= effectiveOpacity;
+
+            // Composite drop shadow behind content
+            if (p.hasShadow) {
+                double shadowAlphaSum = 0.0;
+                const double shadowPx = static_cast<double>(x) - p.shadowOffsetX;
+                const double shadowPy = static_cast<double>(y) - p.shadowOffsetY;
+                if (p.shadowSoftnessPx <= 0.0) {
+                    shadowAlphaSum = sampleTransformedAlphaAt(p, sampler, user, shadowPx, shadowPy);
+                } else {
+                    const int radius = std::min(5, static_cast<int>(std::ceil(p.shadowSoftnessPx)));
+                    int sampleCount = 0;
+                    for (int dy = -radius; dy <= radius; ++dy) {
+                        for (int dx = -radius; dx <= radius; ++dx) {
+                            shadowAlphaSum += sampleTransformedAlphaAt(p, sampler, user, shadowPx + dx, shadowPy + dy);
+                            sampleCount++;
+                        }
+                    }
+                    if (sampleCount > 0) shadowAlphaSum /= sampleCount;
+                }
+                const double shadowAlpha = std::clamp(shadowAlphaSum * p.shadowOpacity, 0.0, 1.0);
+                // Porter-Duff Over: result (content) over shadow (black with shadowAlpha)
+                const double invContentA = 1.0 - result.a;
+                result.r += 0.0 * invContentA;
+                result.g += 0.0 * invContentA;
+                result.b += 0.0 * invContentA;
+                result.a += shadowAlpha * invContentA;
+            }
+
             out[y * outW + x] = result;
         }
     }
