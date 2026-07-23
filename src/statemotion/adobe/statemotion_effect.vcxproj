@@ -118,6 +118,7 @@
     <ClCompile Include="$(MSBuildProjectDirectory)\..\renderer\transform_render.cpp" />
     <ClCompile Include="$(MSBuildProjectDirectory)\..\progress\easing.cpp" />
     <ClCompile Include="$(MSBuildProjectDirectory)\..\progress\progress_engine.cpp" />
+    <ClCompile Include="$(MSBuildProjectDirectory)\..\progress\easing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="statemotion_effect.h" />

@@ -12,6 +12,7 @@
 
 #include "statemotion_effect.h"
 #include "statemotion_point_default.hpp"
+#include "statemotion_world_pixels.hpp"
 
 // Minimal error-propagation macro: run the call and return on the first error.
 #define SM_ERR(x)                    \
@@ -204,45 +205,52 @@ smParamIndex(int diskId)
     return -1;
 }
 
-// Phase 0.1 advertises no deep-color capability, so Premiere supplies PF_Pixel8.
-// Keep the host boundary honest; broader pixel-format support is a later gate.
+
+// The legacy PF_Cmd_RENDER path hands an 8-bit world when no depth capability is
+// declared (out_flags = 0), or a 16-bit world under DEEP_COLOR_AWARE. Float
+// worlds only arrive on the SmartFX path, which this effect does not implement.
+// Reading the world at the wrong depth (the prior float-only cast) over-reads
+// past every row and the buffer end -> host low-level exception (AEVideoFilter).
+static statemotion::world::WorldDepth
+smWorldDepth(const PF_EffectWorld *world)
+{
+    return PF_WORLD_IS_DEEP(world)
+        ? statemotion::world::WorldDepth::Sixteen
+        : statemotion::world::WorldDepth::Eight;
+}
+
 static void
 smWorldToPixels(const PF_EffectWorld *world, std::vector<statemotion::Pixel> &out)
 {
-    const int w = world->width;
-    const int h = world->height;
-    out.resize(static_cast<size_t>(w) * h);
-    const A_long rowbytes = world->rowbytes;
-    for (int y = 0; y < h; ++y) {
-        const PF_Pixel8 *row =
-            reinterpret_cast<const PF_Pixel8 *>(reinterpret_cast<const char *>(world->data) + y * rowbytes);
-        for (int x = 0; x < w; ++x) {
-            const PF_Pixel8 &px = row[x];
-            statemotion::Pixel &p = out[static_cast<size_t>(y) * w + x];
-            p.r = statemotion::raster::byteToUnit(px.red);
-            p.g = statemotion::raster::byteToUnit(px.green);
-            p.b = statemotion::raster::byteToUnit(px.blue);
-            p.a = statemotion::raster::byteToUnit(px.alpha);
-        }
-    }
+    statemotion::world::worldToPixels(
+        world->data, world->width, world->height,
+        static_cast<std::ptrdiff_t>(world->rowbytes), smWorldDepth(world), out);
 }
 
 static void
 smPixelsToWorld(const std::vector<statemotion::Pixel> &in, PF_EffectWorld *world)
 {
-    const int w = world->width;
-    const int h = world->height;
-    const A_long rowbytes = world->rowbytes;
+    statemotion::world::pixelsToWorld(
+        in, world->data, world->width, world->height,
+        static_cast<std::ptrdiff_t>(world->rowbytes), smWorldDepth(world));
+}
+
+// Safe identity copy respecting per-world rowbytes. Copies only the overlapping
+// region so a src/dst dimension or stride mismatch can never over-read/write.
+static void
+smIdentityCopy(const PF_EffectWorld *src, PF_EffectWorld *dst)
+{
+    const int w = src->width < dst->width ? src->width : dst->width;
+    const int h = src->height < dst->height ? src->height : dst->height;
+    const A_long srb = src->rowbytes;
+    const A_long drb = dst->rowbytes;
+    const size_t bpp = statemotion::world::bytesPerPixel(smWorldDepth(dst));
+    const size_t bytesPerRow = static_cast<size_t>(w) * bpp;
     for (int y = 0; y < h; ++y) {
-        PF_Pixel8 *row =
-            reinterpret_cast<PF_Pixel8 *>(reinterpret_cast<char *>(world->data) + y * rowbytes);
-        for (int x = 0; x < w; ++x) {
-            const statemotion::Pixel &p = in[static_cast<size_t>(y) * w + x];
-            row[x].red = statemotion::raster::unitToByte(p.r);
-            row[x].green = statemotion::raster::unitToByte(p.g);
-            row[x].blue = statemotion::raster::unitToByte(p.b);
-            row[x].alpha = statemotion::raster::unitToByte(p.a);
-        }
+
+        const char *s = reinterpret_cast<const char *>(src->data) + static_cast<ptrdiff_t>(y) * srb;
+        char *d = reinterpret_cast<char *>(dst->data) + static_cast<ptrdiff_t>(y) * drb;
+        ::memcpy(d, s, bytesPerRow);
     }
 }
 
@@ -336,15 +344,15 @@ Render(
         statemotion::native::modeFromPopup(modeIdx),
         statemotion::native::alignmentFromPopup(alignIdx),
         dur, delay, manual,
-        static_cast<statemotion::ids::EasingMode>(easingIdx),
+
+        static_cast<statemotion::EasingMode>(easingIdx),
         {cx1, cy1, cx2, cy2});
 
     // 4. Progress -> canonical interpolation.
     auto pe = statemotion::evaluateProgress(pin);
     if (!pe.ok) {
         // Non-finite input: fail safe to identity copy.
-        const A_long bytes = output->rowbytes * H;
-        if (bytes > 0) ::memcpy(dst->data, src->data, static_cast<size_t>(bytes));
+        smIdentityCopy(src, dst);
         return err;
     }
     auto canon = statemotion::interpolateCanonical(A, B, pe.result.easedProgress);
@@ -370,8 +378,7 @@ Render(
     // 6. Identity fast path (true no-op only).
     auto plan = statemotion::plan(rt, SW, SH);
     if (plan.identityTransform) {
-        const A_long bytes = output->rowbytes * H;
-        if (bytes > 0) ::memcpy(dst->data, src->data, static_cast<size_t>(bytes));
+        smIdentityCopy(src, dst);
         return err;
     }
 
