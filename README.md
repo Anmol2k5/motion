@@ -5,9 +5,9 @@ panel for Adobe Premiere Pro.
 
 ## Status
 
-StateMotion is currently in Phase 0.1 architecture validation.
-
-It is not yet installable or usable inside Premiere Pro.
+StateMotion is currently a v0.1 private-alpha candidate. Host-independent code
+is implemented; the current native binary must still be rebuilt and the combined
+native effect + UXP panel must be certified in Premiere Pro 26.3.
 
 Currently implemented:
 
@@ -19,25 +19,25 @@ Currently implemented:
 - Three alignment modes
 - Shared C++/TypeScript parity fixtures
 - Deterministic contract generation and validation tests
+- Native effect parameter registration and CPU render integration
+- Premiere Pro 26.3 UXP panel adapter and preset library
+- Local user presets, favorites, collections, import/export, and diagnostics
 
 Not currently implemented:
 
-- Adobe native effect registration
-- UXP panel integration
-- Premiere timeline and selection integration
+- Certified Premiere host integration
 - GPU rendering
 - Crop and rounded masks
 - Stroke, glow, and shadow
 - Motion blur
-- Full preset management
 - Batch tools
 - Production installers
 
 ## Development status
 
-The current codebase contains host-independent foundations only. Adobe host
-integration must not be considered working until it has been built and tested
-inside Premiere Pro with the appropriate Adobe SDK.
+Adobe host integration must not be considered release-ready until the corrected
+25-parameter native effect has been rebuilt with the Adobe SDK and the release
+checklist has been run inside Premiere Pro 26.3.
 
 ## Clean-room development
 
@@ -76,4 +76,15 @@ C++ renderer and progress-engine tests are built and run with a C++17 compiler
 node --experimental-transform-types src/statemotion/progress/progressEngine.test.ts
 ```
 
-No Premiere Pro host integration exists yet; no host-side tests have been run.
+Panel verification:
+
+```
+cd src/statemotion/panel
+npm ci
+npm run typecheck
+npm test
+npm run build
+```
+
+Host-side certification status is tracked in
+`docs/releases/v0.1-alpha-host-status.md`.
