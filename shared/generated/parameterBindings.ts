@@ -19,14 +19,14 @@ export interface ParameterBinding {
   oldDefault: number | string;
 }
 
-export const CONTRACT_DIGEST = "c4855e30edc47e23f3f6794ed526c7b5fe9fccf25c9fe6a34105224c8bc2cb46";
+export const CONTRACT_DIGEST = "af78592f70e322c9f60e5ea979cad0ed3a22f3b1aade66629ff0ec422fdaad79";
 export const SCHEMA_VERSION = 1;
 export const BINDING_REVISION = 2;
-export const PARAMETER_COUNT = 25;
+export const PARAMETER_COUNT = 43;
 
 export const BINDINGS: ParameterBinding[] = [
   { logicalId: "contract.schemaVersion", diskId: 1, wireName: "SM Schema Version", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 1, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 1 },
-  { logicalId: "contract.parameterCount", diskId: 2, wireName: "SM Param Count", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 25, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 20 },
+  { logicalId: "contract.parameterCount", diskId: 2, wireName: "SM Param Count", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 43, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 20 },
   { logicalId: "contract.bindingRevision", diskId: 3, wireName: "SM Binding Rev", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 2, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 1 },
   { logicalId: "transition.mode", diskId: 50, wireName: "SM Mode", nativeType: "POPUP", stateOwnership: "transition", timeVariance: "static", defaultVal: 0, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "ProgressMode", oldDefault: 0 },
   { logicalId: "transition.alignment", diskId: 51, wireName: "SM Alignment", nativeType: "POPUP", stateOwnership: "transition", timeVariance: "static", defaultVal: 0, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "AlignmentMode", oldDefault: 0 },
@@ -50,6 +50,24 @@ export const BINDINGS: ParameterBinding[] = [
   { logicalId: "transform.anchor.b", diskId: 109, wireName: "SM Anchor B", nativeType: "POINT", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: "sourceCenter", validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: "sourceCenter" },
   { logicalId: "transform.opacity.a", diskId: 110, wireName: "SM Opacity A", nativeType: "FLOAT_SLIDER", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: 100, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 100 },
   { logicalId: "transform.opacity.b", diskId: 111, wireName: "SM Opacity B", nativeType: "FLOAT_SLIDER", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 100, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 100 },
+  { logicalId: "crop.left.a", diskId: 150, wireName: "SM Crop Left A", nativeType: "FLOAT_SLIDER", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: 0, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 0 },
+  { logicalId: "crop.left.b", diskId: 151, wireName: "SM Crop Left B", nativeType: "FLOAT_SLIDER", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 0, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 0 },
+  { logicalId: "crop.right.a", diskId: 152, wireName: "SM Crop Right A", nativeType: "FLOAT_SLIDER", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: 0, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 0 },
+  { logicalId: "crop.right.b", diskId: 153, wireName: "SM Crop Right B", nativeType: "FLOAT_SLIDER", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 0, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 0 },
+  { logicalId: "crop.top.a", diskId: 154, wireName: "SM Crop Top A", nativeType: "FLOAT_SLIDER", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: 0, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 0 },
+  { logicalId: "crop.top.b", diskId: 155, wireName: "SM Crop Top B", nativeType: "FLOAT_SLIDER", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 0, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 0 },
+  { logicalId: "crop.bottom.a", diskId: 156, wireName: "SM Crop Bottom A", nativeType: "FLOAT_SLIDER", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: 0, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 0 },
+  { logicalId: "crop.bottom.b", diskId: 157, wireName: "SM Crop Bottom B", nativeType: "FLOAT_SLIDER", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 0, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 0 },
+  { logicalId: "crop.cornerRadius.a", diskId: 158, wireName: "SM Corner Radius A", nativeType: "FLOAT_SLIDER", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: 0, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 0 },
+  { logicalId: "crop.cornerRadius.b", diskId: 159, wireName: "SM Corner Radius B", nativeType: "FLOAT_SLIDER", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 0, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 0 },
+  { logicalId: "shadow.opacity.a", diskId: 250, wireName: "SM Shadow Opacity A", nativeType: "FLOAT_SLIDER", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: 0, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 0 },
+  { logicalId: "shadow.opacity.b", diskId: 251, wireName: "SM Shadow Opacity B", nativeType: "FLOAT_SLIDER", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 0, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 0 },
+  { logicalId: "shadow.angle.a", diskId: 252, wireName: "SM Shadow Angle A", nativeType: "ANGLE", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: 2.356194490192345, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: 2.356194490192345 },
+  { logicalId: "shadow.angle.b", diskId: 253, wireName: "SM Shadow Angle B", nativeType: "ANGLE", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 2.356194490192345, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: 2.356194490192345 },
+  { logicalId: "shadow.distance.a", diskId: 254, wireName: "SM Shadow Distance A", nativeType: "FLOAT_SLIDER", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: 10, validMin: 0, validMax: 1000, uiMin: 0, uiMax: 200, enumRef: "", oldDefault: 10 },
+  { logicalId: "shadow.distance.b", diskId: 255, wireName: "SM Shadow Distance B", nativeType: "FLOAT_SLIDER", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 10, validMin: 0, validMax: 1000, uiMin: 0, uiMax: 200, enumRef: "", oldDefault: 10 },
+  { logicalId: "shadow.softness.a", diskId: 256, wireName: "SM Shadow Softness A", nativeType: "FLOAT_SLIDER", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: 20, validMin: 0, validMax: 500, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 20 },
+  { logicalId: "shadow.softness.b", diskId: 257, wireName: "SM Shadow Softness B", nativeType: "FLOAT_SLIDER", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 20, validMin: 0, validMax: 500, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 20 },
 ];
 
 const byLogicalId = new Map<string, ParameterBinding>(

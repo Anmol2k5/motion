@@ -39,8 +39,8 @@ expectFail('diskId 0', (c) => { c.parameters[0].diskId = 0; }, 'diskId 0');
 expectFail('diskId out of range (>9999)', (c) => { c.parameters[0].diskId = 10000; }, 'outside 1..9999');
 expectFail('diskId out of range (<1)', (c) => { c.parameters[0].diskId = -1; }, 'outside 1..9999');
 expectFail('param outside declared family range', (c) => { c.parameters.find(p => p.logicalId === 'transform.opacity.b').diskId = 60; }, 'expected transform');
-expectFail('entry in reserved family (cropMask)', (c) => {
-  c.parameters.push({ logicalId: 'transform.crop.radius', diskId: 160, wireName: 'SM Crop Radius', nativeType: 'FLOAT_SLIDER', default: 10, range: { min: 0, max: 100 }, uiRange: { min: 0, max: 100 }, introducedInSchema: 1, timeVariance: 'interpolatable', serialization: 'diskId', fingerprint: true, stateOwnership: 'A', canonical: 'px', oldProjectDefault: 10 });
+expectFail('entry in reserved family (motionBlurQuality)', (c) => {
+  c.parameters.push({ logicalId: 'quality.shutterAngle', diskId: 310, wireName: 'SM Shutter Angle', nativeType: 'FLOAT_SLIDER', default: 180, range: { min: 0, max: 360 }, uiRange: { min: 0, max: 360 }, introducedInSchema: 1, timeVariance: 'interpolatable', serialization: 'diskId', fingerprint: true, stateOwnership: 'A', canonical: 'deg', oldProjectDefault: 180 });
 }, null);
 expectFail('duplicate wireName', (c) => { c.parameters[1].wireName = c.parameters[0].wireName; }, 'duplicate wireName');
 expectFail('wireName too long (>31)', (c) => { c.parameters[0].wireName = 'X'.repeat(32); }, 'exceeds 31');
@@ -134,8 +134,8 @@ expectFail('binding revision metadata mismatch', (c) => {
   assert.ok(cpp.includes('"transition.mode", 50, "SM Mode", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 7, "ProgressMode"'), 'transition.mode popup binding wrong');
   // A POINT must emit defaultNum 0 (native resolves center).
   assert.ok(cpp.includes('"transform.position.a", 100, "SM Position A", "POINT", "A", "interpolatable", 0,'), 'position.a POINT default must be 0');
-  // parameterCount metadata new-default 25 (5 easing params added), old-default 20.
-  assert.ok(cpp.includes('"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 25, 1, 9999, 1, 9999, 20,'), 'parameterCount old default wrong');
+  // parameterCount metadata new-default 43 (shadow params added), old-default 20.
+  assert.ok(cpp.includes('"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 43, 1, 9999, 1, 9999, 20,'), 'parameterCount old default wrong');
   pass('enhanced C++ binding fields present and match contract');
 })();
 
