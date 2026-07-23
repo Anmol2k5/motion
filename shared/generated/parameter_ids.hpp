@@ -26,7 +26,9 @@ enum class EasingMode : int {
   EaseIn = 1,
   EaseOut = 2,
   EaseInOut = 3,
-  Custom = 4
+  Custom = 4,
+  Spring = 5,
+  Bounce = 6
 };
 
 inline constexpr int kSchemaVersion = 1;

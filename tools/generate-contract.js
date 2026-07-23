@@ -33,6 +33,7 @@ const REQUIRED_ENUMS = {
   ],
   EasingMode: [
     ['Linear', 0], ['EaseIn', 1], ['EaseOut', 2], ['EaseInOut', 3], ['Custom', 4],
+    ['Spring', 5], ['Bounce', 6],
   ],
 };
 

@@ -3,7 +3,7 @@
 - schemaVersion: 1
 - bindingRevision: 2
 - parameterCount: 43
-- SHA-256: `af78592f70e322c9f60e5ea979cad0ed3a22f3b1aade66629ff0ec422fdaad79`
+- SHA-256: `98c9ae4be308d9344519b6c777bbfd862547888c26c5d62e9bdc5100e5be8c32`
 
 > GENERATED from shared/schema/parameter-contract.json. Do not edit by hand.
 
@@ -29,6 +29,8 @@
 - EaseOut = 2
 - EaseInOut = 3
 - Custom = 4
+- Spring = 5
+- Bounce = 6
 
 ## Parameters
 

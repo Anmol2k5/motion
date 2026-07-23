@@ -19,7 +19,7 @@ export interface ParameterBinding {
   oldDefault: number | string;
 }
 
-export const CONTRACT_DIGEST = "af78592f70e322c9f60e5ea979cad0ed3a22f3b1aade66629ff0ec422fdaad79";
+export const CONTRACT_DIGEST = "98c9ae4be308d9344519b6c777bbfd862547888c26c5d62e9bdc5100e5be8c32";
 export const SCHEMA_VERSION = 1;
 export const BINDING_REVISION = 2;
 export const PARAMETER_COUNT = 43;

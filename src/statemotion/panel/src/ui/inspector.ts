@@ -76,7 +76,7 @@ export class InspectorView {
   private repository: PresetRepository | null = null;
 
   private async renderEasingControl(container: HTMLElement, clipId: string): Promise<void> {
-    const EASING_LABELS = ['Linear', 'EaseIn', 'EaseOut', 'EaseInOut', 'Custom'];
+    const EASING_LABELS = ['Linear', 'EaseIn', 'EaseOut', 'EaseInOut', 'Custom', 'Spring', 'Bounce'];
     const CURVE_IDS = ['transition.curveX1', 'transition.curveY1', 'transition.curveX2', 'transition.curveY2'] as const;
 
     let easing = 3;

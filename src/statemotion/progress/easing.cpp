@@ -85,6 +85,31 @@ double evaluateEasing(EasingMode mode, const EasingCurve& curve, double linear) 
             double t = solveBezierT(x, curve.x1, curve.x2);
             return clamp01(bezierY(t, curve.y1, curve.y2));
         }
+        case EasingMode::SPRING: {
+            if (x <= 0.0) return 0.0;
+            if (x >= 1.0) return 1.0;
+            double spring = 1.0 - std::exp(-6.0 * x) * std::cos(12.0 * x);
+            return std::clamp(spring, 0.0, 1.2);
+        }
+        case EasingMode::BOUNCE: {
+            if (x <= 0.0) return 0.0;
+            if (x >= 1.0) return 1.0;
+            const double n1 = 7.5625;
+            const double d1 = 2.75;
+            double t = x;
+            if (t < 1.0 / d1) {
+                return n1 * t * t;
+            } else if (t < 2.0 / d1) {
+                t -= 1.5 / d1;
+                return n1 * t * t + 0.75;
+            } else if (t < 2.5 / d1) {
+                t -= 2.25 / d1;
+                return n1 * t * t + 0.9375;
+            } else {
+                t -= 2.625 / d1;
+                return n1 * t * t + 0.984375;
+            }
+        }
     }
     return x;  // unreachable; safe fallback
 }

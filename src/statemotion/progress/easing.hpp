@@ -19,7 +19,9 @@ enum class EasingMode {
     EASE_IN = 1,
     EASE_OUT = 2,
     EASE_IN_OUT = 3,
-    CUSTOM = 4
+    CUSTOM = 4,
+    SPRING = 5,
+    BOUNCE = 6
 };
 
 struct EasingCurve {
