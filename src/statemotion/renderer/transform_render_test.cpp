@@ -63,6 +63,15 @@ int main() {
         delete[] src;
     }
 
+    // Native defaults use absolute center position and center anchor.
+    {
+        RendererTransformState centered;
+        centered.positionX = 2.0; centered.positionY = 2.0;
+        centered.anchorX = 2.0; centered.anchorY = 2.0;
+        check(statemotion::plan(centered, W, H).identityTransform,
+              "AC1 center position + center anchor is identity");
+    }
+
     // --- AC2: position-only shift (translate by +1,+1) ---
     {
         Pixel* src = makeSource(W, H, 0.5);

@@ -70,18 +70,13 @@ int main() {
         ids::ProgressMode::HoldB, ids::AlignmentMode::EntireClip, 1.0, 0.0, 0.0);
     check(std::abs(evaluateProgress(inHB).result.easedProgress - 1.0) < 1e-9, "HoldB eased=1");
 
-    // Identity fast path: genuinely identity canonical state (no translate/rotate/scale,
-    // anchor 0, opacity 1). Centered position (0.5,0.5) is a real translate, not identity.
-    TransformState id;  // all-zero normalized except scale=1, opacity=1
+    // StateMotion Position is an absolute frame coordinate. Matching center
+    // position/anchor with unit scale and zero rotation is the native default
+    // and must be identity.
     raster::RenderDimensions d{1920, 1080, 1920, 1080};
-    auto rId = raster::toRendererTransformState(id, d);
-    auto planId = plan(rId, d.sourceW, d.sourceH);
-    check(planId.identityTransform, "identity canonical state -> identity plan");
-
-    // Centered position (the default A) is a real translate, so it is NOT the fast path.
     auto rA = raster::toRendererTransformState(A, d);
     auto planA = plan(rA, d.sourceW, d.sourceH);
-    check(!planA.identityTransform, "centered A is a real transform (not identity fast path)");
+    check(planA.identityTransform, "native centered defaults -> identity plan");
 
     // Render B through the existing CPU renderer (no crash, finite).
     std::vector<statemotion::Pixel> out(static_cast<size_t>(d.outputW) * d.outputH);

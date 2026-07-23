@@ -41,6 +41,9 @@
     <TargetExt>.aex</TargetExt>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup>
+    <TargetExt>.aex</TargetExt>
+  </PropertyGroup>
   <ImportGroup Label="ExtensionSettings" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)'=='Debug'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -113,6 +116,7 @@
     <ClCompile Include="statemotion_effect.cpp" />
     <ClCompile Include="statemotion_effect_strings.cpp" />
     <ClCompile Include="$(MSBuildProjectDirectory)\..\renderer\transform_render.cpp" />
+    <ClCompile Include="$(MSBuildProjectDirectory)\..\progress\easing.cpp" />
     <ClCompile Include="$(MSBuildProjectDirectory)\..\progress\progress_engine.cpp" />
   </ItemGroup>
   <ItemGroup>

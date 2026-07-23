@@ -204,10 +204,8 @@ smParamIndex(int diskId)
     return -1;
 }
 
-// Build a premultiplied-alpha RGBA float Pixel buffer from a Premiere software
-// PF_EffectWorld. Phase 0.1 supports the 32-bit float, 4-channel (RGBA) world the
-// host hands the CPU path; the exact channel order is confirmed by the operator on
-// the test machine. No generic pixel-format conversion framework is added.
+// Phase 0.1 advertises no deep-color capability, so Premiere supplies PF_Pixel8.
+// Keep the host boundary honest; broader pixel-format support is a later gate.
 static void
 smWorldToPixels(const PF_EffectWorld *world, std::vector<statemotion::Pixel> &out)
 {
@@ -216,15 +214,15 @@ smWorldToPixels(const PF_EffectWorld *world, std::vector<statemotion::Pixel> &ou
     out.resize(static_cast<size_t>(w) * h);
     const A_long rowbytes = world->rowbytes;
     for (int y = 0; y < h; ++y) {
-        const PF_PixelFloat *row =
-            reinterpret_cast<const PF_PixelFloat *>(reinterpret_cast<const char *>(world->data) + y * rowbytes);
+        const PF_Pixel8 *row =
+            reinterpret_cast<const PF_Pixel8 *>(reinterpret_cast<const char *>(world->data) + y * rowbytes);
         for (int x = 0; x < w; ++x) {
-            const PF_PixelFloat &px = row[x];
+            const PF_Pixel8 &px = row[x];
             statemotion::Pixel &p = out[static_cast<size_t>(y) * w + x];
-            p.r = px.red;
-            p.g = px.green;
-            p.b = px.blue;
-            p.a = px.alpha;
+            p.r = statemotion::raster::byteToUnit(px.red);
+            p.g = statemotion::raster::byteToUnit(px.green);
+            p.b = statemotion::raster::byteToUnit(px.blue);
+            p.a = statemotion::raster::byteToUnit(px.alpha);
         }
     }
 }
@@ -236,14 +234,14 @@ smPixelsToWorld(const std::vector<statemotion::Pixel> &in, PF_EffectWorld *world
     const int h = world->height;
     const A_long rowbytes = world->rowbytes;
     for (int y = 0; y < h; ++y) {
-        PF_PixelFloat *row =
-            reinterpret_cast<PF_PixelFloat *>(reinterpret_cast<char *>(world->data) + y * rowbytes);
+        PF_Pixel8 *row =
+            reinterpret_cast<PF_Pixel8 *>(reinterpret_cast<char *>(world->data) + y * rowbytes);
         for (int x = 0; x < w; ++x) {
             const statemotion::Pixel &p = in[static_cast<size_t>(y) * w + x];
-            row[x].red = static_cast<float>(p.r);
-            row[x].green = static_cast<float>(p.g);
-            row[x].blue = static_cast<float>(p.b);
-            row[x].alpha = static_cast<float>(p.a);
+            row[x].red = statemotion::raster::unitToByte(p.r);
+            row[x].green = statemotion::raster::unitToByte(p.g);
+            row[x].blue = statemotion::raster::unitToByte(p.b);
+            row[x].alpha = statemotion::raster::unitToByte(p.a);
         }
     }
 }
@@ -293,16 +291,22 @@ Render(
     const double ob = SM_RD(kTransformOpacityB)->u.fs_d.value;
     #undef SM_RD
 
-    // Native POINT is percent (fixed 16.16); convert to a percent double.
-    auto pct = [](PF_Fixed v) { return static_cast<double>(v) / 65536.0; };
+    // Premiere exposes runtime POINT values as pixels in fixed 16.16.
+    auto fixedToDouble = [](PF_Fixed v) { return static_cast<double>(v) / 65536.0; };
+    const auto posA = statemotion::native::pointPixelsToPercent(
+        fixedToDouble(pa.x_value), fixedToDouble(pa.y_value), W, H);
+    const auto posB = statemotion::native::pointPixelsToPercent(
+        fixedToDouble(pb.x_value), fixedToDouble(pb.y_value), W, H);
+    const auto anchorA = statemotion::native::pointPixelsToPercent(
+        fixedToDouble(aa.x_value), fixedToDouble(aa.y_value), SW, SH);
+    const auto anchorB = statemotion::native::pointPixelsToPercent(
+        fixedToDouble(ab.x_value), fixedToDouble(ab.y_value), SW, SH);
 
     // 2. Native -> canonical A/B.
     auto A = statemotion::native::buildCanonicalState(
-        pct(pa.x_value), pct(pa.y_value), sxa, sya, ra,
-        pct(aa.x_value), pct(aa.y_value), oa);
+        posA.x, posA.y, sxa, sya, ra, anchorA.x, anchorA.y, oa);
     auto B = statemotion::native::buildCanonicalState(
-        pct(pb.x_value), pct(pb.y_value), sxb, syb, rb,
-        pct(ab.x_value), pct(ab.y_value), ob);
+        posB.x, posB.y, sxb, syb, rb, anchorB.x, anchorB.y, ob);
 
     // 3. Host clip-local time -> ProgressInput seconds.
     auto pin = statemotion::host::buildProgressInput(
@@ -310,7 +314,7 @@ Render(
         statemotion::native::modeFromPopup(modeIdx),
         statemotion::native::alignmentFromPopup(alignIdx),
         dur, delay, manual,
-        static_cast<ids::EasingMode>(easingIdx),
+        static_cast<statemotion::ids::EasingMode>(easingIdx),
         {cx1, cy1, cx2, cy2});
 
     // 4. Progress -> canonical interpolation.

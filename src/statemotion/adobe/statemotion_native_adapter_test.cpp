@@ -26,6 +26,10 @@ int main() {
     auto br = pointPercentToNorm(100.0, 100.0);
     check(std::abs(br.x - 1.0) < 1e-12 && std::abs(br.y - 1.0) < 1e-12, "bottom-right 100%->1");
 
+    auto hostCenter = pointPixelsToPercent(368.0, 245.5, 736, 491);
+    check(std::abs(hostCenter.x - 50.0) < 1e-12 && std::abs(hostCenter.y - 50.0) < 1e-12,
+          "Premiere runtime POINT pixels -> contract percent");
+
     // off-frame / negative percent still linear
     auto of = pointPercentToNorm(150.0, -25.0);
     check(std::abs(of.x - 1.5) < 1e-12 && std::abs(of.y + 0.25) < 1e-12, "off-frame linear");

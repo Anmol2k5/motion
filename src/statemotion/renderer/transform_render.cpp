@@ -45,10 +45,10 @@ CpuRenderPlan plan(const RendererTransformState& t, int srcW, int srcH) {
     p.translateX = t.positionX;
     p.translateY = t.positionY;
     p.identityTransform =
-        (std::abs(t.positionX) < 1e-9 && std::abs(t.positionY) < 1e-9 &&
+        (std::abs(t.positionX - t.anchorX) < 1e-9 &&
+         std::abs(t.positionY - t.anchorY) < 1e-9 &&
          std::abs(t.scaleX - 1.0) < 1e-9 && std::abs(t.scaleY - 1.0) < 1e-9 &&
-         std::abs(t.rotationDeg) < 1e-9 && std::abs(t.anchorX) < 1e-9 &&
-         std::abs(t.anchorY) < 1e-9);
+         std::abs(t.rotationDeg) < 1e-9);
     return p;
 }
 
@@ -77,11 +77,11 @@ void render(const CpuRenderPlan& p, Sampler sampler, void* user,
         for (int x = 0; x < outW; ++x) {
             Pixel result = transparent();
             if (!p.identityTransform) {
-                // Inverse of forward map  out = R(theta)*( (s-anchor)*scale ) + anchor + position.
+                // Inverse of forward map out = R(theta)*((s-anchor)*scale) + position.
                 // Solve for source s. R(-theta) = [cos, sin; -sin, cos]. Deterministic;
                 // out-of-bounds => transparent (no edge smear).
-                double dx = x - p.anchorX - p.translateX;
-                double dy = y - p.anchorY - p.translateY;
+                double dx = x - p.translateX;
+                double dy = y - p.translateY;
                 double rx = p.cosR * dx + p.sinR * dy;
                 double ry = -p.sinR * dx + p.cosR * dy;
                 double sx = rx * p.invScaleX + p.anchorX;
