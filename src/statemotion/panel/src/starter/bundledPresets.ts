@@ -4,7 +4,7 @@
 // Source of truth for the shipped library; .stmpreset files are generated from
 // this module (tools/generate-bundled-presets.js) for import/export.
 
-import { FORMAT_ID } from '../domain/presetSchema.ts';
+import { FORMAT_ID, PARAMETER_COUNT } from '../domain/presetSchema.ts';
 import type { StateMotionPreset, ParameterValues } from '../domain/presetSchema.ts';
 
 function preset(
@@ -27,7 +27,7 @@ function preset(
     tags,
     category,
     collectionIds: [],
-    compatibleContract: { schemaVersion: 1, bindingRevision: 2, parameterCount: 25 },
+    compatibleContract: { schemaVersion: 1, bindingRevision: 2, parameterCount: PARAMETER_COUNT },
     parameters,
     preview: { kind: 'generated' },
   };

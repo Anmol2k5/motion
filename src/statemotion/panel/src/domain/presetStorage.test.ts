@@ -6,7 +6,7 @@ import {
   PresetRepository,
   type FsLike,
 } from './presetStorage.ts';
-import { FORMAT_ID } from './presetSchema.ts';
+import { FORMAT_ID, PARAMETER_COUNT } from './presetSchema.ts';
 
 let passed = 0;
 function pass(name: string) {
@@ -47,7 +47,7 @@ function samplePreset(id: string, name: string, category = 'Entrances') {
     tags: [],
     category,
     collectionIds: [],
-    compatibleContract: { schemaVersion: 1, bindingRevision: 2, parameterCount: 25 },
+    compatibleContract: { schemaVersion: 1, bindingRevision: 2, parameterCount: PARAMETER_COUNT },
     parameters: {},
     preview: { kind: 'generated' },
   };

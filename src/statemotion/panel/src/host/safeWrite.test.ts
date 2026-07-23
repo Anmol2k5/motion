@@ -6,12 +6,14 @@ import { buildApplyPlan, type SelectionItem, ItemStatus } from '../domain/applyP
 import { PremiereAdapter, type HostBridge, type ClipRef } from './premiereAdapter.ts';
 import type { StateMotionPreset } from '../domain/presetSchema.ts';
 
+import { PARAMETER_COUNT } from '../domain/presetSchema.ts';
+
 let passed = 0;
 function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
 
-const CURRENT_CONTRACT = { schemaVersion: 1, bindingRevision: 2, parameterCount: 25 };
+const CURRENT_CONTRACT = { schemaVersion: 1, bindingRevision: 2, parameterCount: PARAMETER_COUNT };
 const OLDER_CONTRACT = { schemaVersion: 1, bindingRevision: 1, parameterCount: 20 };
-const NEWER_CONTRACT = { schemaVersion: 2, bindingRevision: 2, parameterCount: 25 };
+const NEWER_CONTRACT = { schemaVersion: 2, bindingRevision: 2, parameterCount: PARAMETER_COUNT };
 
 // --- pure plan classification ------------------------------------------------
 {

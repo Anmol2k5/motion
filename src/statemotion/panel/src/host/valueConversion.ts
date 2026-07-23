@@ -33,6 +33,10 @@ for (const id of LOGICAL_IDS) {
   else if (id.startsWith('transform.scale')) CONVERSION_KIND[id] = 'percent';
   else if (id.startsWith('transform.rotation')) CONVERSION_KIND[id] = 'degrees';
   else if (id.startsWith('transform.opacity')) CONVERSION_KIND[id] = 'percent';
+  else if (id.startsWith('crop.')) CONVERSION_KIND[id] = 'percent';
+  else if (id.startsWith('shadow.opacity')) CONVERSION_KIND[id] = 'percent';
+  else if (id.startsWith('shadow.angle')) CONVERSION_KIND[id] = 'degrees';
+  else if (id.startsWith('shadow.distance') || id.startsWith('shadow.softness')) CONVERSION_KIND[id] = 'identity';
   else if (id.startsWith('transform.position') || id.startsWith('transform.anchor')) CONVERSION_KIND[id] = 'point';
 }
 
@@ -94,7 +98,7 @@ export function toCanonical(logicalId: string, native: NativeValue, binding: Par
     case 'identity': return native as number;
     case 'percent': {
       const v = (native as number) / 100;
-      return logicalId.startsWith('transform.opacity') ? Math.min(1, Math.max(0, v)) : v;
+      return (logicalId.startsWith('transform.opacity') || logicalId.startsWith('crop.')) ? Math.min(1, Math.max(0, v)) : v;
     }
     case 'degrees': return (native as number) * Math.PI / 180;
     case 'point': {

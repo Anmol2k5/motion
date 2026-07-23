@@ -50,13 +50,15 @@ function fakeBridgeWithContract(contract: { schemaVersion: number; bindingRevisi
   };
 }
 
+import { PARAMETER_COUNT } from '../domain/presetSchema.ts';
+
 (async () => {
   const adapter = new PremiereAdapter(fakeBridgeWithState({
     'transition.manualProgress': 50,
     'transform.scaleX.b': 130,
     'transform.opacity.b': 100,
     'contract.schemaVersion': 1,
-    'contract.parameterCount': 25,
+    'contract.parameterCount': PARAMETER_COUNT,
     'contract.bindingRevision': 2,
   }));
   const cfg = await adapter.readState({ clipId: 'c1' });

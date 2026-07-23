@@ -49,10 +49,12 @@ const bridge = new UxpHostBridge(ppro as never);
 const selection = await bridge.getSelection();
 assert.strictEqual(selection.length, 1);
 
+import { PARAMETER_COUNT } from '../domain/presetSchema.ts';
+
 const clip = selection[0];
 assert.deepStrictEqual(await bridge.getContract(clip), {
   schemaVersion: 1,
-  parameterCount: 25,
+  parameterCount: PARAMETER_COUNT,
   bindingRevision: 2,
 });
 

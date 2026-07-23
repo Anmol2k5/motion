@@ -21,7 +21,7 @@ function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
     const expected = byWire[getBinding(id)!.wireName];
     assert.strictEqual(map.resolve(id), expected);
   }
-  pass('resolves all 20 logical ids by stable wireName in shuffled runtime order');
+  pass(`resolves all ${LOGICAL_IDS.length} logical ids by stable wireName in shuffled runtime order`);
 })();
 
 (() => {
