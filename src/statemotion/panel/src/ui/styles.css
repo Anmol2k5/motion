@@ -1,5 +1,5 @@
-// StateMotion Preset Panel — visual design (original, Premiere-aligned).
-// Neutral dark UI, single accent (state-cyan). State never conveyed by color alone.
+/* StateMotion Preset Panel — original, Premiere-aligned visual design.
+   Neutral dark UI, single accent; state is never conveyed by color alone. */
 
 :root {
   --sm-bg: #1b1d21;

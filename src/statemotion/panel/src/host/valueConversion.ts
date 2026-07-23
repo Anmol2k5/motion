@@ -3,6 +3,7 @@
 // Host-free: receives/returns only StateMotion-owned values.
 
 import { getBinding, LOGICAL_IDS, type ParameterBinding } from '../../../../../shared/generated/parameterBindings.ts';
+import type { ParameterValue } from '../domain/presetSchema.ts';
 
 export interface SmPoint { x: number; y: number; }
 export type NativeValue = number | string | SmPoint;
@@ -44,7 +45,7 @@ const EXPECTED_NATIVE: Record<Kind, string> = {
   point: 'POINT',
 };
 
-function resolvePoint(canonical: number | string): SmPoint {
+function resolvePoint(canonical: ParameterValue): SmPoint {
   if (typeof canonical === 'string') {
     if (canonical === 'frameCenter' || canonical === 'sourceCenter') return { x: 0.5, y: 0.5 };
     throw new ConversionTypeMismatch(String(canonical), 'point token', 'unknown token');
@@ -66,7 +67,7 @@ function guard(logicalId: string, kind: Kind, binding: ParameterBinding): void {
   }
 }
 
-export function toNative(logicalId: string, canonical: number | string, binding: ParameterBinding): NativeValue {
+export function toNative(logicalId: string, canonical: ParameterValue, binding: ParameterBinding): NativeValue {
   const b = getBinding(logicalId);
   if (!b) throw new UnknownLogicalId(logicalId);
   const kind = CONVERSION_KIND[logicalId];
@@ -83,7 +84,7 @@ export function toNative(logicalId: string, canonical: number | string, binding:
   }
 }
 
-export function toCanonical(logicalId: string, native: number | string, binding: ParameterBinding): number | string {
+export function toCanonical(logicalId: string, native: NativeValue, binding: ParameterBinding): ParameterValue {
   const b = getBinding(logicalId);
   if (!b) throw new UnknownLogicalId(logicalId);
   const kind = CONVERSION_KIND[logicalId];

@@ -88,6 +88,14 @@ export class PresetRepository {
     return id.startsWith('bundled-');
   }
 
+  async installBundled(presets: StateMotionPreset[]): Promise<void> {
+    for (const preset of presets) {
+      const res = validatePreset(preset);
+      if (!this.isBundled(preset.presetId) || !res.ok) throw new Error('invalid bundled preset: ' + preset.presetId);
+      await this.fs.writeFile(this.bundledPath(preset.presetId), serializePreset(preset));
+    }
+  }
+
   async list(): Promise<StateMotionPreset[]> {
     const out: StateMotionPreset[] = [];
     for (const f of await this.fs.listFiles(this.bundledDir())) {
@@ -167,6 +175,3 @@ export class PresetRepository {
     return serializePreset(preset);
   }
 }
-
-// Re-export the FS contract for callers/tests.
-export type { FsLike };

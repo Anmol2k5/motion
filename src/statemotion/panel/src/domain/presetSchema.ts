@@ -18,7 +18,9 @@ export const PRESET_EXTENSION = '.stmpreset';
 export const CURRENT_SCHEMA_VERSION = SCHEMA_VERSION;
 export { SCHEMA_VERSION, BINDING_REVISION, PARAMETER_COUNT } from '../../../../../shared/generated/parameterBindings.ts';
 
-export type ParameterValues = Record<string, number | string>;
+export interface PointValue { x: number; y: number; }
+export type ParameterValue = number | string | PointValue;
+export type ParameterValues = Record<string, ParameterValue>;
 
 export interface CompatibleContract {
   schemaVersion: number;
@@ -27,7 +29,7 @@ export interface CompatibleContract {
 }
 
 export interface CanonicalStateMotionConfig {
-  parameters: Record<string, number | string>;
+  parameters: ParameterValues;
 }
 
 export interface StateMotionPreset {
