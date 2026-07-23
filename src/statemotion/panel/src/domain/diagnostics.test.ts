@@ -10,6 +10,8 @@ import {
 } from './diagnostics.ts';
 import { Capability, VerifyState, capabilityStatus } from './capability.ts';
 
+import { PARAMETER_COUNT } from './presetSchema.ts';
+
 let passed = 0;
 function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
 
@@ -19,7 +21,7 @@ assert.strictEqual(snap.productVersion, '0.1.0-alpha.1');
 assert.strictEqual(snap.presetFormatVersion, 1);
 assert.strictEqual(snap.parameterSchemaVersion, 1);
 assert.strictEqual(snap.bindingRevision, 2);
-assert.strictEqual(snap.expectedParameterCount, 25);
+assert.strictEqual(snap.expectedParameterCount, PARAMETER_COUNT);
 assert.strictEqual(snap.effectMatchName, EXPECTED_MATCH_NAME);
 assert.strictEqual(snap.contractStatus, 'compatible');
 pass('snapshot exposes product/schema/binding/parameter-count distinctly');
@@ -34,7 +36,7 @@ const report = buildDebugReport({
 });
 assert.ok(report.includes('StateMotion Version:'), 'has version line');
 assert.ok(report.includes('Preset Format Version: 1'), 'has preset format version');
-assert.ok(report.includes('Expected Parameter Count: 25'), 'has expected param count');
+assert.ok(report.includes(`Expected Parameter Count: ${PARAMETER_COUNT}`), 'has expected param count');
 assert.ok(report.includes('Binding Revision: 2'), 'has binding revision');
 assert.ok(report.includes('Contract Status: compatible'), 'has contract status');
 assert.ok(report.includes('Selection Count: 2'), 'has selection count');

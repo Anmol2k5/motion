@@ -6,6 +6,7 @@ import assert from 'node:assert';
 import {
   FORMAT_ID,
   SCHEMA_VERSION,
+  PARAMETER_COUNT,
   validatePreset,
   migratePreset,
   serializePreset,
@@ -34,7 +35,7 @@ function basePreset(overrides: Record<string, unknown> = {}) {
     tags: ['entrance', 'scale'],
     category: 'Entrances',
     collectionIds: [],
-    compatibleContract: { schemaVersion: 1, bindingRevision: 2, parameterCount: 25 },
+    compatibleContract: { schemaVersion: 1, bindingRevision: 2, parameterCount: PARAMETER_COUNT },
     parameters: { 'transform.scaleX.a': 1.0, 'transform.scaleX.b': 1.15 },
     preview: { kind: 'generated' },
     ...overrides,

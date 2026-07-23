@@ -4,6 +4,8 @@
 #include "transform_state.hpp"    // canonical TransformState
 #include "transform_render.h"      // RendererTransformState
 
+#include <algorithm>
+
 namespace statemotion { namespace raster {
 
 // Verified frame dimensions (in pixels) for the single boundary conversion.
@@ -15,6 +17,14 @@ struct RenderDimensions {
     int sourceW = 0;
     int sourceH = 0;
 };
+
+inline double byteToUnit(unsigned char value) {
+    return static_cast<double>(value) / 255.0;
+}
+
+inline unsigned char unitToByte(double value) {
+    return static_cast<unsigned char>(std::clamp(value, 0.0, 1.0) * 255.0 + 0.5);
+}
 
 // Convert the FINAL interpolated canonical transform into renderer-native units.
 // Called exactly once, AFTER interpolation (per design: convert after, not per

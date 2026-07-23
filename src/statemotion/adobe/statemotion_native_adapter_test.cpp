@@ -26,6 +26,10 @@ int main() {
     auto br = pointPercentToNorm(100.0, 100.0);
     check(std::abs(br.x - 1.0) < 1e-12 && std::abs(br.y - 1.0) < 1e-12, "bottom-right 100%->1");
 
+    auto hostCenter = pointPixelsToPercent(368.0, 245.5, 736, 491);
+    check(std::abs(hostCenter.x - 50.0) < 1e-12 && std::abs(hostCenter.y - 50.0) < 1e-12,
+          "Premiere runtime POINT pixels -> contract percent");
+
     // off-frame / negative percent still linear
     auto of = pointPercentToNorm(150.0, -25.0);
     check(std::abs(of.x - 1.5) < 1e-12 && std::abs(of.y + 0.25) < 1e-12, "off-frame linear");
@@ -40,6 +44,13 @@ int main() {
     check(std::abs(percentToOpacity(100.0) - 1.0) < 1e-12, "opacity 100%->1");
     check(percentToOpacity(150.0) == 1.0, "opacity >100 clamps to 1");
     check(percentToOpacity(-10.0) == 0.0, "opacity <0 clamps to 0");
+
+    check(std::abs(percentToFraction(0.0)) < 1e-12, "crop 0%->0");
+    check(std::abs(percentToFraction(50.0) - 0.5) < 1e-12, "crop 50%->0.5");
+    check(std::abs(percentToFraction(100.0) - 1.0) < 1e-12, "crop 100%->1");
+    check(std::abs(percentToFraction(25.0) - 0.25) < 1e-12, "crop 25%->0.25");
+    // percentToFraction does NOT clamp (renderer clamps in plan()), so out-of-range passes through.
+    check(std::abs(percentToFraction(150.0) - 1.5) < 1e-12, "crop 150%->1.5 (no clamp)");
 
     check(std::abs(degreesToRadians(0.0)) < 1e-12, "0deg->0rad");
     check(std::abs(degreesToRadians(90.0) - 1.5707963267948966) < 1e-9, "90deg->pi/2");

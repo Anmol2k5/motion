@@ -28,9 +28,8 @@ async function main(): Promise<void> {
 
   // Seed bundled presets on first run.
   await repo.init();
-  for (const p of BUNDLED_PRESETS) {
-    try { await repo.create(p); } catch { /* already present */ }
-  }
+  await repo.installBundled(BUNDLED_PRESETS);
+  library = repo.getLibrary();
 
   const adapter = new PremiereAdapter(new UxpHostBridge());
   const getLibrary = () => library;
@@ -39,7 +38,7 @@ async function main(): Promise<void> {
   const libraryView = new LibraryView(repo, getLibrary, {
     onApply: async (p: StateMotionPreset) => {
       inspector.setLastPreset(p);
-      const report = await adapter.applyPresetToSelection(p, (await adapter.detectSelection()).supported.map((c) => c.clipId));
+      const report = await adapter.applyPresetToSelection(p);
       void report;
       // Record recently used (cap to last 12).
       const updated = { ...library, recentlyUsed: [p.presetId, ...library.recentlyUsed.filter((x) => x !== p.presetId)].slice(0, 12) };
@@ -56,6 +55,7 @@ async function main(): Promise<void> {
   libraryView.setContainer(views);
 
   const inspector = new InspectorView(adapter);
+  inspector.setRepository(repo);
   const manage = new ManageView(repo, getLibrary, setLibrary);
   manage.setContainer(views);
 
@@ -68,11 +68,10 @@ async function main(): Promise<void> {
     selectionStatus: selectionCount > 0 ? `${selectionCount} clip(s)` : 'none',
     lastOperation: 'none',
   }));
-  diagnostics.setContainer(views);
-
   let selectionCount = 0;
   async function refreshSelection() {
-    selectionCount = (await adapter.detectSelection()).supported.length;
+    const selection = await adapter.detectSelection();
+    selectionCount = selection.supported.length + selection.unsupported.length;
   }
 
   const tabs = [
@@ -92,12 +91,6 @@ async function main(): Promise<void> {
     const b = el('button', { class: 'sm-tab', role: 'tab', 'aria-selected': String(t.id === active), 'data-id': t.id, text: t.label });
     b.addEventListener('click', () => selectTab(t.id));
     tabBar.append(b);
-  }
-
-  // Re-render on project/selection changes if Premiere emits them.
-  const pApp = (globalThis as any).app;
-  if (pApp && pApp.addEventListener) {
-    pApp.addEventListener('selectionChanged', () => { refreshSelection(); if (active === 'inspector' || active === 'library') tabs.find((t) => t.id === active)?.render(); });
   }
 
   await refreshSelection();

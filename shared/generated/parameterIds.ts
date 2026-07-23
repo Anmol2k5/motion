@@ -22,12 +22,14 @@ export enum EasingMode {
   EaseIn = 1,
   EaseOut = 2,
   EaseInOut = 3,
-  Custom = 4
+  Custom = 4,
+  Spring = 5,
+  Bounce = 6
 }
 
 export const SCHEMA_VERSION = 1;
 export const BINDING_REVISION = 2;
-export const PARAMETER_COUNT = 25;
+export const PARAMETER_COUNT = 43;
 
 export const ContractSchemaVersion = 1;
 export const ContractParameterCount = 2;
@@ -54,3 +56,21 @@ export const TransformAnchorA = 108;
 export const TransformAnchorB = 109;
 export const TransformOpacityA = 110;
 export const TransformOpacityB = 111;
+export const CropLeftA = 150;
+export const CropLeftB = 151;
+export const CropRightA = 152;
+export const CropRightB = 153;
+export const CropTopA = 154;
+export const CropTopB = 155;
+export const CropBottomA = 156;
+export const CropBottomB = 157;
+export const CropCornerRadiusA = 158;
+export const CropCornerRadiusB = 159;
+export const ShadowOpacityA = 250;
+export const ShadowOpacityB = 251;
+export const ShadowAngleA = 252;
+export const ShadowAngleB = 253;
+export const ShadowDistanceA = 254;
+export const ShadowDistanceB = 255;
+export const ShadowSoftnessA = 256;
+export const ShadowSoftnessB = 257;

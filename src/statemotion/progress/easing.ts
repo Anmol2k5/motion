@@ -8,6 +8,8 @@ export enum EasingMode {
   EASE_OUT = 2,
   EASE_IN_OUT = 3,
   CUSTOM = 4,
+  SPRING = 5,
+  BOUNCE = 6,
 }
 
 export interface EasingCurve {
@@ -88,6 +90,31 @@ export function evaluateEasing(
       }
       const t = solveBezierT(x, curve.x1, curve.x2);
       return clamp01(bezierY(t, curve.y1, curve.y2));
+    }
+    case EasingMode.SPRING: {
+      if (x <= 0) return 0;
+      if (x >= 1) return 1;
+      const spring = 1 - Math.exp(-6 * x) * Math.cos(12 * x);
+      return Math.min(1.2, Math.max(0, spring));
+    }
+    case EasingMode.BOUNCE: {
+      if (x <= 0) return 0;
+      if (x >= 1) return 1;
+      const n1 = 7.5625;
+      const d1 = 2.75;
+      let t = x;
+      if (t < 1 / d1) {
+        return n1 * t * t;
+      } else if (t < 2 / d1) {
+        t -= 1.5 / d1;
+        return n1 * t * t + 0.75;
+      } else if (t < 2.5 / d1) {
+        t -= 2.25 / d1;
+        return n1 * t * t + 0.9375;
+      } else {
+        t -= 2.625 / d1;
+        return n1 * t * t + 0.984375;
+      }
     }
   }
   return x;

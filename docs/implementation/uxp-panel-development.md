@@ -35,38 +35,30 @@ npm test             # run all domain/host tests via Node
 
 ## Host API status (verify in your Premiere build)
 The `UxpHostBridge` (`src/host/uxpHost.ts`) is implemented against the documented
-UXP `app` / `premierepro` object model, but **every call is guarded** and failures
-degrade safely (e.g. a clip with no reachable StateMotion effect is reported as
-"unsupported" rather than crashing). The following capabilities must be confirmed
-by the operator in the actual Premiere environment:
+Premiere 26.3 `premierepro` module and is type-checked against the pinned
+`@adobe/premierepro@26.3.0` declarations. Failures degrade safely where possible.
+Runtime behavior must still be confirmed by the operator in Premiere:
 
-| Capability | API used (proposed) | Status |
+| Capability | API used | Status |
 |---|---|---|
-| Active sequence + tracks | `app.project.activeSequence.videoTracks[].clips` | PROTOTYPE — verify object shape |
-| Per-clip components | `clip.components[]` (matchName) | PROTOTYPE — verify match-name access |
-| Read contract metadata | effect `properties` by persistentID (disk 1/2/3) | PROTOTYPE — verify persistentID semantics |
-| Enumerate param index | effect `properties` by `displayName` (wireName) | PROTOTYPE — verify displayName == wireName |
-| Write logical param | `property.setValue(...)` | **UNVERIFIED** — see note below |
-| Single undo boundary | `app.beginUndo` / `app.endUndo` | PROTOTYPE — verify availability |
-| Apply effect by match name | `clip.addEffect(MATCH_NAME)` | PROTOTYPE — verify addEffect signature |
+| Active selection | `Project.getActiveProject()` → sequence `getSelection()` | TYPE-CHECKED; host unverified |
+| Per-clip components | `VideoClipTrackItem.getComponentChain()` | TYPE-CHECKED; host unverified |
+| Read contract metadata | component `getParam(index).getStartValue()` | TYPE-CHECKED; host unverified |
+| Resolve parameter index | generated registration order after contract handshake | TYPE-CHECKED; host unverified |
+| Write logical param | `createKeyframe()` + `createSetValueAction()` | TYPE-CHECKED; host unverified |
+| Single undo boundary | `project.executeTransaction()` + `CompoundAction.addAction()` | TYPE-CHECKED; host unverified |
+| Apply effect by match name | `VideoFilterFactory.createComponent()` + append action | TYPE-CHECKED; host unverified |
 
-**Parameter write note:** `writeLogical` currently resolves the effect and is a
-guarded stub. The exact UXP call to set a parameter value (and whether it requires
-the property object vs a typed setter) must be confirmed against the installed
-Premiere UXP build before claiming host-side apply works. Until then, the
-**fully verified** parts are: preset domain, storage, search, favorites,
-collections, preview, compatibility, parameter-map resolution logic, and the
-apply-plan classification (all covered by automated tests).
+Premiere 26.3 does not expose a per-parameter disk ID or name on `ComponentParam`.
+The panel therefore uses the generated native registration order only after the
+schema/revision/count handshake succeeds; incompatible instances remain read-only.
 
 No CEP is used. If a required capability is proven unavailable in UXP, a separate
 decision (Hybrid/native addon) must be approved before introduction — not assumed.
 
 ## Known limitations
-- The native parameter-registration milestone on `feat/native-parameter-registration`
-  was not merged when this panel branched; the panel consumes only the committed
-  logical contract (`shared/generated/parameterBindings.ts`). Apply against the
-  native effect requires the native params to be registered and the UXP write API
-  verified.
+- The corrected 25-parameter native effect must be rebuilt before combined host
+  testing; the ignored `.aex` currently present in local workspaces may be stale.
 - Bundled presets are seeded into the plugin data folder on first run; they are
   read-only. User presets live under `user/`.
 - Preview cards are deterministic SVG (scale/rotation/opacity), not frame renders.

@@ -6,12 +6,14 @@ import { buildApplyPlan, type SelectionItem, ItemStatus } from '../domain/applyP
 import { PremiereAdapter, type HostBridge, type ClipRef } from './premiereAdapter.ts';
 import type { StateMotionPreset } from '../domain/presetSchema.ts';
 
+import { PARAMETER_COUNT } from '../domain/presetSchema.ts';
+
 let passed = 0;
 function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
 
-const CURRENT_CONTRACT = { schemaVersion: 1, bindingRevision: 2, parameterCount: 25 };
+const CURRENT_CONTRACT = { schemaVersion: 1, bindingRevision: 2, parameterCount: PARAMETER_COUNT };
 const OLDER_CONTRACT = { schemaVersion: 1, bindingRevision: 1, parameterCount: 20 };
-const NEWER_CONTRACT = { schemaVersion: 2, bindingRevision: 2, parameterCount: 25 };
+const NEWER_CONTRACT = { schemaVersion: 2, bindingRevision: 2, parameterCount: PARAMETER_COUNT };
 
 // --- pure plan classification ------------------------------------------------
 {
@@ -66,6 +68,17 @@ class CountingBridge implements HostBridge {
   async applyEffect(): Promise<void> { this.applies++; }
 }
 
+class FreshEffectBridge extends CountingBridge {
+  private installed = false;
+  readonly order: string[] = [];
+  override async getSelection(): Promise<ClipRef[]> { return [{ clipId: 'selected' }]; }
+  override async hasStateMotionEffect(): Promise<boolean> { return this.installed; }
+  override async getContract(): Promise<any> { return this.installed ? CURRENT_CONTRACT : null; }
+  override async beginUndo(): Promise<void> { this.order.push('begin'); }
+  override async applyEffect(): Promise<void> { this.order.push('apply'); this.applies++; this.installed = true; }
+  override async endUndo(): Promise<void> { this.order.push('end'); }
+}
+
 function fakePreset(contract: typeof CURRENT_CONTRACT): StateMotionPreset {
   return {
     formatId: 'io.github.anmol2k5.statemotion.preset',
@@ -103,6 +116,27 @@ function fakePreset(contract: typeof CURRENT_CONTRACT): StateMotionPreset {
   const report = await adapter.applyPresetToSelection(fakePreset(CURRENT_CONTRACT), ['a']);
   assert.strictEqual(bridge.writes, 0, 'no write when effect cannot be established');
   pass('adapter performs ZERO host writes when effect cannot be established');
+}
+
+// Omitting explicit ids must use the real host selection, including clips that
+// do not have StateMotion yet, so the adapter can install and configure it.
+{
+  const bridge = new FreshEffectBridge(null);
+  const adapter = new PremiereAdapter(bridge);
+  const report = await adapter.applyPresetToSelection(fakePreset(CURRENT_CONTRACT));
+  assert.strictEqual(bridge.applies, 1);
+  assert.strictEqual(bridge.writes, 2);
+  assert.deepStrictEqual(report.applied, ['selected']);
+  assert.ok(bridge.order.indexOf('begin') < bridge.order.indexOf('apply'));
+  pass('adapter applies a preset to the current selection and installs a missing effect');
+}
+
+{
+  const bridge = new CountingBridge(NEWER_CONTRACT);
+  const adapter = new PremiereAdapter(bridge);
+  await assert.rejects(() => adapter.writeLogical({ clipId: 'a' }, 'transition.easing', 2));
+  assert.strictEqual(bridge.writes, 0);
+  pass('direct inspector edit never writes an incompatible contract');
 }
 
 console.log(`\nALL PASSED (${passed})`);

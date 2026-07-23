@@ -29,7 +29,7 @@ inline ProgressInput buildProgressInput(long current_time, long total_time, long
                         : (manualProgressNative > 100.0) ? 1.0
                                                         : manualProgressNative / 100.0;
     // Ignored by the progress engine unless mode == Manual.
-    in.easing = easing;
+    in.easing = static_cast<EasingMode>(static_cast<int>(easing));
     in.curve = curve;
     return in;
 }

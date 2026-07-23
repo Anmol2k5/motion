@@ -26,12 +26,14 @@ enum class EasingMode : int {
   EaseIn = 1,
   EaseOut = 2,
   EaseInOut = 3,
-  Custom = 4
+  Custom = 4,
+  Spring = 5,
+  Bounce = 6
 };
 
 inline constexpr int kSchemaVersion = 1;
 inline constexpr int kBindingRevision = 2;
-inline constexpr int kParameterCount = 25;
+inline constexpr int kParameterCount = 43;
 
 inline constexpr int kContractSchemaVersion = 1;
 inline constexpr int kContractParameterCount = 2;
@@ -58,6 +60,24 @@ inline constexpr int kTransformAnchorA = 108;
 inline constexpr int kTransformAnchorB = 109;
 inline constexpr int kTransformOpacityA = 110;
 inline constexpr int kTransformOpacityB = 111;
+inline constexpr int kCropLeftA = 150;
+inline constexpr int kCropLeftB = 151;
+inline constexpr int kCropRightA = 152;
+inline constexpr int kCropRightB = 153;
+inline constexpr int kCropTopA = 154;
+inline constexpr int kCropTopB = 155;
+inline constexpr int kCropBottomA = 156;
+inline constexpr int kCropBottomB = 157;
+inline constexpr int kCropCornerRadiusA = 158;
+inline constexpr int kCropCornerRadiusB = 159;
+inline constexpr int kShadowOpacityA = 250;
+inline constexpr int kShadowOpacityB = 251;
+inline constexpr int kShadowAngleA = 252;
+inline constexpr int kShadowAngleB = 253;
+inline constexpr int kShadowDistanceA = 254;
+inline constexpr int kShadowDistanceB = 255;
+inline constexpr int kShadowSoftnessA = 256;
+inline constexpr int kShadowSoftnessB = 257;
 
 } // namespace ids
 } // namespace statemotion

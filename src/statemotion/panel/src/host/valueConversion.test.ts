@@ -79,5 +79,5 @@ function throws(fn: () => unknown, ctor: Function) {
   for (const id of LOGICAL_IDS) {
     assert.doesNotThrow(() => toNative(id, 1, b(id)), UnknownLogicalId);
   }
-  pass('all 20 logical ids have a conversion kind');
+  pass(`all ${LOGICAL_IDS.length} logical ids have a conversion kind`);
 })();

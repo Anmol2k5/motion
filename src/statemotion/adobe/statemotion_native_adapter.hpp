@@ -20,6 +20,15 @@ inline Vec2 pointPercentToNorm(double px, double py) {
     return Vec2{px / 100.0, py / 100.0};
 }
 
+// PF_PointDef defaults are declared as percentages, but Premiere supplies
+// runtime POINT values in pixels.
+inline Vec2 pointPixelsToPercent(double x, double y, int width, int height) {
+    return Vec2{
+        width > 0 ? x * 100.0 / static_cast<double>(width) : 0.0,
+        height > 0 ? y * 100.0 / static_cast<double>(height) : 0.0
+    };
+}
+
 // FLOAT_SLIDER scale percent -> multiplier (100% -> 1.0).
 inline double percentToMultiplier(double percent) {
     return percent / 100.0;
@@ -28,6 +37,13 @@ inline double percentToMultiplier(double percent) {
 // FLOAT_SLIDER opacity percent -> clamped [0,1] (0% -> 0, 100% -> 1).
 inline double percentToOpacity(double percent) {
     return std::clamp(percent / 100.0, 0.0, 1.0);
+}
+
+// FLOAT_SLIDER crop percent -> fraction [0,1] (0% -> 0, 100% -> 1).
+// Crop values are stored as percent in the native host but the renderer expects
+// fractions of the source dimension.
+inline double percentToFraction(double percent) {
+    return percent / 100.0;
 }
 
 // ANGLE degrees -> radians.

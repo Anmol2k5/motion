@@ -38,6 +38,15 @@ struct RendererTransformState {
     double anchorX = 0.0;
     double anchorY = 0.0;
     double opacity = 1.0;
+    double cropLeft = 0.0;
+    double cropRight = 0.0;
+    double cropTop = 0.0;
+    double cropBottom = 0.0;
+    double cornerRadius = 0.0;
+    double shadowOpacity = 0.0;
+    double shadowAngleDeg = 135.0;
+    double shadowDistance = 10.0;
+    double shadowSoftness = 20.0;
 };
 
 // Clamp near-zero scale to +/-epsilon to avoid singular transforms, preserving
@@ -58,8 +67,23 @@ struct CpuRenderPlan {
     double translateX = 0.0;
     double translateY = 0.0;
     double opacity = 1.0;
+    double cropMinX = 0.0;
+    double cropMaxX = 0.0;
+    double cropMinY = 0.0;
+    double cropMaxY = 0.0;
+    double cropCenterX = 0.0;
+    double cropCenterY = 0.0;
+    double cropHalfInnerW = 0.0;
+    double cropHalfInnerH = 0.0;
+    double cornerRadiusPx = 0.0;
+    double shadowOffsetX = 0.0;
+    double shadowOffsetY = 0.0;
+    double shadowOpacity = 0.0;
+    double shadowSoftnessPx = 0.0;
     int srcW = 0;
     int srcH = 0;
+    bool hasCropMask = false;
+    bool hasShadow = false;
     bool identityTransform = true;
     bool fullyTransparent = false;
 };

@@ -8,6 +8,7 @@ import {
   serializePreset,
   deserializePreset,
   defaultValueFor,
+  PARAMETER_COUNT,
 } from './presetSchema.ts';
 import { checkCompatibility, CompatLevel } from './compatibility.ts';
 
@@ -56,7 +57,7 @@ function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
     tags: ['custom'],
     category: 'Custom',
     collectionIds: [],
-    compatibleContract: { schemaVersion: 1, bindingRevision: 2, parameterCount: 25 },
+    compatibleContract: { schemaVersion: 1, bindingRevision: 2, parameterCount: PARAMETER_COUNT },
     parameters: {
       'transition.easing': 4,
       'transition.curveX1': 0.25, 'transition.curveY1': 0.1,
@@ -77,7 +78,7 @@ function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
 (() => {
   const ro = checkCompatibility({ schemaVersion: 1, bindingRevision: 1, parameterCount: 20 });
   assert.strictEqual(ro.level, CompatLevel.ReadOnly, 'older project is read-only');
-  const cur = checkCompatibility({ schemaVersion: 1, bindingRevision: 2, parameterCount: 25 });
+  const cur = checkCompatibility({ schemaVersion: 1, bindingRevision: 2, parameterCount: PARAMETER_COUNT });
   assert.strictEqual(cur.level, CompatLevel.Ok, 'current contract is Ok');
   pass('C: older project contract is ReadOnly');
 })();

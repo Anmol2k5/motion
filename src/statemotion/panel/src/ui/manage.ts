@@ -22,7 +22,6 @@ export class ManageView {
     container.append(el('div', { class: 'sm-section-title', text: `User presets (${userPresets.length})` }));
     if (userPresets.length === 0) {
       showState(container, '📁', 'No user presets yet', 'Create one from the Inspector or duplicate a bundled preset.');
-      return;
     }
     const list = el('div', { class: 'sm-list' });
     for (const p of userPresets) {
@@ -45,11 +44,13 @@ export class ManageView {
     container.append(colList);
 
     const newColBtn = el('button', { class: 'sm-btn secondary', text: '+ New collection' }) as HTMLButtonElement;
-    newColBtn.addEventListener('click', () => {
+    newColBtn.addEventListener('click', async () => {
       const name = window.prompt('Collection name?', 'My Collection');
       if (!name) return;
       const id = 'col-' + Date.now().toString(36);
-      this.setLibrary(createCollection(library, id, name));
+      const updated = createCollection(library, id, name);
+      this.setLibrary(updated);
+      await this.repo.saveLibrary(updated);
       this.render(container);
     });
 

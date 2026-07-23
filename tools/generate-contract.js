@@ -33,6 +33,7 @@ const REQUIRED_ENUMS = {
   ],
   EasingMode: [
     ['Linear', 0], ['EaseIn', 1], ['EaseOut', 2], ['EaseInOut', 3], ['Custom', 4],
+    ['Spring', 5], ['Bounce', 6],
   ],
 };
 
@@ -71,7 +72,7 @@ function familyOf(diskId, ranges) {
 }
 
 // Expected family inferred from logicalId prefix (semantic allocation).
-const FAMILY_PREFIX = { 'contract.': 'metadata', 'transition.': 'progressCurve', 'transform.': 'transform' };
+const FAMILY_PREFIX = { 'contract.': 'metadata', 'transition.': 'progressCurve', 'transform.': 'transform', 'crop.': 'cropMask', 'shadow.': 'shadow' };
 function expectedFamily(logicalId) {
   for (const [pfx, fam] of Object.entries(FAMILY_PREFIX)) {
     if (logicalId.startsWith(pfx)) return fam;
@@ -193,6 +194,10 @@ function validate(contract) {
   const countParam = contract.parameters.find((p) => p.logicalId === 'contract.parameterCount');
   if (countParam && countParam.default !== expectedCount) {
     fail(`contract.parameterCount default ${countParam.default} != actual parameter count ${expectedCount}`);
+  }
+  const revisionParam = contract.parameters.find((p) => p.logicalId === 'contract.bindingRevision');
+  if (revisionParam && revisionParam.default !== contract.bindingRevision) {
+    fail(`contract.bindingRevision default ${revisionParam.default} != bindingRevision ${contract.bindingRevision}`);
   }
   for (const [name, r] of Object.entries(contract.diskIdRanges)) {
     if (r.status === 'reserved') {

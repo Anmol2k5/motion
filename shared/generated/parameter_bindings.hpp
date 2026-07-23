@@ -26,18 +26,18 @@ struct ParameterBinding {
   const char* enumRef;    // POPUP enum name (else "")
 };
 
-inline constexpr char kContractDigest[] = "f2a192c2e529e9ed4f881ceae7c51f8604d4a6597bca6b9c027dac3e41d9b32e";
+inline constexpr char kContractDigest[] = "98c9ae4be308d9344519b6c777bbfd862547888c26c5d62e9bdc5100e5be8c32";
 
-inline constexpr ParameterBinding kBindings[25] = {
+inline constexpr ParameterBinding kBindings[43] = {
   {"contract.schemaVersion", 1, "SM Schema Version", "FLOAT_SLIDER", "metadata", "static", 1, 1, 9999, 1, 9999, 1, 2, 0, ""},
-  {"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 25, 1, 9999, 1, 9999, 20, 2, 0, ""},
-  {"contract.bindingRevision", 3, "SM Binding Rev", "FLOAT_SLIDER", "metadata", "static", 1, 1, 9999, 1, 9999, 1, 2, 0, ""},
+  {"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 43, 1, 9999, 1, 9999, 20, 2, 0, ""},
+  {"contract.bindingRevision", 3, "SM Binding Rev", "FLOAT_SLIDER", "metadata", "static", 2, 1, 9999, 1, 9999, 1, 2, 0, ""},
   {"transition.mode", 50, "SM Mode", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 7, "ProgressMode"},
   {"transition.alignment", 51, "SM Alignment", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 3, "AlignmentMode"},
   {"transition.durationSeconds", 52, "SM Duration", "FLOAT_SLIDER", "transition", "static", 1, 0, 3600, 0, 10, 1, 3, 0, ""},
   {"transition.delaySeconds", 53, "SM Delay", "FLOAT_SLIDER", "transition", "static", 0, 0, 3600, 0, 10, 0, 3, 0, ""},
   {"transition.manualProgress", 54, "SM Manual Progress", "FLOAT_SLIDER", "transition", "keyframeable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
-  {"transition.easing", 55, "SM Easing", "POPUP", "transition", "static", 3, 0, 0, 0, 0, 3, 2, 5, "EasingMode"},
+  {"transition.easing", 55, "SM Easing", "POPUP", "transition", "static", 3, 0, 0, 0, 0, 3, 2, 7, "EasingMode"},
   {"transition.curveX1", 56, "SM Curve X1", "FLOAT_SLIDER", "transition", "static", 0.3333333333333333, 0, 1, 0, 1, 0.3333333333333333, 2, 0, ""},
   {"transition.curveY1", 57, "SM Curve Y1", "FLOAT_SLIDER", "transition", "static", 0, 0, 1, 0, 1, 0, 2, 0, ""},
   {"transition.curveX2", 58, "SM Curve X2", "FLOAT_SLIDER", "transition", "static", 0.6666666666666667, 0, 1, 0, 1, 0.6666666666666667, 2, 0, ""},
@@ -53,7 +53,25 @@ inline constexpr ParameterBinding kBindings[25] = {
   {"transform.anchor.a", 108, "SM Anchor A", "POINT", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
   {"transform.anchor.b", 109, "SM Anchor B", "POINT", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
   {"transform.opacity.a", 110, "SM Opacity A", "FLOAT_SLIDER", "A", "interpolatable", 100, 0, 100, 0, 100, 100, 2, 0, ""},
-  {"transform.opacity.b", 111, "SM Opacity B", "FLOAT_SLIDER", "B", "interpolatable", 100, 0, 100, 0, 100, 100, 2, 0, ""}
+  {"transform.opacity.b", 111, "SM Opacity B", "FLOAT_SLIDER", "B", "interpolatable", 100, 0, 100, 0, 100, 100, 2, 0, ""},
+  {"crop.left.a", 150, "SM Crop Left A", "FLOAT_SLIDER", "A", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"crop.left.b", 151, "SM Crop Left B", "FLOAT_SLIDER", "B", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"crop.right.a", 152, "SM Crop Right A", "FLOAT_SLIDER", "A", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"crop.right.b", 153, "SM Crop Right B", "FLOAT_SLIDER", "B", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"crop.top.a", 154, "SM Crop Top A", "FLOAT_SLIDER", "A", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"crop.top.b", 155, "SM Crop Top B", "FLOAT_SLIDER", "B", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"crop.bottom.a", 156, "SM Crop Bottom A", "FLOAT_SLIDER", "A", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"crop.bottom.b", 157, "SM Crop Bottom B", "FLOAT_SLIDER", "B", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"crop.cornerRadius.a", 158, "SM Corner Radius A", "FLOAT_SLIDER", "A", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"crop.cornerRadius.b", 159, "SM Corner Radius B", "FLOAT_SLIDER", "B", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"shadow.opacity.a", 250, "SM Shadow Opacity A", "FLOAT_SLIDER", "A", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"shadow.opacity.b", 251, "SM Shadow Opacity B", "FLOAT_SLIDER", "B", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"shadow.angle.a", 252, "SM Shadow Angle A", "ANGLE", "A", "interpolatable", 2.356194490192345, 0, 0, 0, 0, 2.356194490192345, 2, 0, ""},
+  {"shadow.angle.b", 253, "SM Shadow Angle B", "ANGLE", "B", "interpolatable", 2.356194490192345, 0, 0, 0, 0, 2.356194490192345, 2, 0, ""},
+  {"shadow.distance.a", 254, "SM Shadow Distance A", "FLOAT_SLIDER", "A", "interpolatable", 10, 0, 1000, 0, 200, 10, 2, 0, ""},
+  {"shadow.distance.b", 255, "SM Shadow Distance B", "FLOAT_SLIDER", "B", "interpolatable", 10, 0, 1000, 0, 200, 10, 2, 0, ""},
+  {"shadow.softness.a", 256, "SM Shadow Softness A", "FLOAT_SLIDER", "A", "interpolatable", 20, 0, 500, 0, 100, 20, 2, 0, ""},
+  {"shadow.softness.b", 257, "SM Shadow Softness B", "FLOAT_SLIDER", "B", "interpolatable", 20, 0, 500, 0, 100, 20, 2, 0, ""}
 };
 
 } // namespace contract

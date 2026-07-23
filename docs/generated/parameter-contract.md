@@ -2,8 +2,8 @@
 
 - schemaVersion: 1
 - bindingRevision: 2
-- parameterCount: 25
-- SHA-256: `f2a192c2e529e9ed4f881ceae7c51f8604d4a6597bca6b9c027dac3e41d9b32e`
+- parameterCount: 43
+- SHA-256: `98c9ae4be308d9344519b6c777bbfd862547888c26c5d62e9bdc5100e5be8c32`
 
 > GENERATED from shared/schema/parameter-contract.json. Do not edit by hand.
 
@@ -29,14 +29,16 @@
 - EaseOut = 2
 - EaseInOut = 3
 - Custom = 4
+- Spring = 5
+- Bounce = 6
 
 ## Parameters
 
 | logicalId | diskId | wireName | nativeType | default | range | timeVariance | state |
 |---|---|---|---|---|---|---|---|
 | contract.schemaVersion | 1 | SM Schema Version | FLOAT_SLIDER | 1 | 1..9999 | static | metadata |
-| contract.parameterCount | 2 | SM Param Count | FLOAT_SLIDER | 25 | 1..9999 | static | metadata |
-| contract.bindingRevision | 3 | SM Binding Rev | FLOAT_SLIDER | 1 | 1..9999 | static | metadata |
+| contract.parameterCount | 2 | SM Param Count | FLOAT_SLIDER | 43 | 1..9999 | static | metadata |
+| contract.bindingRevision | 3 | SM Binding Rev | FLOAT_SLIDER | 2 | 1..9999 | static | metadata |
 | transition.mode | 50 | SM Mode | POPUP | 0 | ProgressMode | static | transition |
 | transition.alignment | 51 | SM Alignment | POPUP | 0 | AlignmentMode | static | transition |
 | transition.durationSeconds | 52 | SM Duration | FLOAT_SLIDER | 1 | 0..3600 | static | transition |
@@ -59,3 +61,21 @@
 | transform.anchor.b | 109 | SM Anchor B | POINT | "sourceCenter" | n/a | interpolatable | B |
 | transform.opacity.a | 110 | SM Opacity A | FLOAT_SLIDER | 100 | 0..100 | interpolatable | A |
 | transform.opacity.b | 111 | SM Opacity B | FLOAT_SLIDER | 100 | 0..100 | interpolatable | B |
+| crop.left.a | 150 | SM Crop Left A | FLOAT_SLIDER | 0 | 0..100 | interpolatable | A |
+| crop.left.b | 151 | SM Crop Left B | FLOAT_SLIDER | 0 | 0..100 | interpolatable | B |
+| crop.right.a | 152 | SM Crop Right A | FLOAT_SLIDER | 0 | 0..100 | interpolatable | A |
+| crop.right.b | 153 | SM Crop Right B | FLOAT_SLIDER | 0 | 0..100 | interpolatable | B |
+| crop.top.a | 154 | SM Crop Top A | FLOAT_SLIDER | 0 | 0..100 | interpolatable | A |
+| crop.top.b | 155 | SM Crop Top B | FLOAT_SLIDER | 0 | 0..100 | interpolatable | B |
+| crop.bottom.a | 156 | SM Crop Bottom A | FLOAT_SLIDER | 0 | 0..100 | interpolatable | A |
+| crop.bottom.b | 157 | SM Crop Bottom B | FLOAT_SLIDER | 0 | 0..100 | interpolatable | B |
+| crop.cornerRadius.a | 158 | SM Corner Radius A | FLOAT_SLIDER | 0 | 0..100 | interpolatable | A |
+| crop.cornerRadius.b | 159 | SM Corner Radius B | FLOAT_SLIDER | 0 | 0..100 | interpolatable | B |
+| shadow.opacity.a | 250 | SM Shadow Opacity A | FLOAT_SLIDER | 0 | 0..100 | interpolatable | A |
+| shadow.opacity.b | 251 | SM Shadow Opacity B | FLOAT_SLIDER | 0 | 0..100 | interpolatable | B |
+| shadow.angle.a | 252 | SM Shadow Angle A | ANGLE | 2.356194490192345 | n/a | interpolatable | A |
+| shadow.angle.b | 253 | SM Shadow Angle B | ANGLE | 2.356194490192345 | n/a | interpolatable | B |
+| shadow.distance.a | 254 | SM Shadow Distance A | FLOAT_SLIDER | 10 | 0..1000 | interpolatable | A |
+| shadow.distance.b | 255 | SM Shadow Distance B | FLOAT_SLIDER | 10 | 0..1000 | interpolatable | B |
+| shadow.softness.a | 256 | SM Shadow Softness A | FLOAT_SLIDER | 20 | 0..500 | interpolatable | A |
+| shadow.softness.b | 257 | SM Shadow Softness B | FLOAT_SLIDER | 20 | 0..500 | interpolatable | B |

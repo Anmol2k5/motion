@@ -8,7 +8,7 @@
 import { buildApplyPlan, type SelectionItem, ItemStatus } from '../domain/applyPlan.ts';
 import { checkCompatibility, CompatLevel } from '../domain/compatibility.ts';
 import { getBinding, LOGICAL_IDS } from '../../../../../shared/generated/parameterBindings.ts';
-import type { StateMotionPreset, CanonicalStateMotionConfig } from '../domain/presetSchema.ts';
+import type { StateMotionPreset, CanonicalStateMotionConfig, ParameterValue } from '../domain/presetSchema.ts';
 
 export interface ClipRef {
   clipId: string;
@@ -19,8 +19,8 @@ export interface HostBridge {
   hasStateMotionEffect(clip: ClipRef): Promise<boolean>;
   getContract(clip: ClipRef): Promise<{ schemaVersion: number; bindingRevision: number; parameterCount: number } | null>;
   enumerateParamIndex(clip: ClipRef, wireName: string): Promise<number | undefined>;
-  readLogical(clip: ClipRef, logicalId: string): Promise<number | string | undefined>;
-  writeLogical(clip: ClipRef, logicalId: string, value: number | string): Promise<void>;
+  readLogical(clip: ClipRef, logicalId: string): Promise<ParameterValue | undefined>;
+  writeLogical(clip: ClipRef, logicalId: string, value: ParameterValue): Promise<void>;
   beginUndo(label: string): Promise<void>;
   endUndo(): Promise<void>;
   applyEffect(clip: ClipRef): Promise<void>;
@@ -57,28 +57,29 @@ export class PremiereAdapter {
 
   // Apply a preset to the given selection clip ids. Uses buildApplyPlan for
   // classification, then writes only resolvable logical params inside one undo.
-  async applyPresetToSelection(preset: StateMotionPreset, selectionClipIds: string[]): Promise<ApplyReport> {
-    const clips: ClipRef[] = selectionClipIds.map((id) => ({ clipId: id }));
-    const items: SelectionItem[] = [];
-    for (const clip of clips) {
-      const has = await this.host.hasStateMotionEffect(clip);
-      let contract = await this.host.getContract(clip);
-      if (!has && contract === null) {
-        // No effect: apply it (reuse, do not duplicate), then read its contract.
-        await this.host.applyEffect(clip);
-        contract = await this.host.getContract(clip);
-      }
-      // After a successful apply, the clip now has the effect. Report the
-      // post-apply truth so the plan treats it as supported.
-      const effectiveHas = has || contract !== null;
-      items.push({ clipId: clip.clipId, hasStateMotion: effectiveHas, contract });
-    }
-
-    const plan = buildApplyPlan(items, preset.presetId, preset.compatibleContract);
+  async applyPresetToSelection(preset: StateMotionPreset, selectionClipIds?: string[]): Promise<ApplyReport> {
+    const clips = selectionClipIds
+      ? selectionClipIds.map((clipId) => ({ clipId }))
+      : await this.host.getSelection();
     const report: ApplyReport = { applied: [], skipped: [], failed: [], reasons: {} };
 
     await this.host.beginUndo('StateMotion: apply preset ' + preset.name);
     try {
+      const items: SelectionItem[] = [];
+      for (const clip of clips) {
+        const has = await this.host.hasStateMotionEffect(clip);
+        let contract = await this.host.getContract(clip);
+        if (!has && contract === null) {
+          // No effect: queue it in the same transaction, then inspect the new
+          // component before commit so parameter actions remain one undo step.
+          await this.host.applyEffect(clip);
+          contract = await this.host.getContract(clip);
+        }
+        const effectiveHas = has || contract !== null;
+        items.push({ clipId: clip.clipId, hasStateMotion: effectiveHas, contract });
+      }
+
+      const plan = buildApplyPlan(items, preset.presetId, preset.compatibleContract);
       for (const item of plan.items) {
         if (item.status !== ItemStatus.Supported) {
           if (item.status === ItemStatus.Unsupported) report.skipped.push(item.clipId);
@@ -106,6 +107,18 @@ export class PremiereAdapter {
     return this.host.getContract(clip);
   }
 
+  async writeLogical(clip: ClipRef, logicalId: string, value: ParameterValue): Promise<void> {
+    const compat = checkCompatibility(await this.host.getContract(clip));
+    if (compat.level === CompatLevel.ReadOnly) throw new ContractReadOnly(compat.reasons);
+    if (compat.level !== CompatLevel.Ok) throw new ContractIncompatible(compat.reasons);
+    await this.host.beginUndo('StateMotion: edit parameter');
+    try {
+      await this.host.writeLogical(clip, logicalId, value);
+    } finally {
+      await this.host.endUndo();
+    }
+  }
+
   async readState(clip: ClipRef): Promise<CanonicalStateMotionConfig> {
     const contract = await this.host.getContract(clip);
     const compat = checkCompatibility(contract);
@@ -113,7 +126,7 @@ export class PremiereAdapter {
     if (compat.level === CompatLevel.ReadOnly) throw new ContractReadOnly(compat.reasons);
     if (!(await this.host.hasStateMotionEffect(clip))) throw new Error('No StateMotion effect on clip');
 
-    const parameters: Record<string, number | string> = {};
+    const parameters: Record<string, ParameterValue> = {};
     for (const id of LOGICAL_IDS) {
       if (!isCreative(id)) continue; // never read metadata
       const v = await this.host.readLogical(clip, id);

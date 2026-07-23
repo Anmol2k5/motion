@@ -69,6 +69,11 @@ using statemotion::TransformState;
               std::abs(rd5.opacity - 0.5) < 1e-12,
           "scale/opacity unchanged");
 
+    check(byteToUnit(0) == 0.0 && byteToUnit(255) == 1.0,
+          "8-bit channels normalize to renderer units");
+    check(unitToByte(-1.0) == 0 && unitToByte(0.5) == 128 && unitToByte(2.0) == 255,
+          "renderer units clamp and round to 8-bit channels");
+
     std::printf("\n%s: %d failures\n", g_fail ? "FAILED" : "ALL PASSED", g_fail);
     return g_fail ? 1 : 0;
 }

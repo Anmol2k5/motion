@@ -35,8 +35,10 @@ export class InspectorView {
     }
     container.append(summary);
 
-    // Live easing control for the first supported clip.
+    // Live easing, crop & shadow controls for the first supported clip.
     await this.renderEasingControl(container, supported[0].clipId);
+    await this.renderCropControl(container, supported[0].clipId);
+    await this.renderShadowControl(container, supported[0].clipId);
 
     // Applied preset (best-effort detection by matching params is future work;
     // we show a manual Apply control here).
@@ -74,7 +76,7 @@ export class InspectorView {
   private repository: PresetRepository | null = null;
 
   private async renderEasingControl(container: HTMLElement, clipId: string): Promise<void> {
-    const EASING_LABELS = ['Linear', 'EaseIn', 'EaseOut', 'EaseInOut', 'Custom'];
+    const EASING_LABELS = ['Linear', 'EaseIn', 'EaseOut', 'EaseInOut', 'Custom', 'Spring', 'Bounce'];
     const CURVE_IDS = ['transition.curveX1', 'transition.curveY1', 'transition.curveX2', 'transition.curveY2'] as const;
 
     let easing = 3;
@@ -133,5 +135,96 @@ export class InspectorView {
 
   private writeEasing(clipId: string, logicalId: string, value: number): void {
     this.adapter.writeLogical({ clipId }, logicalId, value).catch(() => {});
+  }
+
+  private async renderCropControl(container: HTMLElement, clipId: string): Promise<void> {
+    const CROP_IDS = [
+      { idA: 'crop.left.a', idB: 'crop.left.b', label: 'Left' },
+      { idA: 'crop.right.a', idB: 'crop.right.b', label: 'Right' },
+      { idA: 'crop.top.a', idB: 'crop.top.b', label: 'Top' },
+      { idA: 'crop.bottom.a', idB: 'crop.bottom.b', label: 'Bottom' },
+      { idA: 'crop.cornerRadius.a', idB: 'crop.cornerRadius.b', label: 'Radius' },
+    ] as const;
+
+    const values: Record<string, number> = {};
+    try {
+      const cfg = await this.adapter.readState({ clipId });
+      for (const item of CROP_IDS) {
+        values[item.idA] = typeof cfg.parameters[item.idA] === 'number' ? (cfg.parameters[item.idA] as number) * 100 : 0;
+        values[item.idB] = typeof cfg.parameters[item.idB] === 'number' ? (cfg.parameters[item.idB] as number) * 100 : 0;
+      }
+    } catch { /* read-only or unsupported */ }
+
+    const section = el('div', { class: 'sm-section' });
+    section.append(el('div', { class: 'sm-section-title', text: 'Crop & Rounded Mask (%)' }));
+
+    for (const item of CROP_IDS) {
+      const inputA = el('input', { type: 'number', min: '0', max: '100', value: String(values[item.idA] ?? 0) }) as HTMLInputElement;
+      const inputB = el('input', { type: 'number', min: '0', max: '100', value: String(values[item.idB] ?? 0) }) as HTMLInputElement;
+      inputA.classList.add('sm-curve-input');
+      inputB.classList.add('sm-curve-input');
+
+      inputA.addEventListener('change', () => {
+        const v = parseFloat(inputA.value);
+        if (Number.isFinite(v)) this.adapter.writeLogical({ clipId }, item.idA, Math.min(1, Math.max(0, v / 100))).catch(() => {});
+      });
+      inputB.addEventListener('change', () => {
+        const v = parseFloat(inputB.value);
+        if (Number.isFinite(v)) this.adapter.writeLogical({ clipId }, item.idB, Math.min(1, Math.max(0, v / 100))).catch(() => {});
+      });
+
+      const row = el('div', { class: 'sm-row' }, [
+        el('span', { class: 'label', text: item.label }),
+        el('span', { class: 'label', text: 'A' }), inputA,
+        el('span', { class: 'label', text: 'B' }), inputB,
+      ]);
+      section.append(row);
+    }
+    container.append(section);
+  }
+
+  private async renderShadowControl(container: HTMLElement, clipId: string): Promise<void> {
+    const SHADOW_IDS = [
+      { idA: 'shadow.opacity.a', idB: 'shadow.opacity.b', label: 'Opacity (%)', scale: 100, max: 100 },
+      { idA: 'shadow.angle.a', idB: 'shadow.angle.b', label: 'Angle (°)', scale: (180 / Math.PI), max: 360 },
+      { idA: 'shadow.distance.a', idB: 'shadow.distance.b', label: 'Distance (px)', scale: 1, max: 1000 },
+      { idA: 'shadow.softness.a', idB: 'shadow.softness.b', label: 'Softness (px)', scale: 1, max: 500 },
+    ] as const;
+
+    const values: Record<string, number> = {};
+    try {
+      const cfg = await this.adapter.readState({ clipId });
+      for (const item of SHADOW_IDS) {
+        values[item.idA] = typeof cfg.parameters[item.idA] === 'number' ? (cfg.parameters[item.idA] as number) * item.scale : 0;
+        values[item.idB] = typeof cfg.parameters[item.idB] === 'number' ? (cfg.parameters[item.idB] as number) * item.scale : 0;
+      }
+    } catch { /* read-only or unsupported */ }
+
+    const section = el('div', { class: 'sm-section' });
+    section.append(el('div', { class: 'sm-section-title', text: 'Drop Shadow' }));
+
+    for (const item of SHADOW_IDS) {
+      const inputA = el('input', { type: 'number', min: '0', max: String(item.max), value: String(Math.round(values[item.idA] ?? 0)) }) as HTMLInputElement;
+      const inputB = el('input', { type: 'number', min: '0', max: String(item.max), value: String(Math.round(values[item.idB] ?? 0)) }) as HTMLInputElement;
+      inputA.classList.add('sm-curve-input');
+      inputB.classList.add('sm-curve-input');
+
+      inputA.addEventListener('change', () => {
+        const v = parseFloat(inputA.value);
+        if (Number.isFinite(v)) this.adapter.writeLogical({ clipId }, item.idA, v / item.scale).catch(() => {});
+      });
+      inputB.addEventListener('change', () => {
+        const v = parseFloat(inputB.value);
+        if (Number.isFinite(v)) this.adapter.writeLogical({ clipId }, item.idB, v / item.scale).catch(() => {});
+      });
+
+      const row = el('div', { class: 'sm-row' }, [
+        el('span', { class: 'label', text: item.label }),
+        el('span', { class: 'label', text: 'A' }), inputA,
+        el('span', { class: 'label', text: 'B' }), inputB,
+      ]);
+      section.append(row);
+    }
+    container.append(section);
   }
 }
