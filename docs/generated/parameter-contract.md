@@ -3,7 +3,7 @@
 - schemaVersion: 1
 - bindingRevision: 2
 - parameterCount: 25
-- SHA-256: `f2a192c2e529e9ed4f881ceae7c51f8604d4a6597bca6b9c027dac3e41d9b32e`
+- SHA-256: `c4855e30edc47e23f3f6794ed526c7b5fe9fccf25c9fe6a34105224c8bc2cb46`
 
 > GENERATED from shared/schema/parameter-contract.json. Do not edit by hand.
 
@@ -36,7 +36,7 @@
 |---|---|---|---|---|---|---|---|
 | contract.schemaVersion | 1 | SM Schema Version | FLOAT_SLIDER | 1 | 1..9999 | static | metadata |
 | contract.parameterCount | 2 | SM Param Count | FLOAT_SLIDER | 25 | 1..9999 | static | metadata |
-| contract.bindingRevision | 3 | SM Binding Rev | FLOAT_SLIDER | 1 | 1..9999 | static | metadata |
+| contract.bindingRevision | 3 | SM Binding Rev | FLOAT_SLIDER | 2 | 1..9999 | static | metadata |
 | transition.mode | 50 | SM Mode | POPUP | 0 | ProgressMode | static | transition |
 | transition.alignment | 51 | SM Alignment | POPUP | 0 | AlignmentMode | static | transition |
 | transition.durationSeconds | 52 | SM Duration | FLOAT_SLIDER | 1 | 0..3600 | static | transition |

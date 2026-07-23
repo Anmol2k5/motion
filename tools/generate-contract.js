@@ -194,6 +194,10 @@ function validate(contract) {
   if (countParam && countParam.default !== expectedCount) {
     fail(`contract.parameterCount default ${countParam.default} != actual parameter count ${expectedCount}`);
   }
+  const revisionParam = contract.parameters.find((p) => p.logicalId === 'contract.bindingRevision');
+  if (revisionParam && revisionParam.default !== contract.bindingRevision) {
+    fail(`contract.bindingRevision default ${revisionParam.default} != bindingRevision ${contract.bindingRevision}`);
+  }
   for (const [name, r] of Object.entries(contract.diskIdRanges)) {
     if (r.status === 'reserved') {
       const inside = contract.parameters.filter((p) => p.diskId >= r.min && p.diskId <= r.max);

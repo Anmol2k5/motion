@@ -84,7 +84,7 @@
       "diskId": 3,
       "wireName": "SM Binding Rev",
       "nativeType": "FLOAT_SLIDER",
-      "default": 1,
+      "default": 2,
       "range": { "min": 1, "max": 9999 },
       "uiRange": { "min": 1, "max": 9999 },
       "introducedInSchema": 1,

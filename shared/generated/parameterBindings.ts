@@ -19,7 +19,7 @@ export interface ParameterBinding {
   oldDefault: number | string;
 }
 
-export const CONTRACT_DIGEST = "f2a192c2e529e9ed4f881ceae7c51f8604d4a6597bca6b9c027dac3e41d9b32e";
+export const CONTRACT_DIGEST = "c4855e30edc47e23f3f6794ed526c7b5fe9fccf25c9fe6a34105224c8bc2cb46";
 export const SCHEMA_VERSION = 1;
 export const BINDING_REVISION = 2;
 export const PARAMETER_COUNT = 25;
@@ -27,7 +27,7 @@ export const PARAMETER_COUNT = 25;
 export const BINDINGS: ParameterBinding[] = [
   { logicalId: "contract.schemaVersion", diskId: 1, wireName: "SM Schema Version", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 1, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 1 },
   { logicalId: "contract.parameterCount", diskId: 2, wireName: "SM Param Count", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 25, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 20 },
-  { logicalId: "contract.bindingRevision", diskId: 3, wireName: "SM Binding Rev", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 1, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 1 },
+  { logicalId: "contract.bindingRevision", diskId: 3, wireName: "SM Binding Rev", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 2, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 1 },
   { logicalId: "transition.mode", diskId: 50, wireName: "SM Mode", nativeType: "POPUP", stateOwnership: "transition", timeVariance: "static", defaultVal: 0, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "ProgressMode", oldDefault: 0 },
   { logicalId: "transition.alignment", diskId: 51, wireName: "SM Alignment", nativeType: "POPUP", stateOwnership: "transition", timeVariance: "static", defaultVal: 0, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "AlignmentMode", oldDefault: 0 },
   { logicalId: "transition.durationSeconds", diskId: 52, wireName: "SM Duration", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 1, validMin: 0, validMax: 3600, uiMin: 0, uiMax: 10, enumRef: "", oldDefault: 1 },

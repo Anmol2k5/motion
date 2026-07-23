@@ -54,6 +54,9 @@ expectFail('enum missing value (ProgressMode)', (c) => { c.enums.ProgressMode.va
 expectFail('missing oldProjectDefault', (c) => { delete c.parameters[0].oldProjectDefault; }, 'missing oldProjectDefault');
 expectFail('POPUP default not in enum', (c) => { c.parameters.find(p => p.logicalId === 'transition.mode').default = 99; }, 'not in enum');
 expectFail('POINT default invalid', (c) => { c.parameters.find(p => p.logicalId === 'transform.position.a').default = { x: 0, y: 0 }; }, 'must be one of');
+expectFail('binding revision metadata mismatch', (c) => {
+  c.parameters.find(p => p.logicalId === 'contract.bindingRevision').default = c.bindingRevision - 1;
+}, 'contract.bindingRevision default');
 
 // ---- valid generation -------------------------------------------------------
 
