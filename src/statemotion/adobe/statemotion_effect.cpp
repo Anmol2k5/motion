@@ -1,10 +1,10 @@
 // StateMotion native effect - entry point and CPU transform render.
 //
-// Registers the "StateMotion" effect with the permanent match name and its 20
-// transform + progress parameters. Render() reads native params via disk-ID
-// adapters, builds canonical A/B states, evaluates progress from clip-local
-// host time, interpolates, converts to renderer units, and rasterizes through
-// the existing verified CPU transform renderer.
+// Registers the "StateMotion" effect with the permanent match name and its 43
+// parameters (progress, transform, crop, shadow). Render() reads native params
+// via disk-ID adapters, builds canonical A/B states, evaluates progress from
+// clip-local host time, interpolates, converts to renderer units, and
+// rasterizes through the existing verified CPU transform renderer.
 
 #include <cstdio>
 #include <cstring>
@@ -128,7 +128,7 @@ registerStateMotionParameters(
             } else if (::strcmp(b.enumRef, "AlignmentMode") == 0) {
                 items = "ClipStart|ClipEnd|EntireClip";
             } else if (::strcmp(b.enumRef, "EasingMode") == 0) {
-                items = "Linear|EaseIn|EaseOut|EaseInOut|Custom";
+                items = "Linear|EaseIn|EaseOut|EaseInOut|Custom|Spring|Bounce";
             }
             def.u.pd.num_choices = static_cast<A_short>(b.enumCount);
             def.u.pd.dephault = static_cast<A_short>(b.defaultNum);
@@ -289,6 +289,28 @@ Render(
     const PF_PointDef &ab = SM_RD(kTransformAnchorB)->u.td;
     const double oa = SM_RD(kTransformOpacityA)->u.fs_d.value;
     const double ob = SM_RD(kTransformOpacityB)->u.fs_d.value;
+
+    // 1b. Read crop parameters (disk IDs 150-159, percent 0-100).
+    const double cropLA = SM_RD(kCropLeftA)->u.fs_d.value;
+    const double cropLB = SM_RD(kCropLeftB)->u.fs_d.value;
+    const double cropRA = SM_RD(kCropRightA)->u.fs_d.value;
+    const double cropRB = SM_RD(kCropRightB)->u.fs_d.value;
+    const double cropTA = SM_RD(kCropTopA)->u.fs_d.value;
+    const double cropTB = SM_RD(kCropTopB)->u.fs_d.value;
+    const double cropBA = SM_RD(kCropBottomA)->u.fs_d.value;
+    const double cropBB = SM_RD(kCropBottomB)->u.fs_d.value;
+    const double cropCRA = SM_RD(kCropCornerRadiusA)->u.fs_d.value;
+    const double cropCRB = SM_RD(kCropCornerRadiusB)->u.fs_d.value;
+
+    // 1c. Read shadow parameters (disk IDs 250-257).
+    const double shadOpA = SM_RD(kShadowOpacityA)->u.fs_d.value;
+    const double shadOpB = SM_RD(kShadowOpacityB)->u.fs_d.value;
+    const double shadAngA = SM_RD(kShadowAngleA)->u.ad.value / 65536.0;
+    const double shadAngB = SM_RD(kShadowAngleB)->u.ad.value / 65536.0;
+    const double shadDistA = SM_RD(kShadowDistanceA)->u.fs_d.value;
+    const double shadDistB = SM_RD(kShadowDistanceB)->u.fs_d.value;
+    const double shadSoftA = SM_RD(kShadowSoftnessA)->u.fs_d.value;
+    const double shadSoftB = SM_RD(kShadowSoftnessB)->u.fs_d.value;
     #undef SM_RD
 
     // Premiere exposes runtime POINT values as pixels in fixed 16.16.
@@ -330,6 +352,20 @@ Render(
     // 5. Canonical -> renderer-native units (single boundary conversion, after interp).
     statemotion::raster::RenderDimensions dims{W, H, SW, SH};
     auto rt = statemotion::raster::toRendererTransformState(canon, dims);
+
+    // 5b. Interpolate crop/shadow directly on renderer state (Option A: minimal,
+    //     bypasses canonical TransformState which only holds transform fields).
+    const double ep = pe.result.easedProgress;
+    const double t = std::clamp(ep, 0.0, 1.0);
+    rt.cropLeft      = statemotion::native::percentToFraction(cropLA  + (cropLB  - cropLA)  * t);
+    rt.cropRight     = statemotion::native::percentToFraction(cropRA  + (cropRB  - cropRA)  * t);
+    rt.cropTop       = statemotion::native::percentToFraction(cropTA  + (cropTB  - cropTA)  * t);
+    rt.cropBottom    = statemotion::native::percentToFraction(cropBA  + (cropBB  - cropBA)  * t);
+    rt.cornerRadius  = statemotion::native::percentToFraction(cropCRA + (cropCRB - cropCRA) * t);
+    rt.shadowOpacity = statemotion::native::percentToOpacity( shadOpA + (shadOpB - shadOpA) * t);
+    rt.shadowAngleDeg  = shadAngA + (shadAngB - shadAngA) * t;
+    rt.shadowDistance  = shadDistA + (shadDistB - shadDistA) * t;
+    rt.shadowSoftness  = shadSoftA + (shadSoftB - shadSoftA) * t;
 
     // 6. Identity fast path (true no-op only).
     auto plan = statemotion::plan(rt, SW, SH);

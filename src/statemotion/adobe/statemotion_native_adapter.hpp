@@ -39,6 +39,13 @@ inline double percentToOpacity(double percent) {
     return std::clamp(percent / 100.0, 0.0, 1.0);
 }
 
+// FLOAT_SLIDER crop percent -> fraction [0,1] (0% -> 0, 100% -> 1).
+// Crop values are stored as percent in the native host but the renderer expects
+// fractions of the source dimension.
+inline double percentToFraction(double percent) {
+    return percent / 100.0;
+}
+
 // ANGLE degrees -> radians.
 inline double degreesToRadians(double degrees) {
     return degrees * 3.14159265358979323846 / 180.0;
