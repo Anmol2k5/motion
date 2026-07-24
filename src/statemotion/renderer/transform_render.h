@@ -47,6 +47,15 @@ struct RendererTransformState {
     double shadowAngleDeg = 135.0;
     double shadowDistance = 10.0;
     double shadowSoftness = 20.0;
+    bool strokeEnabled = false;
+    double strokeWidth = 10.0;
+    Pixel strokeColor1 = {1.0, 1.0, 1.0, 1.0};
+    Pixel strokeColor2 = {1.0, 1.0, 1.0, 1.0};
+    double strokeGradientAngleDeg = 0.0;
+    double strokeGradientPhaseOffset = 0.0;
+    bool glowEnabled = false;
+    double glowAmount = 0.0;
+    double glowRadius = 50.0;
 };
 
 // Clamp near-zero scale to +/-epsilon to avoid singular transforms, preserving
@@ -80,10 +89,22 @@ struct CpuRenderPlan {
     double shadowOffsetY = 0.0;
     double shadowOpacity = 0.0;
     double shadowSoftnessPx = 0.0;
+    bool strokeEnabled = false;
+    double strokeWidthPx = 0.0;
+    Pixel strokeColor1;
+    Pixel strokeColor2;
+    double strokeGradientPhaseOffset = 0.0;
+    double strokeGradientDx = 0.0;
+    double strokeGradientDy = 0.0;
+    bool glowEnabled = false;
+    double glowAmount = 0.0;
+    double glowRadiusPx = 0.0;
     int srcW = 0;
     int srcH = 0;
     bool hasCropMask = false;
     bool hasShadow = false;
+    bool hasStroke = false;
+    bool hasGlow = false;
     bool identityTransform = true;
     bool fullyTransparent = false;
 };

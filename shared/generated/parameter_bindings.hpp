@@ -26,12 +26,12 @@ struct ParameterBinding {
   const char* enumRef;    // POPUP enum name (else "")
 };
 
-inline constexpr char kContractDigest[] = "98c9ae4be308d9344519b6c777bbfd862547888c26c5d62e9bdc5100e5be8c32";
+inline constexpr char kContractDigest[] = "b1f0f11f71b95cf1f86f73856e409382e558002d2d1fefe03418a11cd0cdc0bb";
 
-inline constexpr ParameterBinding kBindings[43] = {
+inline constexpr ParameterBinding kBindings[60] = {
   {"contract.schemaVersion", 1, "SM Schema Version", "FLOAT_SLIDER", "metadata", "static", 1, 1, 9999, 1, 9999, 1, 2, 0, ""},
-  {"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 43, 1, 9999, 1, 9999, 20, 2, 0, ""},
-  {"contract.bindingRevision", 3, "SM Binding Rev", "FLOAT_SLIDER", "metadata", "static", 2, 1, 9999, 1, 9999, 1, 2, 0, ""},
+  {"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 60, 1, 9999, 1, 9999, 20, 2, 0, ""},
+  {"contract.bindingRevision", 3, "SM Binding Rev", "FLOAT_SLIDER", "metadata", "static", 3, 1, 9999, 1, 9999, 1, 2, 0, ""},
   {"transition.mode", 50, "SM Mode", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 7, "ProgressMode"},
   {"transition.alignment", 51, "SM Alignment", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 3, "AlignmentMode"},
   {"transition.durationSeconds", 52, "SM Duration", "FLOAT_SLIDER", "transition", "static", 1, 0, 3600, 0, 10, 1, 3, 0, ""},
@@ -71,7 +71,24 @@ inline constexpr ParameterBinding kBindings[43] = {
   {"shadow.distance.a", 254, "SM Shadow Distance A", "FLOAT_SLIDER", "A", "interpolatable", 10, 0, 1000, 0, 200, 10, 2, 0, ""},
   {"shadow.distance.b", 255, "SM Shadow Distance B", "FLOAT_SLIDER", "B", "interpolatable", 10, 0, 1000, 0, 200, 10, 2, 0, ""},
   {"shadow.softness.a", 256, "SM Shadow Softness A", "FLOAT_SLIDER", "A", "interpolatable", 20, 0, 500, 0, 100, 20, 2, 0, ""},
-  {"shadow.softness.b", 257, "SM Shadow Softness B", "FLOAT_SLIDER", "B", "interpolatable", 20, 0, 500, 0, 100, 20, 2, 0, ""}
+  {"shadow.softness.b", 257, "SM Shadow Softness B", "FLOAT_SLIDER", "B", "interpolatable", 20, 0, 500, 0, 100, 20, 2, 0, ""},
+  {"stroke.enabled.a", 200, "SM Stroke Enable A", "CHECKBOX", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"stroke.enabled.b", 201, "SM Stroke Enable B", "CHECKBOX", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"stroke.width.a", 202, "SM Stroke Width A", "FLOAT_SLIDER", "A", "interpolatable", 10, 0, 1000, 0, 200, 10, 2, 0, ""},
+  {"stroke.width.b", 203, "SM Stroke Width B", "FLOAT_SLIDER", "B", "interpolatable", 10, 0, 1000, 0, 200, 10, 2, 0, ""},
+  {"stroke.color1.a", 204, "SM Stroke Color1 A", "COLOR", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"stroke.color1.b", 205, "SM Stroke Color1 B", "COLOR", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"stroke.color2.a", 206, "SM Stroke Color2 A", "COLOR", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"stroke.color2.b", 207, "SM Stroke Color2 B", "COLOR", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"stroke.gradientAngle.a", 208, "SM Stroke Angle A", "ANGLE", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"stroke.gradientAngle.b", 209, "SM Stroke Angle B", "ANGLE", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"stroke.gradientCycleSpeed", 210, "SM Stroke Cycle Spd", "FLOAT_SLIDER", "transition", "static", 0, -100, 100, -10, 10, 0, 2, 0, ""},
+  {"glow.enabled.a", 211, "SM Glow Enable A", "CHECKBOX", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"glow.enabled.b", 212, "SM Glow Enable B", "CHECKBOX", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"glow.amount.a", 213, "SM Glow Amount A", "FLOAT_SLIDER", "A", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"glow.amount.b", 214, "SM Glow Amount B", "FLOAT_SLIDER", "B", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"glow.radius.a", 215, "SM Glow Radius A", "FLOAT_SLIDER", "A", "interpolatable", 50, 0, 1000, 0, 200, 50, 2, 0, ""},
+  {"glow.radius.b", 216, "SM Glow Radius B", "FLOAT_SLIDER", "B", "interpolatable", 50, 0, 1000, 0, 200, 50, 2, 0, ""}
 };
 
 } // namespace contract

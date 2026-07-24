@@ -19,15 +19,15 @@ export interface ParameterBinding {
   oldDefault: number | string;
 }
 
-export const CONTRACT_DIGEST = "98c9ae4be308d9344519b6c777bbfd862547888c26c5d62e9bdc5100e5be8c32";
+export const CONTRACT_DIGEST = "b1f0f11f71b95cf1f86f73856e409382e558002d2d1fefe03418a11cd0cdc0bb";
 export const SCHEMA_VERSION = 1;
-export const BINDING_REVISION = 2;
-export const PARAMETER_COUNT = 43;
+export const BINDING_REVISION = 3;
+export const PARAMETER_COUNT = 60;
 
 export const BINDINGS: ParameterBinding[] = [
   { logicalId: "contract.schemaVersion", diskId: 1, wireName: "SM Schema Version", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 1, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 1 },
-  { logicalId: "contract.parameterCount", diskId: 2, wireName: "SM Param Count", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 43, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 20 },
-  { logicalId: "contract.bindingRevision", diskId: 3, wireName: "SM Binding Rev", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 2, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 1 },
+  { logicalId: "contract.parameterCount", diskId: 2, wireName: "SM Param Count", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 60, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 20 },
+  { logicalId: "contract.bindingRevision", diskId: 3, wireName: "SM Binding Rev", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 3, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 1 },
   { logicalId: "transition.mode", diskId: 50, wireName: "SM Mode", nativeType: "POPUP", stateOwnership: "transition", timeVariance: "static", defaultVal: 0, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "ProgressMode", oldDefault: 0 },
   { logicalId: "transition.alignment", diskId: 51, wireName: "SM Alignment", nativeType: "POPUP", stateOwnership: "transition", timeVariance: "static", defaultVal: 0, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "AlignmentMode", oldDefault: 0 },
   { logicalId: "transition.durationSeconds", diskId: 52, wireName: "SM Duration", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 1, validMin: 0, validMax: 3600, uiMin: 0, uiMax: 10, enumRef: "", oldDefault: 1 },
@@ -68,6 +68,23 @@ export const BINDINGS: ParameterBinding[] = [
   { logicalId: "shadow.distance.b", diskId: 255, wireName: "SM Shadow Distance B", nativeType: "FLOAT_SLIDER", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 10, validMin: 0, validMax: 1000, uiMin: 0, uiMax: 200, enumRef: "", oldDefault: 10 },
   { logicalId: "shadow.softness.a", diskId: 256, wireName: "SM Shadow Softness A", nativeType: "FLOAT_SLIDER", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: 20, validMin: 0, validMax: 500, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 20 },
   { logicalId: "shadow.softness.b", diskId: 257, wireName: "SM Shadow Softness B", nativeType: "FLOAT_SLIDER", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 20, validMin: 0, validMax: 500, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 20 },
+  { logicalId: "stroke.enabled.a", diskId: 200, wireName: "SM Stroke Enable A", nativeType: "CHECKBOX", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: false, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: false },
+  { logicalId: "stroke.enabled.b", diskId: 201, wireName: "SM Stroke Enable B", nativeType: "CHECKBOX", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: false, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: false },
+  { logicalId: "stroke.width.a", diskId: 202, wireName: "SM Stroke Width A", nativeType: "FLOAT_SLIDER", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: 10, validMin: 0, validMax: 1000, uiMin: 0, uiMax: 200, enumRef: "", oldDefault: 10 },
+  { logicalId: "stroke.width.b", diskId: 203, wireName: "SM Stroke Width B", nativeType: "FLOAT_SLIDER", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 10, validMin: 0, validMax: 1000, uiMin: 0, uiMax: 200, enumRef: "", oldDefault: 10 },
+  { logicalId: "stroke.color1.a", diskId: 204, wireName: "SM Stroke Color1 A", nativeType: "COLOR", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: "white", validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: "white" },
+  { logicalId: "stroke.color1.b", diskId: 205, wireName: "SM Stroke Color1 B", nativeType: "COLOR", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: "white", validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: "white" },
+  { logicalId: "stroke.color2.a", diskId: 206, wireName: "SM Stroke Color2 A", nativeType: "COLOR", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: "white", validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: "white" },
+  { logicalId: "stroke.color2.b", diskId: 207, wireName: "SM Stroke Color2 B", nativeType: "COLOR", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: "white", validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: "white" },
+  { logicalId: "stroke.gradientAngle.a", diskId: 208, wireName: "SM Stroke Angle A", nativeType: "ANGLE", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: 0, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: 0 },
+  { logicalId: "stroke.gradientAngle.b", diskId: 209, wireName: "SM Stroke Angle B", nativeType: "ANGLE", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 0, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: 0 },
+  { logicalId: "stroke.gradientCycleSpeed", diskId: 210, wireName: "SM Stroke Cycle Spd", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 0, validMin: -100, validMax: 100, uiMin: -10, uiMax: 10, enumRef: "", oldDefault: 0 },
+  { logicalId: "glow.enabled.a", diskId: 211, wireName: "SM Glow Enable A", nativeType: "CHECKBOX", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: false, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: false },
+  { logicalId: "glow.enabled.b", diskId: 212, wireName: "SM Glow Enable B", nativeType: "CHECKBOX", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: false, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: false },
+  { logicalId: "glow.amount.a", diskId: 213, wireName: "SM Glow Amount A", nativeType: "FLOAT_SLIDER", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: 0, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 0 },
+  { logicalId: "glow.amount.b", diskId: 214, wireName: "SM Glow Amount B", nativeType: "FLOAT_SLIDER", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 0, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 0 },
+  { logicalId: "glow.radius.a", diskId: 215, wireName: "SM Glow Radius A", nativeType: "FLOAT_SLIDER", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: 50, validMin: 0, validMax: 1000, uiMin: 0, uiMax: 200, enumRef: "", oldDefault: 50 },
+  { logicalId: "glow.radius.b", diskId: 216, wireName: "SM Glow Radius B", nativeType: "FLOAT_SLIDER", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 50, validMin: 0, validMax: 1000, uiMin: 0, uiMax: 200, enumRef: "", oldDefault: 50 },
 ];
 
 const byLogicalId = new Map<string, ParameterBinding>(

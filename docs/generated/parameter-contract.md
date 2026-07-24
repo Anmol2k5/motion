@@ -1,9 +1,9 @@
 # StateMotion Parameter Contract (generated)
 
 - schemaVersion: 1
-- bindingRevision: 2
-- parameterCount: 43
-- SHA-256: `98c9ae4be308d9344519b6c777bbfd862547888c26c5d62e9bdc5100e5be8c32`
+- bindingRevision: 3
+- parameterCount: 60
+- SHA-256: `b1f0f11f71b95cf1f86f73856e409382e558002d2d1fefe03418a11cd0cdc0bb`
 
 > GENERATED from shared/schema/parameter-contract.json. Do not edit by hand.
 
@@ -37,8 +37,8 @@
 | logicalId | diskId | wireName | nativeType | default | range | timeVariance | state |
 |---|---|---|---|---|---|---|---|
 | contract.schemaVersion | 1 | SM Schema Version | FLOAT_SLIDER | 1 | 1..9999 | static | metadata |
-| contract.parameterCount | 2 | SM Param Count | FLOAT_SLIDER | 43 | 1..9999 | static | metadata |
-| contract.bindingRevision | 3 | SM Binding Rev | FLOAT_SLIDER | 2 | 1..9999 | static | metadata |
+| contract.parameterCount | 2 | SM Param Count | FLOAT_SLIDER | 60 | 1..9999 | static | metadata |
+| contract.bindingRevision | 3 | SM Binding Rev | FLOAT_SLIDER | 3 | 1..9999 | static | metadata |
 | transition.mode | 50 | SM Mode | POPUP | 0 | ProgressMode | static | transition |
 | transition.alignment | 51 | SM Alignment | POPUP | 0 | AlignmentMode | static | transition |
 | transition.durationSeconds | 52 | SM Duration | FLOAT_SLIDER | 1 | 0..3600 | static | transition |
@@ -79,3 +79,20 @@
 | shadow.distance.b | 255 | SM Shadow Distance B | FLOAT_SLIDER | 10 | 0..1000 | interpolatable | B |
 | shadow.softness.a | 256 | SM Shadow Softness A | FLOAT_SLIDER | 20 | 0..500 | interpolatable | A |
 | shadow.softness.b | 257 | SM Shadow Softness B | FLOAT_SLIDER | 20 | 0..500 | interpolatable | B |
+| stroke.enabled.a | 200 | SM Stroke Enable A | CHECKBOX | false | n/a | interpolatable | A |
+| stroke.enabled.b | 201 | SM Stroke Enable B | CHECKBOX | false | n/a | interpolatable | B |
+| stroke.width.a | 202 | SM Stroke Width A | FLOAT_SLIDER | 10 | 0..1000 | interpolatable | A |
+| stroke.width.b | 203 | SM Stroke Width B | FLOAT_SLIDER | 10 | 0..1000 | interpolatable | B |
+| stroke.color1.a | 204 | SM Stroke Color1 A | COLOR | "white" | n/a | interpolatable | A |
+| stroke.color1.b | 205 | SM Stroke Color1 B | COLOR | "white" | n/a | interpolatable | B |
+| stroke.color2.a | 206 | SM Stroke Color2 A | COLOR | "white" | n/a | interpolatable | A |
+| stroke.color2.b | 207 | SM Stroke Color2 B | COLOR | "white" | n/a | interpolatable | B |
+| stroke.gradientAngle.a | 208 | SM Stroke Angle A | ANGLE | 0 | n/a | interpolatable | A |
+| stroke.gradientAngle.b | 209 | SM Stroke Angle B | ANGLE | 0 | n/a | interpolatable | B |
+| stroke.gradientCycleSpeed | 210 | SM Stroke Cycle Spd | FLOAT_SLIDER | 0 | -100..100 | static | transition |
+| glow.enabled.a | 211 | SM Glow Enable A | CHECKBOX | false | n/a | interpolatable | A |
+| glow.enabled.b | 212 | SM Glow Enable B | CHECKBOX | false | n/a | interpolatable | B |
+| glow.amount.a | 213 | SM Glow Amount A | FLOAT_SLIDER | 0 | 0..100 | interpolatable | A |
+| glow.amount.b | 214 | SM Glow Amount B | FLOAT_SLIDER | 0 | 0..100 | interpolatable | B |
+| glow.radius.a | 215 | SM Glow Radius A | FLOAT_SLIDER | 50 | 0..1000 | interpolatable | A |
+| glow.radius.b | 216 | SM Glow Radius B | FLOAT_SLIDER | 50 | 0..1000 | interpolatable | B |

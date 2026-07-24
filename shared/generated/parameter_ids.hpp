@@ -32,8 +32,8 @@ enum class EasingMode : int {
 };
 
 inline constexpr int kSchemaVersion = 1;
-inline constexpr int kBindingRevision = 2;
-inline constexpr int kParameterCount = 43;
+inline constexpr int kBindingRevision = 3;
+inline constexpr int kParameterCount = 60;
 
 inline constexpr int kContractSchemaVersion = 1;
 inline constexpr int kContractParameterCount = 2;
@@ -78,6 +78,23 @@ inline constexpr int kShadowDistanceA = 254;
 inline constexpr int kShadowDistanceB = 255;
 inline constexpr int kShadowSoftnessA = 256;
 inline constexpr int kShadowSoftnessB = 257;
+inline constexpr int kStrokeEnabledA = 200;
+inline constexpr int kStrokeEnabledB = 201;
+inline constexpr int kStrokeWidthA = 202;
+inline constexpr int kStrokeWidthB = 203;
+inline constexpr int kStrokeColor1A = 204;
+inline constexpr int kStrokeColor1B = 205;
+inline constexpr int kStrokeColor2A = 206;
+inline constexpr int kStrokeColor2B = 207;
+inline constexpr int kStrokeGradientAngleA = 208;
+inline constexpr int kStrokeGradientAngleB = 209;
+inline constexpr int kStrokeGradientCycleSpeed = 210;
+inline constexpr int kGlowEnabledA = 211;
+inline constexpr int kGlowEnabledB = 212;
+inline constexpr int kGlowAmountA = 213;
+inline constexpr int kGlowAmountB = 214;
+inline constexpr int kGlowRadiusA = 215;
+inline constexpr int kGlowRadiusB = 216;
 
 } // namespace ids
 } // namespace statemotion

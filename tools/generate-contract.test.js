@@ -134,8 +134,8 @@ expectFail('binding revision metadata mismatch', (c) => {
   assert.ok(cpp.includes('"transition.mode", 50, "SM Mode", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 7, "ProgressMode"'), 'transition.mode popup binding wrong');
   // A POINT must emit defaultNum 0 (native resolves center).
   assert.ok(cpp.includes('"transform.position.a", 100, "SM Position A", "POINT", "A", "interpolatable", 0,'), 'position.a POINT default must be 0');
-  // parameterCount metadata new-default 43 (shadow params added), old-default 20.
-  assert.ok(cpp.includes('"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 43, 1, 9999, 1, 9999, 20,'), 'parameterCount old default wrong');
+  // parameterCount metadata new-default 60 (shadow params added), old-default 20.
+  assert.ok(cpp.includes('"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 60, 1, 9999, 1, 9999, 20,'), 'parameterCount old default wrong');
   pass('enhanced C++ binding fields present and match contract');
 })();
 

@@ -141,11 +141,15 @@ double sampleTransformedAlphaAt(const CpuRenderPlan& p, Sampler sampler, void* u
     const int x1 = x0 + 1;
     const int y1 = y0 + 1;
     double a = 0.0;
-    if (x0 >= 0 && y0 >= 0 && x1 < p.srcW && y1 < p.srcH) {
+    if (x0 >= -1 && y0 >= -1 && x0 <= p.srcW && y0 <= p.srcH) {
         const double fx = sx - x0;
         const double fy = sy - y0;
-        double topA = sampler(user, x0, y0).a + (sampler(user, x1, y0).a - sampler(user, x0, y0).a) * fx;
-        double botA = sampler(user, x0, y1).a + (sampler(user, x1, y1).a - sampler(user, x0, y1).a) * fx;
+        double a00 = (x0 >= 0 && x0 < p.srcW && y0 >= 0 && y0 < p.srcH) ? sampler(user, x0, y0).a : 0.0;
+        double a10 = (x1 >= 0 && x1 < p.srcW && y0 >= 0 && y0 < p.srcH) ? sampler(user, x1, y0).a : 0.0;
+        double a01 = (x0 >= 0 && x0 < p.srcW && y1 >= 0 && y1 < p.srcH) ? sampler(user, x0, y1).a : 0.0;
+        double a11 = (x1 >= 0 && x1 < p.srcW && y1 >= 0 && y1 < p.srcH) ? sampler(user, x1, y1).a : 0.0;
+        double topA = a00 + (a10 - a00) * fx;
+        double botA = a01 + (a11 - a01) * fx;
         a = topA + (botA - topA) * fy;
     } else if (p.identityTransform && px >= 0 && px < p.srcW && py >= 0 && py < p.srcH) {
         a = sampler(user, static_cast<int>(px), static_cast<int>(py)).a;
@@ -181,11 +185,15 @@ void render(const CpuRenderPlan& p, Sampler sampler, void* user,
                 const int y0 = static_cast<int>(std::floor(sy));
                 const int x1 = x0 + 1;
                 const int y1 = y0 + 1;
-                if (x0 >= 0 && y0 >= 0 && x1 < p.srcW && y1 < p.srcH) {
+                if (x0 >= -1 && y0 >= -1 && x0 <= p.srcW && y0 <= p.srcH) {
                     const double fx = sx - x0;
                     const double fy = sy - y0;
-                    Pixel top = lerp(sampler(user, x0, y0), sampler(user, x1, y0), fx);
-                    Pixel bot = lerp(sampler(user, x0, y1), sampler(user, x1, y1), fx);
+                    Pixel p00 = (x0 >= 0 && x0 < p.srcW && y0 >= 0 && y0 < p.srcH) ? sampler(user, x0, y0) : transparent();
+                    Pixel p10 = (x1 >= 0 && x1 < p.srcW && y0 >= 0 && y0 < p.srcH) ? sampler(user, x1, y0) : transparent();
+                    Pixel p01 = (x0 >= 0 && x0 < p.srcW && y1 >= 0 && y1 < p.srcH) ? sampler(user, x0, y1) : transparent();
+                    Pixel p11 = (x1 >= 0 && x1 < p.srcW && y1 >= 0 && y1 < p.srcH) ? sampler(user, x1, y1) : transparent();
+                    Pixel top = lerp(p00, p10, fx);
+                    Pixel bot = lerp(p01, p11, fx);
                     result = lerp(top, bot, fy);
                 }
             } else if (x >= 0 && x < p.srcW && y >= 0 && y < p.srcH) {

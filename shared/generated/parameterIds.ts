@@ -28,8 +28,8 @@ export enum EasingMode {
 }
 
 export const SCHEMA_VERSION = 1;
-export const BINDING_REVISION = 2;
-export const PARAMETER_COUNT = 43;
+export const BINDING_REVISION = 3;
+export const PARAMETER_COUNT = 60;
 
 export const ContractSchemaVersion = 1;
 export const ContractParameterCount = 2;
@@ -74,3 +74,20 @@ export const ShadowDistanceA = 254;
 export const ShadowDistanceB = 255;
 export const ShadowSoftnessA = 256;
 export const ShadowSoftnessB = 257;
+export const StrokeEnabledA = 200;
+export const StrokeEnabledB = 201;
+export const StrokeWidthA = 202;
+export const StrokeWidthB = 203;
+export const StrokeColor1A = 204;
+export const StrokeColor1B = 205;
+export const StrokeColor2A = 206;
+export const StrokeColor2B = 207;
+export const StrokeGradientAngleA = 208;
+export const StrokeGradientAngleB = 209;
+export const StrokeGradientCycleSpeed = 210;
+export const GlowEnabledA = 211;
+export const GlowEnabledB = 212;
+export const GlowAmountA = 213;
+export const GlowAmountB = 214;
+export const GlowRadiusA = 215;
+export const GlowRadiusB = 216;

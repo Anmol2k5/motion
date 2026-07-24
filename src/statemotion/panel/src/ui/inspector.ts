@@ -35,10 +35,11 @@ export class InspectorView {
     }
     container.append(summary);
 
-    // Live easing, crop & shadow controls for the first supported clip.
     await this.renderEasingControl(container, supported[0].clipId);
     await this.renderCropControl(container, supported[0].clipId);
     await this.renderShadowControl(container, supported[0].clipId);
+    await this.renderStrokeControl(container, supported[0].clipId);
+    await this.renderGlowControl(container, supported[0].clipId);
 
     // Applied preset (best-effort detection by matching params is future work;
     // we show a manual Apply control here).
@@ -216,6 +217,152 @@ export class InspectorView {
       inputB.addEventListener('change', () => {
         const v = parseFloat(inputB.value);
         if (Number.isFinite(v)) this.adapter.writeLogical({ clipId }, item.idB, v / item.scale).catch(() => {});
+      });
+
+      const row = el('div', { class: 'sm-row' }, [
+        el('span', { class: 'label', text: item.label }),
+        el('span', { class: 'label', text: 'A' }), inputA,
+        el('span', { class: 'label', text: 'B' }), inputB,
+      ]);
+      section.append(row);
+    }
+    container.append(section);
+  }
+
+  private async renderStrokeControl(container: HTMLElement, clipId: string): Promise<void> {
+    const STROKE_IDS = [
+      { idA: 'stroke.enabled.a', idB: 'stroke.enabled.b', label: 'Enabled', type: 'checkbox' },
+      { idA: 'stroke.width.a', idB: 'stroke.width.b', label: 'Width (px)', type: 'number', scale: 1, max: 1000 },
+      { idA: 'stroke.color1.a', idB: 'stroke.color1.b', label: 'Color 1', type: 'text' },
+      { idA: 'stroke.color2.a', idB: 'stroke.color2.b', label: 'Color 2', type: 'text' },
+      { idA: 'stroke.gradientAngle.a', idB: 'stroke.gradientAngle.b', label: 'Angle (°)', type: 'number', scale: (180 / Math.PI), max: 360 },
+    ] as const;
+
+    const values: Record<string, any> = {};
+    let cycleSpeed = 0;
+    try {
+      const cfg = await this.adapter.readState({ clipId });
+      for (const item of STROKE_IDS) {
+        if (item.type === 'number') {
+          values[item.idA] = typeof cfg.parameters[item.idA] === 'number' ? (cfg.parameters[item.idA] as number) * item.scale! : 0;
+          values[item.idB] = typeof cfg.parameters[item.idB] === 'number' ? (cfg.parameters[item.idB] as number) * item.scale! : 0;
+        } else {
+          values[item.idA] = cfg.parameters[item.idA];
+          values[item.idB] = cfg.parameters[item.idB];
+        }
+      }
+      cycleSpeed = typeof cfg.parameters['stroke.gradientCycleSpeed'] === 'number' ? cfg.parameters['stroke.gradientCycleSpeed'] as number : 0;
+    } catch { /* read-only or unsupported */ }
+
+    const section = el('div', { class: 'sm-section' });
+    section.append(el('div', { class: 'sm-section-title', text: 'Stroke' }));
+
+    for (const item of STROKE_IDS) {
+      let inputA: HTMLInputElement, inputB: HTMLInputElement;
+      if (item.type === 'checkbox') {
+        inputA = el('input', { type: 'checkbox' }) as HTMLInputElement;
+        inputB = el('input', { type: 'checkbox' }) as HTMLInputElement;
+        inputA.checked = !!values[item.idA];
+        inputB.checked = !!values[item.idB];
+      } else if (item.type === 'number') {
+        inputA = el('input', { type: 'number', min: '0', max: String(item.max), value: String(Math.round(values[item.idA] ?? 0)) }) as HTMLInputElement;
+        inputB = el('input', { type: 'number', min: '0', max: String(item.max), value: String(Math.round(values[item.idB] ?? 0)) }) as HTMLInputElement;
+        inputA.classList.add('sm-curve-input');
+        inputB.classList.add('sm-curve-input');
+      } else {
+        inputA = el('input', { type: 'text', value: String(values[item.idA] ?? 'white') }) as HTMLInputElement;
+        inputB = el('input', { type: 'text', value: String(values[item.idB] ?? 'white') }) as HTMLInputElement;
+        inputA.classList.add('sm-curve-input');
+        inputB.classList.add('sm-curve-input');
+      }
+
+      inputA.addEventListener('change', () => {
+        let val: any;
+        if (item.type === 'checkbox') val = inputA.checked;
+        else if (item.type === 'number') val = parseFloat(inputA.value) / item.scale!;
+        else val = inputA.value;
+        if (item.type !== 'number' || Number.isFinite(val)) this.adapter.writeLogical({ clipId }, item.idA, val).catch(() => {});
+      });
+      inputB.addEventListener('change', () => {
+        let val: any;
+        if (item.type === 'checkbox') val = inputB.checked;
+        else if (item.type === 'number') val = parseFloat(inputB.value) / item.scale!;
+        else val = inputB.value;
+        if (item.type !== 'number' || Number.isFinite(val)) this.adapter.writeLogical({ clipId }, item.idB, val).catch(() => {});
+      });
+
+      const row = el('div', { class: 'sm-row' }, [
+        el('span', { class: 'label', text: item.label }),
+        el('span', { class: 'label', text: 'A' }), inputA,
+        el('span', { class: 'label', text: 'B' }), inputB,
+      ]);
+      section.append(row);
+    }
+    
+    // Cycle speed
+    const cycleInput = el('input', { type: 'number', min: '-10', max: '10', step: '0.1', value: String(cycleSpeed) }) as HTMLInputElement;
+    cycleInput.classList.add('sm-curve-input');
+    cycleInput.addEventListener('change', () => {
+        const v = parseFloat(cycleInput.value);
+        if (Number.isFinite(v)) this.adapter.writeLogical({ clipId }, 'stroke.gradientCycleSpeed', v).catch(() => {});
+    });
+    section.append(el('div', { class: 'sm-row' }, [
+        el('span', { class: 'label', text: 'Cycle Speed (Hz)' }),
+        cycleInput
+    ]));
+
+    container.append(section);
+  }
+
+  private async renderGlowControl(container: HTMLElement, clipId: string): Promise<void> {
+    const GLOW_IDS = [
+      { idA: 'glow.enabled.a', idB: 'glow.enabled.b', label: 'Enabled', type: 'checkbox' },
+      { idA: 'glow.amount.a', idB: 'glow.amount.b', label: 'Amount (%)', type: 'number', scale: 100, max: 100 },
+      { idA: 'glow.radius.a', idB: 'glow.radius.b', label: 'Radius (px)', type: 'number', scale: 1, max: 1000 },
+    ] as const;
+
+    const values: Record<string, any> = {};
+    try {
+      const cfg = await this.adapter.readState({ clipId });
+      for (const item of GLOW_IDS) {
+        if (item.type === 'number') {
+          values[item.idA] = typeof cfg.parameters[item.idA] === 'number' ? (cfg.parameters[item.idA] as number) * item.scale! : 0;
+          values[item.idB] = typeof cfg.parameters[item.idB] === 'number' ? (cfg.parameters[item.idB] as number) * item.scale! : 0;
+        } else {
+          values[item.idA] = cfg.parameters[item.idA];
+          values[item.idB] = cfg.parameters[item.idB];
+        }
+      }
+    } catch { /* read-only or unsupported */ }
+
+    const section = el('div', { class: 'sm-section' });
+    section.append(el('div', { class: 'sm-section-title', text: 'Glow' }));
+
+    for (const item of GLOW_IDS) {
+      let inputA: HTMLInputElement, inputB: HTMLInputElement;
+      if (item.type === 'checkbox') {
+        inputA = el('input', { type: 'checkbox' }) as HTMLInputElement;
+        inputB = el('input', { type: 'checkbox' }) as HTMLInputElement;
+        inputA.checked = !!values[item.idA];
+        inputB.checked = !!values[item.idB];
+      } else {
+        inputA = el('input', { type: 'number', min: '0', max: String(item.max), value: String(Math.round(values[item.idA] ?? 0)) }) as HTMLInputElement;
+        inputB = el('input', { type: 'number', min: '0', max: String(item.max), value: String(Math.round(values[item.idB] ?? 0)) }) as HTMLInputElement;
+        inputA.classList.add('sm-curve-input');
+        inputB.classList.add('sm-curve-input');
+      }
+
+      inputA.addEventListener('change', () => {
+        let val: any;
+        if (item.type === 'checkbox') val = inputA.checked;
+        else val = parseFloat(inputA.value) / item.scale!;
+        if (item.type !== 'number' || Number.isFinite(val)) this.adapter.writeLogical({ clipId }, item.idA, val).catch(() => {});
+      });
+      inputB.addEventListener('change', () => {
+        let val: any;
+        if (item.type === 'checkbox') val = inputB.checked;
+        else val = parseFloat(inputB.value) / item.scale!;
+        if (item.type !== 'number' || Number.isFinite(val)) this.adapter.writeLogical({ clipId }, item.idB, val).catch(() => {});
       });
 
       const row = el('div', { class: 'sm-row' }, [

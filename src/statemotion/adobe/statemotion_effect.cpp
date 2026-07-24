@@ -156,6 +156,18 @@ registerStateMotionParameters(
             def.u.td.x_value = def.u.td.x_dephault = fx;
             def.u.td.y_value = def.u.td.y_dephault = fy;
             def.u.td.restrict_bounds = TRUE;
+        } else if (::strcmp(nativeType, "CHECKBOX") == 0) {
+            def.param_type = PF_Param_CHECKBOX;
+            def.flags = static_cast<PF_ParamFlags>(timeFlag | oldFlag);
+            def.u.bd.dephault = b.defaultNum > 0.5 ? TRUE : FALSE;
+            def.u.bd.value = b.oldDefaultNum > 0.5 ? TRUE : FALSE;
+            def.u.bd.u.nameptr = b.wireName;
+        } else if (::strcmp(nativeType, "COLOR") == 0) {
+            def.param_type = PF_Param_COLOR;
+            def.flags = static_cast<PF_ParamFlags>(timeFlag | oldFlag);
+            // Default is string, handled gracefully via white color fallback
+            def.u.cd.dephault = {255, 255, 255, 255};
+            def.u.cd.value = {255, 255, 255, 255};
         } else {
             // Unknown native type from the contract: fail loudly rather than
             // register a malformed parameter.
@@ -319,6 +331,27 @@ Render(
     const double shadDistB = SM_RD(kShadowDistanceB)->u.fs_d.value;
     const double shadSoftA = SM_RD(kShadowSoftnessA)->u.fs_d.value;
     const double shadSoftB = SM_RD(kShadowSoftnessB)->u.fs_d.value;
+
+    // 1d. Read stroke and glow parameters (disk IDs 200-216).
+    const bool strokeEnA = SM_RD(kStrokeEnabledA)->u.bd.value;
+    const bool strokeEnB = SM_RD(kStrokeEnabledB)->u.bd.value;
+    const double strokeWidthA = SM_RD(kStrokeWidthA)->u.fs_d.value;
+    const double strokeWidthB = SM_RD(kStrokeWidthB)->u.fs_d.value;
+    auto readColor = [](const PF_Pixel& c) { return statemotion::Pixel{c.red/255.0, c.green/255.0, c.blue/255.0, c.alpha/255.0}; };
+    const auto strokeC1A = readColor(SM_RD(kStrokeColor1A)->u.cd.value);
+    const auto strokeC1B = readColor(SM_RD(kStrokeColor1B)->u.cd.value);
+    const auto strokeC2A = readColor(SM_RD(kStrokeColor2A)->u.cd.value);
+    const auto strokeC2B = readColor(SM_RD(kStrokeColor2B)->u.cd.value);
+    const double strokeAngA = SM_RD(kStrokeGradientAngleA)->u.ad.value / 65536.0;
+    const double strokeAngB = SM_RD(kStrokeGradientAngleB)->u.ad.value / 65536.0;
+    const double strokeSpeed = SM_RD(kStrokeGradientCycleSpeed)->u.fs_d.value;
+    const bool glowEnA = SM_RD(kGlowEnabledA)->u.bd.value;
+    const bool glowEnB = SM_RD(kGlowEnabledB)->u.bd.value;
+    const double glowAmountA = SM_RD(kGlowAmountA)->u.fs_d.value;
+    const double glowAmountB = SM_RD(kGlowAmountB)->u.fs_d.value;
+    const double glowRadiusA = SM_RD(kGlowRadiusA)->u.fs_d.value;
+    const double glowRadiusB = SM_RD(kGlowRadiusB)->u.fs_d.value;
+
     #undef SM_RD
 
     // Premiere exposes runtime POINT values as pixels in fixed 16.16.
@@ -374,6 +407,26 @@ Render(
     rt.shadowAngleDeg  = shadAngA + (shadAngB - shadAngA) * t;
     rt.shadowDistance  = shadDistA + (shadDistB - shadDistA) * t;
     rt.shadowSoftness  = shadSoftA + (shadSoftB - shadSoftA) * t;
+    
+    rt.strokeEnabled = (t < 0.5) ? strokeEnA : strokeEnB;
+    rt.strokeWidth = strokeWidthA + (strokeWidthB - strokeWidthA) * t;
+    rt.strokeColor1.r = strokeC1A.r + (strokeC1B.r - strokeC1A.r) * t;
+    rt.strokeColor1.g = strokeC1A.g + (strokeC1B.g - strokeC1A.g) * t;
+    rt.strokeColor1.b = strokeC1A.b + (strokeC1B.b - strokeC1A.b) * t;
+    rt.strokeColor1.a = strokeC1A.a + (strokeC1B.a - strokeC1A.a) * t;
+    rt.strokeColor2.r = strokeC2A.r + (strokeC2B.r - strokeC2A.r) * t;
+    rt.strokeColor2.g = strokeC2A.g + (strokeC2B.g - strokeC2A.g) * t;
+    rt.strokeColor2.b = strokeC2A.b + (strokeC2B.b - strokeC2A.b) * t;
+    rt.strokeColor2.a = strokeC2A.a + (strokeC2B.a - strokeC2A.a) * t;
+    rt.strokeGradientAngleDeg = strokeAngA + (strokeAngB - strokeAngA) * t;
+    
+    // Cycle speed is in Hz. Phase offset = time (s) * speed (cycles/s) = cycles.
+    const double seqTime = in_data->current_time / static_cast<double>(in_data->time_scale);
+    rt.strokeGradientPhaseOffset = seqTime * strokeSpeed;
+
+    rt.glowEnabled = (t < 0.5) ? glowEnA : glowEnB;
+    rt.glowAmount = (glowAmountA + (glowAmountB - glowAmountA) * t) / 100.0; // Assume 0-100 UI mapping to 0-1
+    rt.glowRadius = glowRadiusA + (glowRadiusB - glowRadiusA) * t;
 
     // 6. Identity fast path (true no-op only).
     auto plan = statemotion::plan(rt, SW, SH);
