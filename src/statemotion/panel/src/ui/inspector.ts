@@ -47,7 +47,22 @@ export class InspectorView {
     const applyBtn = el('button', { class: 'sm-btn', text: 'Apply last selected preset' }) as HTMLButtonElement;
     applyBtn.disabled = !this.lastPreset;
     applyBtn.addEventListener('click', () => { if (this.lastPreset) this.adapter.applyPresetToSelection(this.lastPreset, supported.map((c) => c.clipId)); });
-    container.append(el('div', { class: 'sm-actionbar' }, [applyBtn]));
+    
+    const swapBtn = el('button', { class: 'sm-btn secondary', text: 'Swap A ↔ B' }) as HTMLButtonElement;
+    swapBtn.addEventListener('click', async () => {
+      for (const clip of supported) await this.adapter.swapStates(clip);
+      this.render(container);
+    });
+
+    const removeBtn = el('button', { class: 'sm-btn secondary', text: 'Remove Effect', style: 'color: #ff5f56' }) as HTMLButtonElement;
+    removeBtn.addEventListener('click', async () => {
+      if (window.confirm('Remove StateMotion from selected clips?')) {
+        for (const clip of supported) await this.adapter.removeEffect(clip);
+        this.render(container);
+      }
+    });
+
+    container.append(el('div', { class: 'sm-actionbar' }, [applyBtn, swapBtn, removeBtn]));
 
     if (this.repository) {
       const createBtn = el('button', { class: 'sm-btn', text: 'Create preset from selection' }) as HTMLButtonElement;

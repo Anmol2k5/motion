@@ -118,6 +118,16 @@ export class UxpHostBridge implements HostBridge {
     await this.addAction(chain.createAppendComponentAction(effect), 'StateMotion: add effect');
   }
 
+  async removeEffect(clip: ClipRef): Promise<void> {
+    const effect = await this.findEffect(clip);
+    if (!effect) return;
+    const item = this.resolveClip(clip);
+    if (!item) throw new Error('Selected clip is no longer available');
+    const chain = await item.getComponentChain();
+    await this.addAction(chain.createRemoveComponentAction(effect), 'StateMotion: remove effect');
+    this.pendingEffects.delete(clip.clipId);
+  }
+
   private async addAction(action: any, label: string): Promise<void> {
     if (this.pendingActions) {
       this.pendingActions.push(action);
