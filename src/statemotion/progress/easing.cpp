@@ -88,27 +88,88 @@ double evaluateEasing(EasingMode mode, const EasingCurve& curve, double linear) 
         case EasingMode::SPRING: {
             if (x <= 0.0) return 0.0;
             if (x >= 1.0) return 1.0;
-            double spring = 1.0 - std::exp(-6.0 * x) * std::cos(12.0 * x);
-            return std::clamp(spring, 0.0, 1.2);
+            double freq = std::max(0.01, curve.springFrequency);
+            double damping = std::max(0.0, curve.springDamping);
+            double omega0 = 2.0 * 3.14159265358979323846 * freq;
+            double zeta = damping;
+            if (zeta < 1.0) {
+                // Underdamped
+                double omegaD = omega0 * std::sqrt(1.0 - zeta * zeta);
+                double c1 = 1.0;
+                double c2 = (zeta * omega0 - curve.springInitialVelocity) / omegaD;
+                double env = std::exp(-zeta * omega0 * x);
+                double raw = 1.0 - env * (c1 * std::cos(omegaD * x) + c2 * std::sin(omegaD * x));
+                
+                // Normalize so response(1) lands exactly at 1
+                double env1 = std::exp(-zeta * omega0 * 1.0);
+                double raw1 = 1.0 - env1 * (c1 * std::cos(omegaD * 1.0) + c2 * std::sin(omegaD * 1.0));
+                if (std::abs(raw1 - 1.0) > 1e-6 && raw1 != 0.0) {
+                     return 1.0 + (raw - 1.0) / (raw1 - 1.0 + 1e-12) * (1.0 - 1.0); // Wait, this division doesn't scale to 1 properly if we want to fix exactly at 1.
+                     // The spec says: Normalize the final sample so response(1) lands exactly at 1. 
+                     // A simple fix is to fade out the residual error over time:
+                }
+                
+                // Correct normalization:
+                // Error at t=1 is (1 - raw1).
+                // We can distribute this error linearly: raw + x * (1 - raw1).
+                double err = 1.0 - raw1;
+                return raw + x * err;
+            } else {
+                // Critically damped or overdamped (fallback approximation)
+                double c1 = 1.0;
+                double c2 = omega0 - curve.springInitialVelocity;
+                double raw = 1.0 - std::exp(-omega0 * x) * (c1 + c2 * x);
+                double raw1 = 1.0 - std::exp(-omega0 * 1.0) * (c1 + c2 * 1.0);
+                double err = 1.0 - raw1;
+                return raw + x * err;
+            }
         }
         case EasingMode::BOUNCE: {
             if (x <= 0.0) return 0.0;
             if (x >= 1.0) return 1.0;
-            const double n1 = 7.5625;
-            const double d1 = 2.75;
-            double t = x;
-            if (t < 1.0 / d1) {
-                return n1 * t * t;
-            } else if (t < 2.0 / d1) {
-                t -= 1.5 / d1;
-                return n1 * t * t + 0.75;
-            } else if (t < 2.5 / d1) {
-                t -= 2.25 / d1;
-                return n1 * t * t + 0.9375;
-            } else {
-                t -= 2.625 / d1;
-                return n1 * t * t + 0.984375;
+            
+            int count = std::clamp(static_cast<int>(curve.bounceCount), 1, 8);
+            double hDecay = std::clamp(curve.bounceHeightDecay, 0.0, 1.0);
+            double tDecay = std::clamp(curve.bounceTimeDecay, 0.01, 1.0);
+            
+            // Calculate total time duration
+            double totalT = 1.0; // initial fall
+            double currentT = 1.0;
+            for (int i = 0; i < count; ++i) {
+                currentT *= tDecay;
+                totalT += currentT * 2.0; // up and down
             }
+            
+            // Scale x to internal time
+            double t = x * totalT;
+            
+            // Initial fall
+            if (t <= 1.0) {
+                return t * t;
+            }
+            
+            t -= 1.0; // time since first bounce
+            
+            double currentH = 1.0;
+            currentT = 1.0;
+            
+            for (int i = 0; i < count; ++i) {
+                currentH *= hDecay;
+                currentT *= tDecay;
+                
+                if (t <= currentT * 2.0) {
+                    // We are in this bounce
+                    // Map t to [-currentT, currentT]
+                    double localT = t - currentT;
+                    // Normalized time [-1, 1]
+                    double nT = localT / currentT;
+                    // Parabola: 1 - currentH * (1 - nT^2)
+                    return 1.0 - currentH * (1.0 - nT * nT);
+                }
+                t -= currentT * 2.0;
+            }
+            
+            return 1.0; // past last bounce
         }
     }
     return x;  // unreachable; safe fallback

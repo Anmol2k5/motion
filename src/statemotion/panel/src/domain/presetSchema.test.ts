@@ -35,7 +35,7 @@ function basePreset(overrides: Record<string, unknown> = {}) {
     tags: ['entrance', 'scale'],
     category: 'Entrances',
     collectionIds: [],
-    compatibleContract: { schemaVersion: 1, bindingRevision: 2, parameterCount: PARAMETER_COUNT },
+    compatibleContract: { schemaVersion: 1, bindingRevision: 4, parameterCount: PARAMETER_COUNT },
     parameters: { 'transform.scaleX.a': 1.0, 'transform.scaleX.b': 1.15 },
     preview: { kind: 'generated' },
     ...overrides,
@@ -45,7 +45,9 @@ function basePreset(overrides: Record<string, unknown> = {}) {
 // ---- valid ----
 (() => {
   const p = basePreset();
-  assert.ok(validatePreset(p).ok, 'valid preset should pass');
+  const r = validatePreset(p);
+  if (!r.ok) console.log('Validation errors:', r.errors);
+  assert.ok(r.ok, 'valid preset should pass');
   pass('valid preset passes validation');
 })();
 
@@ -133,7 +135,7 @@ function basePreset(overrides: Record<string, unknown> = {}) {
     tags: [],
     category: 'Custom',
     collectionIds: [],
-    compatibleContract: { schemaVersion: 1, bindingRevision: 2, parameterCount: 25 },
+    compatibleContract: { schemaVersion: 1, bindingRevision: 4, parameterCount: PARAMETER_COUNT },
     parameters: {},
     preview: { kind: 'generated' },
   };

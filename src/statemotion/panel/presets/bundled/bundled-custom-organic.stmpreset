@@ -1,17 +1,17 @@
 {
   "formatId": "io.github.anmol2k5.statemotion.preset",
   "schemaVersion": 1,
-  "presetId": "bundled-wipe-spin",
-  "name": "Wipe Spin",
-  "description": "Rotate into place.",
+  "presetId": "bundled-custom-organic",
+  "name": "Organic Custom",
+  "description": "Custom cubic-bezier with a soft lead-in.",
   "author": "StateMotion",
   "createdAt": "2026-07-18T00:00:00.000Z",
   "modifiedAt": "2026-07-18T00:00:00.000Z",
   "tags": [
-    "screen",
-    "rotation"
+    "custom",
+    "curve"
   ],
-  "category": "Screen",
+  "category": "Custom",
   "collectionIds": [],
   "compatibleContract": {
     "schemaVersion": 1,
@@ -19,10 +19,11 @@
     "parameterCount": 67
   },
   "parameters": {
-    "transform.rotation.a": -0.13962634015954636,
-    "transform.rotation.b": 0,
-    "transform.opacity.a": 0,
-    "transform.opacity.b": 1
+    "transition.easing": 4,
+    "transition.curveX1": 0.25,
+    "transition.curveY1": 0.1,
+    "transition.curveX2": 0.25,
+    "transition.curveY2": 1
   },
   "preview": {
     "kind": "generated"

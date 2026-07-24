@@ -37,9 +37,10 @@ const REQUIRED_ENUMS = {
   ],
 };
 
-const KNOWN_NATIVE_TYPES = new Set(['FLOAT_SLIDER', 'POINT', 'ANGLE', 'POPUP']);
+const KNOWN_NATIVE_TYPES = new Set(['FLOAT_SLIDER', 'POINT', 'ANGLE', 'POPUP', 'CHECKBOX', 'COLOR']);
 const WIRE_NAME_LIMIT = 31; // A_char[32], NUL-terminated (research 008 §5)
 const POINT_DEFAULTS = new Set(['frameCenter', 'sourceCenter']);
+const COLOR_DEFAULTS = new Set(['white', 'black', 'transparent']);
 
 function fail(msg) {
   throw new Error('CONTRACT VALIDATION FAILED: ' + msg);
@@ -72,7 +73,7 @@ function familyOf(diskId, ranges) {
 }
 
 // Expected family inferred from logicalId prefix (semantic allocation).
-const FAMILY_PREFIX = { 'contract.': 'metadata', 'transition.': 'progressCurve', 'transform.': 'transform', 'crop.': 'cropMask', 'shadow.': 'shadow' };
+const FAMILY_PREFIX = { 'contract.': 'metadata', 'transition.': 'progressCurve', 'transform.': 'transform', 'crop.': 'cropMask', 'shadow.': 'shadow', 'stroke.': 'strokeGlow', 'glow.': 'strokeGlow', 'motionBlur.': 'motionBlurQuality' };
 function expectedFamily(logicalId) {
   for (const [pfx, fam] of Object.entries(FAMILY_PREFIX)) {
     if (logicalId.startsWith(pfx)) return fam;
@@ -168,6 +169,12 @@ function validate(contract) {
         fail(`POPUP default ${p.default} for ${p.logicalId} not in enum ${p.enumRef}`);
       }
       if (p.range !== null) fail(`POPUP ${p.logicalId} range must be null`);
+    } else if (p.nativeType === 'CHECKBOX') {
+      if (typeof p.default !== 'boolean') fail(`CHECKBOX default for ${p.logicalId} must be boolean`);
+      if (p.range !== null) fail(`CHECKBOX ${p.logicalId} range must be null`);
+    } else if (p.nativeType === 'COLOR') {
+      if (typeof p.default !== 'string') fail(`COLOR default for ${p.logicalId} must be string`);
+      if (p.range !== null) fail(`COLOR ${p.logicalId} range must be null`);
     } else { // FLOAT_SLIDER / ANGLE
       if (typeof p.default !== 'number') fail(`default for ${p.logicalId} must be number`);
       if (p.nativeType === 'ANGLE') {
@@ -284,6 +291,9 @@ function bindingNumbers(p, contract) {
     const en = (p.enumRef && contract.enums[p.enumRef]) ? contract.enums[p.enumRef] : null;
     out.enumCount = en ? en.values.length : 0;
     out.enumRef = p.enumRef ? `"${p.enumRef}"` : '""';
+  } else if (t === 'CHECKBOX') {
+    out.defaultNum = p.default ? 1 : 0;
+    out.oldDefaultNum = p.oldProjectDefault ? 1 : 0;
   }
   return out;
 }

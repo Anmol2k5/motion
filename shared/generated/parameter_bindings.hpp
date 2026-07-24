@@ -26,12 +26,12 @@ struct ParameterBinding {
   const char* enumRef;    // POPUP enum name (else "")
 };
 
-inline constexpr char kContractDigest[] = "98c9ae4be308d9344519b6c777bbfd862547888c26c5d62e9bdc5100e5be8c32";
+inline constexpr char kContractDigest[] = "05ee3222039a01759cb7c8ab392095d6d6ddc3a777a65f04f19c2f3f2e295ee3";
 
-inline constexpr ParameterBinding kBindings[43] = {
+inline constexpr ParameterBinding kBindings[70] = {
   {"contract.schemaVersion", 1, "SM Schema Version", "FLOAT_SLIDER", "metadata", "static", 1, 1, 9999, 1, 9999, 1, 2, 0, ""},
-  {"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 43, 1, 9999, 1, 9999, 20, 2, 0, ""},
-  {"contract.bindingRevision", 3, "SM Binding Rev", "FLOAT_SLIDER", "metadata", "static", 2, 1, 9999, 1, 9999, 1, 2, 0, ""},
+  {"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 70, 1, 9999, 1, 9999, 20, 2, 0, ""},
+  {"contract.bindingRevision", 3, "SM Binding Rev", "FLOAT_SLIDER", "metadata", "static", 4, 1, 9999, 1, 9999, 1, 2, 0, ""},
   {"transition.mode", 50, "SM Mode", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 7, "ProgressMode"},
   {"transition.alignment", 51, "SM Alignment", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 3, "AlignmentMode"},
   {"transition.durationSeconds", 52, "SM Duration", "FLOAT_SLIDER", "transition", "static", 1, 0, 3600, 0, 10, 1, 3, 0, ""},
@@ -42,6 +42,13 @@ inline constexpr ParameterBinding kBindings[43] = {
   {"transition.curveY1", 57, "SM Curve Y1", "FLOAT_SLIDER", "transition", "static", 0, 0, 1, 0, 1, 0, 2, 0, ""},
   {"transition.curveX2", 58, "SM Curve X2", "FLOAT_SLIDER", "transition", "static", 0.6666666666666667, 0, 1, 0, 1, 0.6666666666666667, 2, 0, ""},
   {"transition.curveY2", 59, "SM Curve Y2", "FLOAT_SLIDER", "transition", "static", 1, 0, 1, 0, 1, 1, 2, 0, ""},
+  {"transition.spring.frequency", 60, "SM Spring Freq", "FLOAT_SLIDER", "transition", "static", 1, 0, 100, 0.1, 10, 1, 2, 0, ""},
+  {"transition.spring.damping", 61, "SM Spring Damping", "FLOAT_SLIDER", "transition", "static", 0.5, 0, 100, 0, 2, 0.5, 2, 0, ""},
+  {"transition.spring.initialVelocity", 62, "SM Spring Vel", "FLOAT_SLIDER", "transition", "static", 0, -100, 100, -10, 10, 0, 2, 0, ""},
+  {"transition.bounce.count", 63, "SM Bounce Count", "FLOAT_SLIDER", "transition", "static", 3, 0, 100, 1, 8, 3, 2, 0, ""},
+  {"transition.bounce.heightDecay", 64, "SM Bounce H-Decay", "FLOAT_SLIDER", "transition", "static", 0.5, 0, 1, 0, 1, 0.5, 2, 0, ""},
+  {"transition.bounce.timeDecay", 65, "SM Bounce T-Decay", "FLOAT_SLIDER", "transition", "static", 0.5, 0, 1, 0, 1, 0.5, 2, 0, ""},
+  {"transition.bounce.hangTime", 66, "SM Bounce Hang", "FLOAT_SLIDER", "transition", "static", 0, 0, 1, 0, 1, 0, 2, 0, ""},
   {"transform.position.a", 100, "SM Position A", "POINT", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
   {"transform.position.b", 101, "SM Position B", "POINT", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
   {"transform.scaleX.a", 102, "SM Scale X A", "FLOAT_SLIDER", "A", "interpolatable", 100, 0.01, 10000, 0, 400, 100, 2, 0, ""},
@@ -71,7 +78,27 @@ inline constexpr ParameterBinding kBindings[43] = {
   {"shadow.distance.a", 254, "SM Shadow Distance A", "FLOAT_SLIDER", "A", "interpolatable", 10, 0, 1000, 0, 200, 10, 2, 0, ""},
   {"shadow.distance.b", 255, "SM Shadow Distance B", "FLOAT_SLIDER", "B", "interpolatable", 10, 0, 1000, 0, 200, 10, 2, 0, ""},
   {"shadow.softness.a", 256, "SM Shadow Softness A", "FLOAT_SLIDER", "A", "interpolatable", 20, 0, 500, 0, 100, 20, 2, 0, ""},
-  {"shadow.softness.b", 257, "SM Shadow Softness B", "FLOAT_SLIDER", "B", "interpolatable", 20, 0, 500, 0, 100, 20, 2, 0, ""}
+  {"shadow.softness.b", 257, "SM Shadow Softness B", "FLOAT_SLIDER", "B", "interpolatable", 20, 0, 500, 0, 100, 20, 2, 0, ""},
+  {"stroke.enabled.a", 200, "SM Stroke Enable A", "CHECKBOX", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"stroke.enabled.b", 201, "SM Stroke Enable B", "CHECKBOX", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"stroke.width.a", 202, "SM Stroke Width A", "FLOAT_SLIDER", "A", "interpolatable", 10, 0, 1000, 0, 200, 10, 2, 0, ""},
+  {"stroke.width.b", 203, "SM Stroke Width B", "FLOAT_SLIDER", "B", "interpolatable", 10, 0, 1000, 0, 200, 10, 2, 0, ""},
+  {"stroke.color1.a", 204, "SM Stroke Color1 A", "COLOR", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"stroke.color1.b", 205, "SM Stroke Color1 B", "COLOR", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"stroke.color2.a", 206, "SM Stroke Color2 A", "COLOR", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"stroke.color2.b", 207, "SM Stroke Color2 B", "COLOR", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"stroke.gradientAngle.a", 208, "SM Stroke Angle A", "ANGLE", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"stroke.gradientAngle.b", 209, "SM Stroke Angle B", "ANGLE", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"stroke.gradientCycleSpeed", 210, "SM Stroke Cycle Spd", "FLOAT_SLIDER", "transition", "static", 0, -100, 100, -10, 10, 0, 2, 0, ""},
+  {"glow.enabled.a", 211, "SM Glow Enable A", "CHECKBOX", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"glow.enabled.b", 212, "SM Glow Enable B", "CHECKBOX", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"glow.amount.a", 213, "SM Glow Amount A", "FLOAT_SLIDER", "A", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"glow.amount.b", 214, "SM Glow Amount B", "FLOAT_SLIDER", "B", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
+  {"glow.radius.a", 215, "SM Glow Radius A", "FLOAT_SLIDER", "A", "interpolatable", 50, 0, 1000, 0, 200, 50, 2, 0, ""},
+  {"glow.radius.b", 216, "SM Glow Radius B", "FLOAT_SLIDER", "B", "interpolatable", 50, 0, 1000, 0, 200, 50, 2, 0, ""},
+  {"motionBlur.enabled", 300, "SM MBlur Enabled", "CHECKBOX", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"motionBlur.shutterAngle", 301, "SM MBlur Angle", "FLOAT_SLIDER", "transition", "static", 180, 0, 720, 0, 360, 180, 2, 0, ""},
+  {"motionBlur.samples", 302, "SM MBlur Samples", "FLOAT_SLIDER", "transition", "static", 8, 2, 64, 2, 32, 8, 2, 0, ""}
 };
 
 } // namespace contract

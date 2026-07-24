@@ -32,8 +32,8 @@ enum class EasingMode : int {
 };
 
 inline constexpr int kSchemaVersion = 1;
-inline constexpr int kBindingRevision = 2;
-inline constexpr int kParameterCount = 43;
+inline constexpr int kBindingRevision = 4;
+inline constexpr int kParameterCount = 70;
 
 inline constexpr int kContractSchemaVersion = 1;
 inline constexpr int kContractParameterCount = 2;
@@ -48,6 +48,13 @@ inline constexpr int kTransitionCurveX1 = 56;
 inline constexpr int kTransitionCurveY1 = 57;
 inline constexpr int kTransitionCurveX2 = 58;
 inline constexpr int kTransitionCurveY2 = 59;
+inline constexpr int kTransitionSpringFrequency = 60;
+inline constexpr int kTransitionSpringDamping = 61;
+inline constexpr int kTransitionSpringInitialVelocity = 62;
+inline constexpr int kTransitionBounceCount = 63;
+inline constexpr int kTransitionBounceHeightDecay = 64;
+inline constexpr int kTransitionBounceTimeDecay = 65;
+inline constexpr int kTransitionBounceHangTime = 66;
 inline constexpr int kTransformPositionA = 100;
 inline constexpr int kTransformPositionB = 101;
 inline constexpr int kTransformScaleXA = 102;
@@ -78,6 +85,26 @@ inline constexpr int kShadowDistanceA = 254;
 inline constexpr int kShadowDistanceB = 255;
 inline constexpr int kShadowSoftnessA = 256;
 inline constexpr int kShadowSoftnessB = 257;
+inline constexpr int kStrokeEnabledA = 200;
+inline constexpr int kStrokeEnabledB = 201;
+inline constexpr int kStrokeWidthA = 202;
+inline constexpr int kStrokeWidthB = 203;
+inline constexpr int kStrokeColor1A = 204;
+inline constexpr int kStrokeColor1B = 205;
+inline constexpr int kStrokeColor2A = 206;
+inline constexpr int kStrokeColor2B = 207;
+inline constexpr int kStrokeGradientAngleA = 208;
+inline constexpr int kStrokeGradientAngleB = 209;
+inline constexpr int kStrokeGradientCycleSpeed = 210;
+inline constexpr int kGlowEnabledA = 211;
+inline constexpr int kGlowEnabledB = 212;
+inline constexpr int kGlowAmountA = 213;
+inline constexpr int kGlowAmountB = 214;
+inline constexpr int kGlowRadiusA = 215;
+inline constexpr int kGlowRadiusB = 216;
+inline constexpr int kMotionBlurEnabled = 300;
+inline constexpr int kMotionBlurShutterAngle = 301;
+inline constexpr int kMotionBlurSamples = 302;
 
 } // namespace ids
 } // namespace statemotion

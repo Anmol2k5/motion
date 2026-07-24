@@ -242,9 +242,13 @@ int main() {
         t.cropLeft = 0.5;
         auto p = statemotion::plan(t, W, H);
         statemotion::render(p, sample, src, W, H, out.data());
-        // Left half (x=0, x=1) transparent, right half (x=2, x=3) visible
+        // Left half (x=0, x=1) is cropped (alpha=0).
+        // (x=2, y=0) is exactly on the left edge (px=0) AND top edge (py=0) -> sdf=0 -> maskAlpha=0.5.
+        // (x=3, y=0) is inside left/right (px=-1) but on top edge (py=0) -> sdf=0 -> maskAlpha=0.5.
+        // (x=3, y=1) is inside left/right (px=-1) and inside top/bottom (py=-1) -> sdf=-1 -> maskAlpha=1.0.
         bool ok = out[0].a < 1e-12 && out[1].a < 1e-12 &&
-                  std::abs(out[2].a - 0.8) < 1e-12 && std::abs(out[3].a - 0.8) < 1e-12;
+                  std::abs(out[2].a - 0.4) < 1e-12 && std::abs(out[3].a - 0.4) < 1e-12 &&
+                  std::abs(out[1 * W + 3].a - 0.8) < 1e-12;
         check(ok, "AC9 rectangular cropLeft 50% crops left half");
         delete[] src;
     }

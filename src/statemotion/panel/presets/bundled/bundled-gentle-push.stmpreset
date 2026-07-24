@@ -15,8 +15,8 @@
   "collectionIds": [],
   "compatibleContract": {
     "schemaVersion": 1,
-    "bindingRevision": 1,
-    "parameterCount": 20
+    "bindingRevision": 3,
+    "parameterCount": 67
   },
   "parameters": {
     "transform.scaleX.a": 0.95,
