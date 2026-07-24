@@ -29,6 +29,15 @@ struct EasingCurve {
     double y1 = 0.0;
     double x2 = 2.0 / 3.0;
     double y2 = 1.0;
+
+    double springFrequency = 1.0;
+    double springDamping = 0.5;
+    double springInitialVelocity = 0.0;
+
+    double bounceCount = 3.0;
+    double bounceHeightDecay = 0.5;
+    double bounceTimeDecay = 0.5;
+    double bounceHangTime = 0.0;
 };
 
 // Evaluate easing. `linear` is clamped to [0,1]; result in [0,1].

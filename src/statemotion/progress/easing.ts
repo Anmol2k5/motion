@@ -17,6 +17,15 @@ export interface EasingCurve {
   y1: number;
   x2: number;
   y2: number;
+
+  springFrequency: number;
+  springDamping: number;
+  springInitialVelocity: number;
+
+  bounceCount: number;
+  bounceHeightDecay: number;
+  bounceTimeDecay: number;
+  bounceHangTime: number;
 }
 
 const clamp01 = (x: number): number => (x < 0 ? 0 : x > 1 ? 1 : x);
@@ -85,36 +94,91 @@ export function evaluateEasing(
     case EasingMode.EASE_IN_OUT:
       return x * x * (3 - 2 * x);
     case EasingMode.CUSTOM: {
-      if (!finite(curve.x1) || !finite(curve.x2) || !finite(curve.y1) || !finite(curve.y2)) {
-        return x; // invalid control points -> deterministic linear fallback
-      }
+      if (!Number.isFinite(curve.x1) || !Number.isFinite(curve.x2) || !Number.isFinite(curve.y1) || !Number.isFinite(curve.y2)) return x;
       const t = solveBezierT(x, curve.x1, curve.x2);
       return clamp01(bezierY(t, curve.y1, curve.y2));
     }
     case EasingMode.SPRING: {
-      if (x <= 0) return 0;
-      if (x >= 1) return 1;
-      const spring = 1 - Math.exp(-6 * x) * Math.cos(12 * x);
-      return Math.min(1.2, Math.max(0, spring));
+      if (x <= 0.0) return 0.0;
+      if (x >= 1.0) return 1.0;
+      
+      const freq = Math.max(0.01, curve.springFrequency ?? 1.0);
+      const damping = Math.max(0.0, curve.springDamping ?? 0.5);
+      const initVel = curve.springInitialVelocity ?? 0.0;
+      const omega0 = 2.0 * Math.PI * freq;
+      const zeta = damping;
+
+      if (zeta < 1.0) {
+        // Underdamped
+        const omegaD = omega0 * Math.sqrt(1.0 - zeta * zeta);
+        const c1 = 1.0;
+        const c2 = (zeta * omega0 - initVel) / omegaD;
+        const env = Math.exp(-zeta * omega0 * x);
+        const raw = 1.0 - env * (c1 * Math.cos(omegaD * x) + c2 * Math.sin(omegaD * x));
+        
+        // Normalize so response(1) lands exactly at 1
+        const env1 = Math.exp(-zeta * omega0 * 1.0);
+        const raw1 = 1.0 - env1 * (c1 * Math.cos(omegaD * 1.0) + c2 * Math.sin(omegaD * 1.0));
+        
+        // Distribute error linearly
+        const err = 1.0 - raw1;
+        return raw + x * err;
+      } else {
+        // Critically damped or overdamped (fallback approximation)
+        const c1 = 1.0;
+        const c2 = omega0 - initVel;
+        const raw = 1.0 - Math.exp(-omega0 * x) * (c1 + c2 * x);
+        const raw1 = 1.0 - Math.exp(-omega0 * 1.0) * (c1 + c2 * 1.0);
+        const err = 1.0 - raw1;
+        return raw + x * err;
+      }
     }
     case EasingMode.BOUNCE: {
-      if (x <= 0) return 0;
-      if (x >= 1) return 1;
-      const n1 = 7.5625;
-      const d1 = 2.75;
-      let t = x;
-      if (t < 1 / d1) {
-        return n1 * t * t;
-      } else if (t < 2 / d1) {
-        t -= 1.5 / d1;
-        return n1 * t * t + 0.75;
-      } else if (t < 2.5 / d1) {
-        t -= 2.25 / d1;
-        return n1 * t * t + 0.9375;
-      } else {
-        t -= 2.625 / d1;
-        return n1 * t * t + 0.984375;
+      if (x <= 0.0) return 0.0;
+      if (x >= 1.0) return 1.0;
+      
+      const count = Math.min(Math.max(Math.floor(curve.bounceCount ?? 3.0), 1), 8);
+      const hDecay = Math.min(Math.max(curve.bounceHeightDecay ?? 0.5, 0.0), 1.0);
+      const tDecay = Math.min(Math.max(curve.bounceTimeDecay ?? 0.5, 0.01), 1.0);
+      
+      // Calculate total time duration
+      let totalT = 1.0; // initial fall
+      let currentT = 1.0;
+      for (let i = 0; i < count; ++i) {
+          currentT *= tDecay;
+          totalT += currentT * 2.0; // up and down
       }
+      
+      // Scale x to internal time
+      let t = x * totalT;
+      
+      // Initial fall
+      if (t <= 1.0) {
+          return t * t;
+      }
+      
+      t -= 1.0; // time since first bounce
+      
+      let currentH = 1.0;
+      currentT = 1.0;
+      
+      for (let i = 0; i < count; ++i) {
+          currentH *= hDecay;
+          currentT *= tDecay;
+          
+          if (t <= currentT * 2.0) {
+              // We are in this bounce
+              // Map t to [-currentT, currentT]
+              const localT = t - currentT;
+              // Normalized time [-1, 1]
+              const nT = localT / currentT;
+              // Parabola: 1 - currentH * (1 - nT^2)
+              return 1.0 - currentH * (1.0 - nT * nT);
+          }
+          t -= currentT * 2.0;
+      }
+      
+      return 1.0; // past last bounce
     }
   }
   return x;

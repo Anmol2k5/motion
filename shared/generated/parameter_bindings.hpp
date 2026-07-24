@@ -26,11 +26,11 @@ struct ParameterBinding {
   const char* enumRef;    // POPUP enum name (else "")
 };
 
-inline constexpr char kContractDigest[] = "b1f0f11f71b95cf1f86f73856e409382e558002d2d1fefe03418a11cd0cdc0bb";
+inline constexpr char kContractDigest[] = "a3553a2f09cdbe38e1f4bf893f9fe002360bc6c5bb023ef043dc3f17742f20a5";
 
-inline constexpr ParameterBinding kBindings[60] = {
+inline constexpr ParameterBinding kBindings[67] = {
   {"contract.schemaVersion", 1, "SM Schema Version", "FLOAT_SLIDER", "metadata", "static", 1, 1, 9999, 1, 9999, 1, 2, 0, ""},
-  {"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 60, 1, 9999, 1, 9999, 20, 2, 0, ""},
+  {"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 67, 1, 9999, 1, 9999, 20, 2, 0, ""},
   {"contract.bindingRevision", 3, "SM Binding Rev", "FLOAT_SLIDER", "metadata", "static", 3, 1, 9999, 1, 9999, 1, 2, 0, ""},
   {"transition.mode", 50, "SM Mode", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 7, "ProgressMode"},
   {"transition.alignment", 51, "SM Alignment", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 3, "AlignmentMode"},
@@ -42,6 +42,13 @@ inline constexpr ParameterBinding kBindings[60] = {
   {"transition.curveY1", 57, "SM Curve Y1", "FLOAT_SLIDER", "transition", "static", 0, 0, 1, 0, 1, 0, 2, 0, ""},
   {"transition.curveX2", 58, "SM Curve X2", "FLOAT_SLIDER", "transition", "static", 0.6666666666666667, 0, 1, 0, 1, 0.6666666666666667, 2, 0, ""},
   {"transition.curveY2", 59, "SM Curve Y2", "FLOAT_SLIDER", "transition", "static", 1, 0, 1, 0, 1, 1, 2, 0, ""},
+  {"transition.spring.frequency", 60, "SM Spring Freq", "FLOAT_SLIDER", "transition", "static", 1, 0, 100, 0.1, 10, 1, 2, 0, ""},
+  {"transition.spring.damping", 61, "SM Spring Damping", "FLOAT_SLIDER", "transition", "static", 0.5, 0, 100, 0, 2, 0.5, 2, 0, ""},
+  {"transition.spring.initialVelocity", 62, "SM Spring Vel", "FLOAT_SLIDER", "transition", "static", 0, -100, 100, -10, 10, 0, 2, 0, ""},
+  {"transition.bounce.count", 63, "SM Bounce Count", "FLOAT_SLIDER", "transition", "static", 3, 0, 100, 1, 8, 3, 2, 0, ""},
+  {"transition.bounce.heightDecay", 64, "SM Bounce H-Decay", "FLOAT_SLIDER", "transition", "static", 0.5, 0, 1, 0, 1, 0.5, 2, 0, ""},
+  {"transition.bounce.timeDecay", 65, "SM Bounce T-Decay", "FLOAT_SLIDER", "transition", "static", 0.5, 0, 1, 0, 1, 0.5, 2, 0, ""},
+  {"transition.bounce.hangTime", 66, "SM Bounce Hang", "FLOAT_SLIDER", "transition", "static", 0, 0, 1, 0, 1, 0, 2, 0, ""},
   {"transform.position.a", 100, "SM Position A", "POINT", "A", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
   {"transform.position.b", 101, "SM Position B", "POINT", "B", "interpolatable", 0, 0, 0, 0, 0, 0, 2, 0, ""},
   {"transform.scaleX.a", 102, "SM Scale X A", "FLOAT_SLIDER", "A", "interpolatable", 100, 0.01, 10000, 0, 400, 100, 2, 0, ""},

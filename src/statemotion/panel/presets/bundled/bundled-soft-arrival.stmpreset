@@ -16,10 +16,11 @@
   "collectionIds": [],
   "compatibleContract": {
     "schemaVersion": 1,
-    "bindingRevision": 1,
-    "parameterCount": 20
+    "bindingRevision": 3,
+    "parameterCount": 67
   },
   "parameters": {
+    "transition.easing": 3,
     "transform.scaleX.a": 0.85,
     "transform.scaleY.a": 0.85,
     "transform.opacity.a": 0,

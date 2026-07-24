@@ -29,7 +29,7 @@ export enum EasingMode {
 
 export const SCHEMA_VERSION = 1;
 export const BINDING_REVISION = 3;
-export const PARAMETER_COUNT = 60;
+export const PARAMETER_COUNT = 67;
 
 export const ContractSchemaVersion = 1;
 export const ContractParameterCount = 2;
@@ -44,6 +44,13 @@ export const TransitionCurveX1 = 56;
 export const TransitionCurveY1 = 57;
 export const TransitionCurveX2 = 58;
 export const TransitionCurveY2 = 59;
+export const TransitionSpringFrequency = 60;
+export const TransitionSpringDamping = 61;
+export const TransitionSpringInitialVelocity = 62;
+export const TransitionBounceCount = 63;
+export const TransitionBounceHeightDecay = 64;
+export const TransitionBounceTimeDecay = 65;
+export const TransitionBounceHangTime = 66;
 export const TransformPositionA = 100;
 export const TransformPositionB = 101;
 export const TransformScaleXA = 102;

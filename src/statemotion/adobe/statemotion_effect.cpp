@@ -297,6 +297,15 @@ Render(
     const double cy1 = SM_RD(kTransitionCurveY1)->u.fs_d.value;
     const double cx2 = SM_RD(kTransitionCurveX2)->u.fs_d.value;
     const double cy2 = SM_RD(kTransitionCurveY2)->u.fs_d.value;
+    
+    const double springFreq = SM_RD(kTransitionSpringFrequency)->u.fs_d.value;
+    const double springDamp = SM_RD(kTransitionSpringDamping)->u.fs_d.value;
+    const double springVel = SM_RD(kTransitionSpringInitialVelocity)->u.fs_d.value;
+    const double bounceCount = SM_RD(kTransitionBounceCount)->u.fs_d.value;
+    const double bounceHDecay = SM_RD(kTransitionBounceHeightDecay)->u.fs_d.value;
+    const double bounceTDecay = SM_RD(kTransitionBounceTimeDecay)->u.fs_d.value;
+    const double bounceHang = SM_RD(kTransitionBounceHangTime)->u.fs_d.value;
+
     const PF_PointDef &pa = SM_RD(kTransformPositionA)->u.td;
     const PF_PointDef &pb = SM_RD(kTransformPositionB)->u.td;
     const double sxa = SM_RD(kTransformScaleXA)->u.fs_d.value;
@@ -379,7 +388,7 @@ Render(
         dur, delay, manual,
 
         static_cast<statemotion::EasingMode>(easingIdx),
-        {cx1, cy1, cx2, cy2});
+        {cx1, cy1, cx2, cy2, springFreq, springDamp, springVel, bounceCount, bounceHDecay, bounceTDecay, bounceHang});
 
     // 4. Progress -> canonical interpolation.
     auto pe = statemotion::evaluateProgress(pin);

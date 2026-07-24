@@ -2,8 +2,8 @@
 
 - schemaVersion: 1
 - bindingRevision: 3
-- parameterCount: 60
-- SHA-256: `b1f0f11f71b95cf1f86f73856e409382e558002d2d1fefe03418a11cd0cdc0bb`
+- parameterCount: 67
+- SHA-256: `a3553a2f09cdbe38e1f4bf893f9fe002360bc6c5bb023ef043dc3f17742f20a5`
 
 > GENERATED from shared/schema/parameter-contract.json. Do not edit by hand.
 
@@ -37,7 +37,7 @@
 | logicalId | diskId | wireName | nativeType | default | range | timeVariance | state |
 |---|---|---|---|---|---|---|---|
 | contract.schemaVersion | 1 | SM Schema Version | FLOAT_SLIDER | 1 | 1..9999 | static | metadata |
-| contract.parameterCount | 2 | SM Param Count | FLOAT_SLIDER | 60 | 1..9999 | static | metadata |
+| contract.parameterCount | 2 | SM Param Count | FLOAT_SLIDER | 67 | 1..9999 | static | metadata |
 | contract.bindingRevision | 3 | SM Binding Rev | FLOAT_SLIDER | 3 | 1..9999 | static | metadata |
 | transition.mode | 50 | SM Mode | POPUP | 0 | ProgressMode | static | transition |
 | transition.alignment | 51 | SM Alignment | POPUP | 0 | AlignmentMode | static | transition |
@@ -49,6 +49,13 @@
 | transition.curveY1 | 57 | SM Curve Y1 | FLOAT_SLIDER | 0 | 0..1 | static | transition |
 | transition.curveX2 | 58 | SM Curve X2 | FLOAT_SLIDER | 0.6666666666666667 | 0..1 | static | transition |
 | transition.curveY2 | 59 | SM Curve Y2 | FLOAT_SLIDER | 1 | 0..1 | static | transition |
+| transition.spring.frequency | 60 | SM Spring Freq | FLOAT_SLIDER | 1 | 0..100 | static | transition |
+| transition.spring.damping | 61 | SM Spring Damping | FLOAT_SLIDER | 0.5 | 0..100 | static | transition |
+| transition.spring.initialVelocity | 62 | SM Spring Vel | FLOAT_SLIDER | 0 | -100..100 | static | transition |
+| transition.bounce.count | 63 | SM Bounce Count | FLOAT_SLIDER | 3 | 0..100 | static | transition |
+| transition.bounce.heightDecay | 64 | SM Bounce H-Decay | FLOAT_SLIDER | 0.5 | 0..1 | static | transition |
+| transition.bounce.timeDecay | 65 | SM Bounce T-Decay | FLOAT_SLIDER | 0.5 | 0..1 | static | transition |
+| transition.bounce.hangTime | 66 | SM Bounce Hang | FLOAT_SLIDER | 0 | 0..1 | static | transition |
 | transform.position.a | 100 | SM Position A | POINT | "frameCenter" | n/a | interpolatable | A |
 | transform.position.b | 101 | SM Position B | POINT | "frameCenter" | n/a | interpolatable | B |
 | transform.scaleX.a | 102 | SM Scale X A | FLOAT_SLIDER | 100 | 0.01..10000 | interpolatable | A |

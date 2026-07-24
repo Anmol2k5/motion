@@ -82,8 +82,9 @@ export class InspectorView {
 
     let easing = 3;
     let curve = [1 / 3, 0.0, 2 / 3, 1.0];
+    let cfg: any = null;
     try {
-      const cfg = await this.adapter.readState({ clipId });
+      cfg = await this.adapter.readState({ clipId });
       if (typeof cfg.parameters['transition.easing'] === 'number') easing = cfg.parameters['transition.easing'] as number;
       CURVE_IDS.forEach((id, i) => {
         const v = cfg.parameters[id];
@@ -119,10 +120,63 @@ export class InspectorView {
         if (Number.isFinite(v)) this.writeEasing(clipId, id, Math.min(1, Math.max(0, v)));
       });
     };
+    const springRow = el('div', { class: 'sm-row sm-curve' }, []);
+    const springInputs: HTMLInputElement[] = [];
+    const SPRING_IDS = [
+      { id: 'transition.spring.frequency', label: 'Freq', min: '0.1', max: '10', step: '0.1', dflt: 1.0 },
+      { id: 'transition.spring.damping', label: 'Damp', min: '0', max: '2', step: '0.05', dflt: 0.5 },
+      { id: 'transition.spring.initialVelocity', label: 'Vel', min: '-10', max: '10', step: '0.1', dflt: 0.0 }
+    ];
+    SPRING_IDS.forEach((def, i) => {
+      let v = def.dflt;
+      if (cfg && typeof cfg.parameters[def.id] === 'number') v = cfg.parameters[def.id] as number;
+      const input = el('input', { type: 'number', min: def.min, max: def.max, step: def.step, value: String(v) }) as HTMLInputElement;
+      input.classList.add('sm-curve-input');
+      springInputs.push(input);
+      springRow.append(el('span', { class: 'label', text: def.label }), input);
+    });
+    section.append(springRow);
+    const applySpring = () => {
+      SPRING_IDS.forEach((def, i) => {
+        const v = parseFloat(springInputs[i].value);
+        if (Number.isFinite(v)) this.writeEasing(clipId, def.id, v);
+      });
+    };
+    springInputs.forEach((inp) => inp.addEventListener('change', applySpring));
+
+    const bounceRow = el('div', { class: 'sm-row sm-curve' }, []);
+    const bounceInputs: HTMLInputElement[] = [];
+    const BOUNCE_IDS = [
+      { id: 'transition.bounce.count', label: 'Count', min: '1', max: '8', step: '1', dflt: 3 },
+      { id: 'transition.bounce.heightDecay', label: 'HDecay', min: '0', max: '1', step: '0.05', dflt: 0.5 },
+      { id: 'transition.bounce.timeDecay', label: 'TDecay', min: '0', max: '1', step: '0.05', dflt: 0.5 },
+      { id: 'transition.bounce.hangTime', label: 'Hang', min: '0', max: '1', step: '0.05', dflt: 0.0 }
+    ];
+    BOUNCE_IDS.forEach((def, i) => {
+      let v = def.dflt;
+      if (cfg && typeof cfg.parameters[def.id] === 'number') v = cfg.parameters[def.id] as number;
+      const input = el('input', { type: 'number', min: def.min, max: def.max, step: def.step, value: String(v) }) as HTMLInputElement;
+      input.classList.add('sm-curve-input');
+      bounceInputs.push(input);
+      bounceRow.append(el('span', { class: 'label', text: def.label }), input);
+    });
+    section.append(bounceRow);
+    const applyBounce = () => {
+      BOUNCE_IDS.forEach((def, i) => {
+        const v = parseFloat(bounceInputs[i].value);
+        if (Number.isFinite(v)) this.writeEasing(clipId, def.id, v);
+      });
+    };
+    bounceInputs.forEach((inp) => inp.addEventListener('change', applyBounce));
+
     const syncCurveVisibility = () => {
-      const custom = select.value === '4';
-      curveRow.style.display = custom ? '' : 'none';
-      if (custom) applyCurve();
+      const val = select.value;
+      curveRow.style.display = val === '4' ? '' : 'none';
+      springRow.style.display = val === '5' ? '' : 'none';
+      bounceRow.style.display = val === '6' ? '' : 'none';
+      if (val === '4') applyCurve();
+      if (val === '5') applySpring();
+      if (val === '6') applyBounce();
     };
     select.addEventListener('change', () => {
       this.writeEasing(clipId, 'transition.easing', parseInt(select.value, 10));

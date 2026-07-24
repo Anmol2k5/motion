@@ -33,7 +33,7 @@ enum class EasingMode : int {
 
 inline constexpr int kSchemaVersion = 1;
 inline constexpr int kBindingRevision = 3;
-inline constexpr int kParameterCount = 60;
+inline constexpr int kParameterCount = 67;
 
 inline constexpr int kContractSchemaVersion = 1;
 inline constexpr int kContractParameterCount = 2;
@@ -48,6 +48,13 @@ inline constexpr int kTransitionCurveX1 = 56;
 inline constexpr int kTransitionCurveY1 = 57;
 inline constexpr int kTransitionCurveX2 = 58;
 inline constexpr int kTransitionCurveY2 = 59;
+inline constexpr int kTransitionSpringFrequency = 60;
+inline constexpr int kTransitionSpringDamping = 61;
+inline constexpr int kTransitionSpringInitialVelocity = 62;
+inline constexpr int kTransitionBounceCount = 63;
+inline constexpr int kTransitionBounceHeightDecay = 64;
+inline constexpr int kTransitionBounceTimeDecay = 65;
+inline constexpr int kTransitionBounceHangTime = 66;
 inline constexpr int kTransformPositionA = 100;
 inline constexpr int kTransformPositionB = 101;
 inline constexpr int kTransformScaleXA = 102;

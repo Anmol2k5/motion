@@ -27,7 +27,7 @@ function preset(
     tags,
     category,
     collectionIds: [],
-    compatibleContract: { schemaVersion: 1, bindingRevision: 2, parameterCount: PARAMETER_COUNT },
+    compatibleContract: { schemaVersion: 1, bindingRevision: 3, parameterCount: 67 },
     parameters,
     preview: { kind: 'generated' },
   };
