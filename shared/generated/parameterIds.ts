@@ -28,8 +28,8 @@ export enum EasingMode {
 }
 
 export const SCHEMA_VERSION = 1;
-export const BINDING_REVISION = 3;
-export const PARAMETER_COUNT = 67;
+export const BINDING_REVISION = 4;
+export const PARAMETER_COUNT = 70;
 
 export const ContractSchemaVersion = 1;
 export const ContractParameterCount = 2;
@@ -98,3 +98,6 @@ export const GlowAmountA = 213;
 export const GlowAmountB = 214;
 export const GlowRadiusA = 215;
 export const GlowRadiusB = 216;
+export const MotionBlurEnabled = 300;
+export const MotionBlurShutterAngle = 301;
+export const MotionBlurSamples = 302;

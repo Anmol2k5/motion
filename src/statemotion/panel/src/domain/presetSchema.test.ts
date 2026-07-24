@@ -35,7 +35,7 @@ function basePreset(overrides: Record<string, unknown> = {}) {
     tags: ['entrance', 'scale'],
     category: 'Entrances',
     collectionIds: [],
-    compatibleContract: { schemaVersion: 1, bindingRevision: 3, parameterCount: PARAMETER_COUNT },
+    compatibleContract: { schemaVersion: 1, bindingRevision: 4, parameterCount: PARAMETER_COUNT },
     parameters: { 'transform.scaleX.a': 1.0, 'transform.scaleX.b': 1.15 },
     preview: { kind: 'generated' },
     ...overrides,
@@ -135,7 +135,7 @@ function basePreset(overrides: Record<string, unknown> = {}) {
     tags: [],
     category: 'Custom',
     collectionIds: [],
-    compatibleContract: { schemaVersion: 1, bindingRevision: 3, parameterCount: 67 },
+    compatibleContract: { schemaVersion: 1, bindingRevision: 4, parameterCount: PARAMETER_COUNT },
     parameters: {},
     preview: { kind: 'generated' },
   };

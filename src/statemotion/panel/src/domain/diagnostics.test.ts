@@ -20,8 +20,8 @@ const snap = buildSnapshot({ effectMatchName: EXPECTED_MATCH_NAME, contractStatu
 assert.strictEqual(snap.productVersion, '0.1.0-alpha.1');
 assert.strictEqual(snap.presetFormatVersion, 1);
 assert.strictEqual(snap.parameterSchemaVersion, 1);
-assert.strictEqual(snap.bindingRevision, 3);
-assert.strictEqual(snap.expectedParameterCount, 67);
+assert.strictEqual(snap.bindingRevision, 4);
+assert.strictEqual(snap.expectedParameterCount, 70);
 assert.strictEqual(snap.effectMatchName, EXPECTED_MATCH_NAME);
 assert.strictEqual(snap.contractStatus, 'compatible');
 pass('snapshot exposes product/schema/binding/parameter-count distinctly');
@@ -37,7 +37,7 @@ const report = buildDebugReport({
 assert.ok(report.includes('StateMotion Version:'), 'has version line');
 assert.ok(report.includes('Preset Format Version: 1'), 'has preset format version');
 assert.ok(report.includes(`Expected Parameter Count: ${PARAMETER_COUNT}`), 'has expected param count');
-assert.ok(report.includes('Binding Revision: 3'), 'has binding revision');
+assert.ok(report.includes('Binding Revision: 4'), 'has binding revision');
 assert.ok(report.includes('Contract Status: compatible'), 'has contract status');
 assert.ok(report.includes('Selection Count: 2'), 'has selection count');
 assert.ok(report.includes('Last Operation: apply preset'), 'has last operation');

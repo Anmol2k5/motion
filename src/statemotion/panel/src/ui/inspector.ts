@@ -40,6 +40,7 @@ export class InspectorView {
     await this.renderShadowControl(container, supported[0].clipId);
     await this.renderStrokeControl(container, supported[0].clipId);
     await this.renderGlowControl(container, supported[0].clipId);
+    await this.renderMotionBlurControl(container, supported[0].clipId);
 
     // Applied preset (best-effort detection by matching params is future work;
     // we show a manual Apply control here).
@@ -426,6 +427,47 @@ export class InspectorView {
       ]);
       section.append(row);
     }
+    container.append(section);
+  }
+
+  private async renderMotionBlurControl(container: HTMLElement, clipId: string): Promise<void> {
+    const MBLUR_IDS = [
+      { id: 'motionBlur.enabled', label: 'Enabled', type: 'checkbox', dflt: false },
+      { id: 'motionBlur.shutterAngle', label: 'Angle (°)', type: 'number', min: 0, max: 720, step: 1, dflt: 180 },
+      { id: 'motionBlur.samples', label: 'Samples', type: 'number', min: 2, max: 64, step: 1, dflt: 8 },
+    ] as const;
+
+    const values: Record<string, any> = {};
+    try {
+      const cfg = await this.adapter.readState({ clipId });
+      for (const item of MBLUR_IDS) {
+        values[item.id] = cfg.parameters[item.id] ?? item.dflt;
+      }
+    } catch { /* read-only or unsupported */ }
+
+    const section = el('div', { class: 'sm-section' });
+    section.append(el('div', { class: 'sm-section-title', text: 'Motion Blur' }));
+
+    const row = el('div', { class: 'sm-row sm-curve' }, []);
+    for (const item of MBLUR_IDS) {
+      let input: HTMLInputElement;
+      if (item.type === 'checkbox') {
+        input = el('input', { type: 'checkbox' }) as HTMLInputElement;
+        input.checked = !!values[item.id];
+        input.addEventListener('change', () => {
+          this.adapter.writeLogical({ clipId }, item.id, input.checked).catch(() => {});
+        });
+      } else {
+        input = el('input', { type: 'number', min: String(item.min), max: String(item.max), step: String(item.step), value: String(values[item.id]) }) as HTMLInputElement;
+        input.classList.add('sm-curve-input');
+        input.addEventListener('change', () => {
+          const val = parseFloat(input.value);
+          if (Number.isFinite(val)) this.adapter.writeLogical({ clipId }, item.id, val).catch(() => {});
+        });
+      }
+      row.append(el('span', { class: 'label', text: item.label }), input);
+    }
+    section.append(row);
     container.append(section);
   }
 }

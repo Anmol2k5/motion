@@ -1,9 +1,9 @@
 # StateMotion Parameter Contract (generated)
 
 - schemaVersion: 1
-- bindingRevision: 3
-- parameterCount: 67
-- SHA-256: `a3553a2f09cdbe38e1f4bf893f9fe002360bc6c5bb023ef043dc3f17742f20a5`
+- bindingRevision: 4
+- parameterCount: 70
+- SHA-256: `05ee3222039a01759cb7c8ab392095d6d6ddc3a777a65f04f19c2f3f2e295ee3`
 
 > GENERATED from shared/schema/parameter-contract.json. Do not edit by hand.
 
@@ -37,8 +37,8 @@
 | logicalId | diskId | wireName | nativeType | default | range | timeVariance | state |
 |---|---|---|---|---|---|---|---|
 | contract.schemaVersion | 1 | SM Schema Version | FLOAT_SLIDER | 1 | 1..9999 | static | metadata |
-| contract.parameterCount | 2 | SM Param Count | FLOAT_SLIDER | 67 | 1..9999 | static | metadata |
-| contract.bindingRevision | 3 | SM Binding Rev | FLOAT_SLIDER | 3 | 1..9999 | static | metadata |
+| contract.parameterCount | 2 | SM Param Count | FLOAT_SLIDER | 70 | 1..9999 | static | metadata |
+| contract.bindingRevision | 3 | SM Binding Rev | FLOAT_SLIDER | 4 | 1..9999 | static | metadata |
 | transition.mode | 50 | SM Mode | POPUP | 0 | ProgressMode | static | transition |
 | transition.alignment | 51 | SM Alignment | POPUP | 0 | AlignmentMode | static | transition |
 | transition.durationSeconds | 52 | SM Duration | FLOAT_SLIDER | 1 | 0..3600 | static | transition |
@@ -103,3 +103,6 @@
 | glow.amount.b | 214 | SM Glow Amount B | FLOAT_SLIDER | 0 | 0..100 | interpolatable | B |
 | glow.radius.a | 215 | SM Glow Radius A | FLOAT_SLIDER | 50 | 0..1000 | interpolatable | A |
 | glow.radius.b | 216 | SM Glow Radius B | FLOAT_SLIDER | 50 | 0..1000 | interpolatable | B |
+| motionBlur.enabled | 300 | SM MBlur Enabled | CHECKBOX | false | n/a | static | transition |
+| motionBlur.shutterAngle | 301 | SM MBlur Angle | FLOAT_SLIDER | 180 | 0..720 | static | transition |
+| motionBlur.samples | 302 | SM MBlur Samples | FLOAT_SLIDER | 8 | 2..64 | static | transition |

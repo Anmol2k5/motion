@@ -32,8 +32,8 @@ enum class EasingMode : int {
 };
 
 inline constexpr int kSchemaVersion = 1;
-inline constexpr int kBindingRevision = 3;
-inline constexpr int kParameterCount = 67;
+inline constexpr int kBindingRevision = 4;
+inline constexpr int kParameterCount = 70;
 
 inline constexpr int kContractSchemaVersion = 1;
 inline constexpr int kContractParameterCount = 2;
@@ -102,6 +102,9 @@ inline constexpr int kGlowAmountA = 213;
 inline constexpr int kGlowAmountB = 214;
 inline constexpr int kGlowRadiusA = 215;
 inline constexpr int kGlowRadiusB = 216;
+inline constexpr int kMotionBlurEnabled = 300;
+inline constexpr int kMotionBlurShutterAngle = 301;
+inline constexpr int kMotionBlurSamples = 302;
 
 } // namespace ids
 } // namespace statemotion

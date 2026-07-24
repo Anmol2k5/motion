@@ -73,7 +73,7 @@ function familyOf(diskId, ranges) {
 }
 
 // Expected family inferred from logicalId prefix (semantic allocation).
-const FAMILY_PREFIX = { 'contract.': 'metadata', 'transition.': 'progressCurve', 'transform.': 'transform', 'crop.': 'cropMask', 'shadow.': 'shadow', 'stroke.': 'strokeGlow', 'glow.': 'strokeGlow' };
+const FAMILY_PREFIX = { 'contract.': 'metadata', 'transition.': 'progressCurve', 'transform.': 'transform', 'crop.': 'cropMask', 'shadow.': 'shadow', 'stroke.': 'strokeGlow', 'glow.': 'strokeGlow', 'motionBlur.': 'motionBlurQuality' };
 function expectedFamily(logicalId) {
   for (const [pfx, fam] of Object.entries(FAMILY_PREFIX)) {
     if (logicalId.startsWith(pfx)) return fam;

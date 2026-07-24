@@ -39,6 +39,8 @@ for (const id of LOGICAL_IDS) {
   else if (id.startsWith('shadow.distance') || id.startsWith('shadow.softness')) CONVERSION_KIND[id] = 'identity';
   else if (id.startsWith('transform.position') || id.startsWith('transform.anchor')) CONVERSION_KIND[id] = 'point';
   else if (id.startsWith('transition.spring.') || id.startsWith('transition.bounce.')) CONVERSION_KIND[id] = 'identity';
+  else if (id.startsWith('motionBlur.enabled')) CONVERSION_KIND[id] = 'boolean';
+  else if (id.startsWith('motionBlur.shutterAngle') || id.startsWith('motionBlur.samples')) CONVERSION_KIND[id] = 'identity';
   else if (id.startsWith('stroke.width') || id.startsWith('stroke.color') || id === 'stroke.gradientCycleSpeed') CONVERSION_KIND[id] = 'identity';
   else if (id.startsWith('glow.radius')) CONVERSION_KIND[id] = 'identity';
   else if (id.startsWith('stroke.gradientAngle')) CONVERSION_KIND[id] = 'degrees';

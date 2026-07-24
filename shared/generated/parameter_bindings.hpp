@@ -26,12 +26,12 @@ struct ParameterBinding {
   const char* enumRef;    // POPUP enum name (else "")
 };
 
-inline constexpr char kContractDigest[] = "a3553a2f09cdbe38e1f4bf893f9fe002360bc6c5bb023ef043dc3f17742f20a5";
+inline constexpr char kContractDigest[] = "05ee3222039a01759cb7c8ab392095d6d6ddc3a777a65f04f19c2f3f2e295ee3";
 
-inline constexpr ParameterBinding kBindings[67] = {
+inline constexpr ParameterBinding kBindings[70] = {
   {"contract.schemaVersion", 1, "SM Schema Version", "FLOAT_SLIDER", "metadata", "static", 1, 1, 9999, 1, 9999, 1, 2, 0, ""},
-  {"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 67, 1, 9999, 1, 9999, 20, 2, 0, ""},
-  {"contract.bindingRevision", 3, "SM Binding Rev", "FLOAT_SLIDER", "metadata", "static", 3, 1, 9999, 1, 9999, 1, 2, 0, ""},
+  {"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 70, 1, 9999, 1, 9999, 20, 2, 0, ""},
+  {"contract.bindingRevision", 3, "SM Binding Rev", "FLOAT_SLIDER", "metadata", "static", 4, 1, 9999, 1, 9999, 1, 2, 0, ""},
   {"transition.mode", 50, "SM Mode", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 7, "ProgressMode"},
   {"transition.alignment", 51, "SM Alignment", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 3, "AlignmentMode"},
   {"transition.durationSeconds", 52, "SM Duration", "FLOAT_SLIDER", "transition", "static", 1, 0, 3600, 0, 10, 1, 3, 0, ""},
@@ -95,7 +95,10 @@ inline constexpr ParameterBinding kBindings[67] = {
   {"glow.amount.a", 213, "SM Glow Amount A", "FLOAT_SLIDER", "A", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
   {"glow.amount.b", 214, "SM Glow Amount B", "FLOAT_SLIDER", "B", "interpolatable", 0, 0, 100, 0, 100, 0, 2, 0, ""},
   {"glow.radius.a", 215, "SM Glow Radius A", "FLOAT_SLIDER", "A", "interpolatable", 50, 0, 1000, 0, 200, 50, 2, 0, ""},
-  {"glow.radius.b", 216, "SM Glow Radius B", "FLOAT_SLIDER", "B", "interpolatable", 50, 0, 1000, 0, 200, 50, 2, 0, ""}
+  {"glow.radius.b", 216, "SM Glow Radius B", "FLOAT_SLIDER", "B", "interpolatable", 50, 0, 1000, 0, 200, 50, 2, 0, ""},
+  {"motionBlur.enabled", 300, "SM MBlur Enabled", "CHECKBOX", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 0, ""},
+  {"motionBlur.shutterAngle", 301, "SM MBlur Angle", "FLOAT_SLIDER", "transition", "static", 180, 0, 720, 0, 360, 180, 2, 0, ""},
+  {"motionBlur.samples", 302, "SM MBlur Samples", "FLOAT_SLIDER", "transition", "static", 8, 2, 64, 2, 32, 8, 2, 0, ""}
 };
 
 } // namespace contract

@@ -54,8 +54,8 @@ import { PARAMETER_COUNT } from '../domain/presetSchema.ts';
 const clip = selection[0];
 assert.deepStrictEqual(await bridge.getContract(clip), {
   schemaVersion: 1,
-  parameterCount: 67,
-  bindingRevision: 3,
+  parameterCount: 70,
+  bindingRevision: 4,
 });
 
 await bridge.writeLogical(clip, 'transition.manualProgress', 0.5);

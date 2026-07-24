@@ -19,15 +19,15 @@ export interface ParameterBinding {
   oldDefault: number | string;
 }
 
-export const CONTRACT_DIGEST = "a3553a2f09cdbe38e1f4bf893f9fe002360bc6c5bb023ef043dc3f17742f20a5";
+export const CONTRACT_DIGEST = "05ee3222039a01759cb7c8ab392095d6d6ddc3a777a65f04f19c2f3f2e295ee3";
 export const SCHEMA_VERSION = 1;
-export const BINDING_REVISION = 3;
-export const PARAMETER_COUNT = 67;
+export const BINDING_REVISION = 4;
+export const PARAMETER_COUNT = 70;
 
 export const BINDINGS: ParameterBinding[] = [
   { logicalId: "contract.schemaVersion", diskId: 1, wireName: "SM Schema Version", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 1, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 1 },
-  { logicalId: "contract.parameterCount", diskId: 2, wireName: "SM Param Count", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 67, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 20 },
-  { logicalId: "contract.bindingRevision", diskId: 3, wireName: "SM Binding Rev", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 3, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 1 },
+  { logicalId: "contract.parameterCount", diskId: 2, wireName: "SM Param Count", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 70, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 20 },
+  { logicalId: "contract.bindingRevision", diskId: 3, wireName: "SM Binding Rev", nativeType: "FLOAT_SLIDER", stateOwnership: "metadata", timeVariance: "static", defaultVal: 4, validMin: 1, validMax: 9999, uiMin: 1, uiMax: 9999, enumRef: "", oldDefault: 1 },
   { logicalId: "transition.mode", diskId: 50, wireName: "SM Mode", nativeType: "POPUP", stateOwnership: "transition", timeVariance: "static", defaultVal: 0, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "ProgressMode", oldDefault: 0 },
   { logicalId: "transition.alignment", diskId: 51, wireName: "SM Alignment", nativeType: "POPUP", stateOwnership: "transition", timeVariance: "static", defaultVal: 0, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "AlignmentMode", oldDefault: 0 },
   { logicalId: "transition.durationSeconds", diskId: 52, wireName: "SM Duration", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 1, validMin: 0, validMax: 3600, uiMin: 0, uiMax: 10, enumRef: "", oldDefault: 1 },
@@ -92,6 +92,9 @@ export const BINDINGS: ParameterBinding[] = [
   { logicalId: "glow.amount.b", diskId: 214, wireName: "SM Glow Amount B", nativeType: "FLOAT_SLIDER", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 0, validMin: 0, validMax: 100, uiMin: 0, uiMax: 100, enumRef: "", oldDefault: 0 },
   { logicalId: "glow.radius.a", diskId: 215, wireName: "SM Glow Radius A", nativeType: "FLOAT_SLIDER", stateOwnership: "A", timeVariance: "interpolatable", defaultVal: 50, validMin: 0, validMax: 1000, uiMin: 0, uiMax: 200, enumRef: "", oldDefault: 50 },
   { logicalId: "glow.radius.b", diskId: 216, wireName: "SM Glow Radius B", nativeType: "FLOAT_SLIDER", stateOwnership: "B", timeVariance: "interpolatable", defaultVal: 50, validMin: 0, validMax: 1000, uiMin: 0, uiMax: 200, enumRef: "", oldDefault: 50 },
+  { logicalId: "motionBlur.enabled", diskId: 300, wireName: "SM MBlur Enabled", nativeType: "CHECKBOX", stateOwnership: "transition", timeVariance: "static", defaultVal: false, validMin: 0, validMax: 0, uiMin: 0, uiMax: 0, enumRef: "", oldDefault: false },
+  { logicalId: "motionBlur.shutterAngle", diskId: 301, wireName: "SM MBlur Angle", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 180, validMin: 0, validMax: 720, uiMin: 0, uiMax: 360, enumRef: "", oldDefault: 180 },
+  { logicalId: "motionBlur.samples", diskId: 302, wireName: "SM MBlur Samples", nativeType: "FLOAT_SLIDER", stateOwnership: "transition", timeVariance: "static", defaultVal: 8, validMin: 2, validMax: 64, uiMin: 2, uiMax: 32, enumRef: "", oldDefault: 8 },
 ];
 
 const byLogicalId = new Map<string, ParameterBinding>(
