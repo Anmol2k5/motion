@@ -5,6 +5,7 @@ import assert from 'node:assert';
 import { buildApplyPlan, type SelectionItem, ItemStatus } from '../domain/applyPlan.ts';
 import { PremiereAdapter, type HostBridge, type ClipRef } from './premiereAdapter.ts';
 import type { StateMotionPreset } from '../domain/presetSchema.ts';
+import { fromAny } from '@total-typescript/shoehorn';
 
 import { PARAMETER_COUNT } from '../domain/presetSchema.ts';
 
@@ -80,7 +81,7 @@ class FreshEffectBridge extends CountingBridge {
 }
 
 function fakePreset(contract: typeof CURRENT_CONTRACT): StateMotionPreset {
-  return {
+  return fromAny({
     formatId: 'io.github.anmol2k5.statemotion.preset',
     schemaVersion: 1,
     presetId: 'p1', name: 'P', description: '', author: 'S',
@@ -88,7 +89,7 @@ function fakePreset(contract: typeof CURRENT_CONTRACT): StateMotionPreset {
     tags: [], category: 'Entrances', collectionIds: [], compatibleContract: contract,
     parameters: { 'transform.opacity.a': 0, 'transform.opacity.b': 1 },
     preview: { kind: 'generated' },
-  } as unknown as StateMotionPreset;
+  });
 }
 
 // Older contract clip: adapter must NOT write any parameter.
