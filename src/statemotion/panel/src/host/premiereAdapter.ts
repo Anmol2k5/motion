@@ -24,6 +24,7 @@ export interface HostBridge {
   beginUndo(label: string): Promise<void>;
   endUndo(): Promise<void>;
   applyEffect(clip: ClipRef): Promise<void>;
+  removeEffect(clip: ClipRef): Promise<void>;
 }
 
 export interface DetectResult {
@@ -134,6 +135,41 @@ export class PremiereAdapter {
       parameters[id] = v;
     }
     return { parameters };
+  }
+
+  async removeEffect(clip: ClipRef): Promise<void> {
+    await this.host.beginUndo('StateMotion: remove effect');
+    try {
+      await this.host.removeEffect(clip);
+    } finally {
+      await this.host.endUndo();
+    }
+  }
+
+  async swapStates(clip: ClipRef): Promise<void> {
+    const state = await this.readState(clip);
+    await this.host.beginUndo('StateMotion: swap states');
+    try {
+      for (const id of LOGICAL_IDS) {
+        if (!isCreative(id)) continue;
+        const binding = getBinding(id);
+        if (!binding) continue;
+        
+        let targetId = id;
+        if (id.endsWith('.a')) targetId = id.replace(/\.a$/, '.b');
+        else if (id.endsWith('.b')) targetId = id.replace(/\.b$/, '.a');
+        else if (id.endsWith('A')) targetId = id.replace(/A$/, 'B'); // e.g. transform.positionA
+        else if (id.endsWith('B')) targetId = id.replace(/B$/, 'A');
+        
+        if (targetId !== id && state.parameters[targetId] !== undefined) {
+          const index = await this.host.enumerateParamIndex(clip, binding.wireName);
+          if (index === undefined) continue;
+          await this.host.writeLogical(clip, id, state.parameters[targetId]);
+        }
+      }
+    } finally {
+      await this.host.endUndo();
+    }
   }
 }
 

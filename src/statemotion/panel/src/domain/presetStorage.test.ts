@@ -7,6 +7,7 @@ import {
   type FsLike,
 } from './presetStorage.ts';
 import { FORMAT_ID, PARAMETER_COUNT } from './presetSchema.ts';
+import { fromPartial } from '@total-typescript/shoehorn';
 
 let passed = 0;
 function pass(name: string) {
@@ -17,7 +18,7 @@ function pass(name: string) {
 // Minimal in-memory FS implementing the subset the repo needs (sync + async).
 function makeMemoryFs(): FsLike {
   const files = new Map<string, string>();
-  return {
+  return fromPartial({
     async readFile(p: string) { const v = files.get(p); if (v === undefined) throw new Error('ENOENT ' + p); return v; },
     async writeFile(p: string, c: string) { files.set(p, c); },
     async deleteFile(p: string) { files.delete(p); },
@@ -31,7 +32,7 @@ function makeMemoryFs(): FsLike {
     async mkdir(p: string) {
       // no-op for flat in-memory store; directories implicit
     },
-  } as FsLike;
+  });
 }
 
 function samplePreset(id: string, name: string, category = 'Entrances') {
