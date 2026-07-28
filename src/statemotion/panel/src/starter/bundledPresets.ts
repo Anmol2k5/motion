@@ -109,6 +109,24 @@ export const BUNDLED_PRESETS: StateMotionPreset[] = [
     'transition.curveX1': 0.25, 'transition.curveY1': 0.1,
     'transition.curveX2': 0.25, 'transition.curveY2': 1.0,
   }),
+
+  // ---- Emphasis ----
+  preset('bundled-settle-down', 'Settle Down', 'Scale up with spring overshoot that settles into place.', 'Entrances', ['entrance', 'scale', 'spring'], {
+    'transition.easing': 5,
+    'transition.spring.frequency': 1.2, 'transition.spring.damping': 0.35,
+    'transform.scaleX.a': 0.8, 'transform.scaleY.a': 0.8, 'transform.opacity.a': 0,
+    'transform.scaleX.b': 1.0, 'transform.scaleY.b': 1.0, 'transform.opacity.b': 1,
+  }),
+  preset('bundled-quick-emphasis', 'Quick Emphasis', 'Punch in and back for a brief highlight.', 'Focus', ['focus', 'scale', 'emphasis'], {
+    'transition.mode': 2,
+    'transform.scaleX.a': 1.0, 'transform.scaleY.a': 1.0,
+    'transform.scaleX.b': 1.12, 'transform.scaleY.b': 1.12,
+  }),
+  preset('bundled-full-clip-drift', 'Full-Clip Drift', 'Slow pan across the entire clip duration.', 'Focus', ['focus', 'position', 'drift'], {
+    'transition.alignment': 2,
+    'transform.scaleX.a': 1.06, 'transform.scaleY.a': 1.06,
+    'transform.scaleX.b': 1.06, 'transform.scaleY.b': 1.06,
+  }),
 ];
 
 export const CATEGORIES: string[] = [

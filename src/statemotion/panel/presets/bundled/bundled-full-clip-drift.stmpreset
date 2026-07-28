@@ -1,18 +1,18 @@
 {
   "formatId": "io.github.anmol2k5.statemotion.preset",
   "schemaVersion": 1,
-  "presetId": "bundled-title-glow-rise",
-  "name": "Title Rise",
-  "description": "Rise with a gentle scale for lower-thirds.",
+  "presetId": "bundled-full-clip-drift",
+  "name": "Full-Clip Drift",
+  "description": "Slow pan across the entire clip duration.",
   "author": "StateMotion",
   "createdAt": "2026-07-18T00:00:00.000Z",
   "modifiedAt": "2026-07-18T00:00:00.000Z",
   "tags": [
-    "title",
-    "scale",
-    "rise"
+    "focus",
+    "position",
+    "drift"
   ],
-  "category": "Titles",
+  "category": "Focus",
   "collectionIds": [],
   "compatibleContract": {
     "schemaVersion": 1,
@@ -20,12 +20,11 @@
     "parameterCount": 70
   },
   "parameters": {
-    "transform.scaleX.a": 0.92,
-    "transform.scaleY.a": 0.92,
-    "transform.opacity.a": 0,
-    "transform.scaleX.b": 1,
-    "transform.scaleY.b": 1,
-    "transform.opacity.b": 1
+    "transition.alignment": 2,
+    "transform.scaleX.a": 1.06,
+    "transform.scaleY.a": 1.06,
+    "transform.scaleX.b": 1.06,
+    "transform.scaleY.b": 1.06
   },
   "preview": {
     "kind": "generated"

@@ -39,11 +39,11 @@ for (const p of presets) {
 }
 pass('all presets validate, use valid logical ids, no metadata serialized');
 
-// Easing value (if present) is a valid enum (0..4); custom curve values canonical 0..1.
+// Easing value (if present) is a valid enum (0..6: Linear..Bounce); custom curve values canonical 0..1.
 for (const p of presets) {
   const e = p.parameters['transition.easing'];
   if (e !== undefined) {
-    assert.ok(e >= 0 && e <= 4, `preset ${p.presetId} easing in enum range (got ${e})`);
+    assert.ok(e >= 0 && e <= 6, `preset ${p.presetId} easing in enum range (got ${e})`);
   }
   for (const k of ['transition.curveX1', 'transition.curveX2', 'transition.curveY1', 'transition.curveY2']) {
     const v = p.parameters[k];
