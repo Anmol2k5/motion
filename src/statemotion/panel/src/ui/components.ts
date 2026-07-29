@@ -34,3 +34,22 @@ export function svgFromString(markup: string): SVGElement {
   const doc = new DOMParser().parseFromString(markup, 'image/svg+xml');
   return doc.documentElement as unknown as SVGElement;
 }
+
+export function accordion(title: string, content: HTMLElement[], isOpen = false): HTMLElement {
+  const acc = el('div', { class: `sm-accordion ${isOpen ? 'open' : ''}` });
+  const icon = el('span', { class: 'sm-accordion-icon', text: '▶' });
+  const header = el('div', { class: 'sm-accordion-header' }, [icon, el('span', { text: title })]);
+  const body = el('div', { class: 'sm-accordion-content' }, content);
+  
+  header.addEventListener('click', () => {
+    const isCurrentlyOpen = acc.classList.contains('open');
+    if (isCurrentlyOpen) {
+      acc.classList.remove('open');
+    } else {
+      acc.classList.add('open');
+    }
+  });
+
+  acc.append(header, body);
+  return acc;
+}
