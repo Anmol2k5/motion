@@ -19,7 +19,7 @@ export const CURRENT_SCHEMA_VERSION = SCHEMA_VERSION;
 export { SCHEMA_VERSION, BINDING_REVISION, PARAMETER_COUNT } from '../../../../../shared/generated/parameterBindings.ts';
 
 export interface PointValue { x: number; y: number; }
-export type ParameterValue = number | string | PointValue;
+export type ParameterValue = number | string | boolean | PointValue;
 export type ParameterValues = Record<string, ParameterValue>;
 
 export interface CompatibleContract {
@@ -190,7 +190,7 @@ export function deserializePreset(text: string): StateMotionPreset {
 
 // Convenience: resolve a logical parameter value to its numeric/string default
 // when absent from a preset (used by preview + apply planning).
-export function defaultValueFor(logicalId: string): number | string | undefined {
+export function defaultValueFor(logicalId: string): number | string | boolean | undefined {
   return getBinding(logicalId)?.defaultVal;
 }
 

@@ -10,13 +10,13 @@ export interface ParameterBinding {
   nativeType: string;
   stateOwnership: string;
   timeVariance: string;
-  defaultVal: number | string;
+  defaultVal: number | string | boolean;
   validMin: number;
   validMax: number;
   uiMin: number;
   uiMax: number;
   enumRef: string;
-  oldDefault: number | string;
+  oldDefault: number | string | boolean;
 }
 
 export const CONTRACT_DIGEST = "05ee3222039a01759cb7c8ab392095d6d6ddc3a777a65f04f19c2f3f2e295ee3";
