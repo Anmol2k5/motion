@@ -38,7 +38,7 @@ expectFail('duplicate diskId', (c) => { c.parameters[1].diskId = c.parameters[0]
 expectFail('diskId 0', (c) => { c.parameters[0].diskId = 0; }, 'diskId 0');
 expectFail('diskId out of range (>9999)', (c) => { c.parameters[0].diskId = 10000; }, 'outside 1..9999');
 expectFail('diskId out of range (<1)', (c) => { c.parameters[0].diskId = -1; }, 'outside 1..9999');
-expectFail('param outside declared family range', (c) => { c.parameters.find(p => p.logicalId === 'transform.opacity.b').diskId = 60; }, 'expected transform');
+expectFail('param outside declared family range', (c) => { c.parameters.find(p => p.logicalId === 'transform.opacity.b').diskId = 67; }, 'expected transform');
 expectFail('entry in reserved family (motionBlurQuality)', (c) => {
   c.parameters.push({ logicalId: 'quality.shutterAngle', diskId: 310, wireName: 'SM Shutter Angle', nativeType: 'FLOAT_SLIDER', default: 180, range: { min: 0, max: 360 }, uiRange: { min: 0, max: 360 }, introducedInSchema: 1, timeVariance: 'interpolatable', serialization: 'diskId', fingerprint: true, stateOwnership: 'A', canonical: 'deg', oldProjectDefault: 180 });
 }, null);
@@ -134,8 +134,8 @@ expectFail('binding revision metadata mismatch', (c) => {
   assert.ok(cpp.includes('"transition.mode", 50, "SM Mode", "POPUP", "transition", "static", 0, 0, 0, 0, 0, 0, 2, 7, "ProgressMode"'), 'transition.mode popup binding wrong');
   // A POINT must emit defaultNum 0 (native resolves center).
   assert.ok(cpp.includes('"transform.position.a", 100, "SM Position A", "POINT", "A", "interpolatable", 0,'), 'position.a POINT default must be 0');
-  // parameterCount metadata new-default 60 (shadow params added), old-default 20.
-  assert.ok(cpp.includes('"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 60, 1, 9999, 1, 9999, 20,'), 'parameterCount old default wrong');
+  // parameterCount metadata new-default 70 (spring/bounce params added), old-default 20.
+  assert.ok(cpp.includes('"contract.parameterCount", 2, "SM Param Count", "FLOAT_SLIDER", "metadata", "static", 70, 1, 9999, 1, 9999, 20,'), 'parameterCount old default wrong');
   pass('enhanced C++ binding fields present and match contract');
 })();
 

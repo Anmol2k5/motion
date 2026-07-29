@@ -1,18 +1,18 @@
 {
   "formatId": "io.github.anmol2k5.statemotion.preset",
   "schemaVersion": 1,
-  "presetId": "bundled-title-glow-rise",
-  "name": "Title Rise",
-  "description": "Rise with a gentle scale for lower-thirds.",
+  "presetId": "bundled-settle-down",
+  "name": "Settle Down",
+  "description": "Scale up with spring overshoot that settles into place.",
   "author": "StateMotion",
   "createdAt": "2026-07-18T00:00:00.000Z",
   "modifiedAt": "2026-07-18T00:00:00.000Z",
   "tags": [
-    "title",
+    "entrance",
     "scale",
-    "rise"
+    "spring"
   ],
-  "category": "Titles",
+  "category": "Entrances",
   "collectionIds": [],
   "compatibleContract": {
     "schemaVersion": 1,
@@ -20,8 +20,11 @@
     "parameterCount": 70
   },
   "parameters": {
-    "transform.scaleX.a": 0.92,
-    "transform.scaleY.a": 0.92,
+    "transition.easing": 5,
+    "transition.spring.frequency": 1.2,
+    "transition.spring.damping": 0.35,
+    "transform.scaleX.a": 0.8,
+    "transform.scaleY.a": 0.8,
     "transform.opacity.a": 0,
     "transform.scaleX.b": 1,
     "transform.scaleY.b": 1,

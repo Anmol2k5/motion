@@ -366,7 +366,7 @@ Render(
     const double mblurAngle = SM_RD(kMotionBlurShutterAngle)->u.fs_d.value;
     const int mblurSamplesRaw = static_cast<int>(SM_RD(kMotionBlurSamples)->u.fs_d.value);
     // Enforce 2..64 range for samples if enabled
-    const int mblurSamples = (mblurEnabled && mblurSamplesRaw >= 2) ? std::min(mblurSamplesRaw, 64) : 1;
+    const int mblurSamples = (mblurEnabled && mblurSamplesRaw >= 2) ? (mblurSamplesRaw < 64 ? mblurSamplesRaw : 64) : 1;
 
     #undef SM_RD
 

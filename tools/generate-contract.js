@@ -382,13 +382,13 @@ function emitBindingsTs(contract, digest) {
   L.push('  nativeType: string;');
   L.push('  stateOwnership: string;');
   L.push('  timeVariance: string;');
-  L.push('  defaultVal: number | string;');
+  L.push('  defaultVal: number | string | boolean;');
   L.push('  validMin: number;');
   L.push('  validMax: number;');
   L.push('  uiMin: number;');
   L.push('  uiMax: number;');
   L.push('  enumRef: string;');
-  L.push('  oldDefault: number | string;');
+  L.push('  oldDefault: number | string | boolean;');
   L.push('}');
   L.push('');
   L.push(`export const CONTRACT_DIGEST = "${digest}";`);

@@ -94,7 +94,7 @@ export function toNative(logicalId: string, canonical: ParameterValue, binding: 
       const p = resolvePoint(canonical);
       return { x: p.x * 100, y: p.y * 100 };
     }
-    case 'boolean': return (canonical === true ? 1 : 0); // native CHECKBOX expects 1 or 0
+    case 'boolean': return (canonical === true || canonical === 1 ? 1 : 0); // native CHECKBOX expects 1 or 0
   }
 }
 

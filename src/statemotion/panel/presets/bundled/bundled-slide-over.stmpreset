@@ -15,8 +15,8 @@
   "collectionIds": [],
   "compatibleContract": {
     "schemaVersion": 1,
-    "bindingRevision": 3,
-    "parameterCount": 67
+    "bindingRevision": 4,
+    "parameterCount": 70
   },
   "parameters": {
     "transform.position.a": "frameCenter",
