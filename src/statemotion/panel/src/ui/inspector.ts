@@ -181,20 +181,83 @@ export class InspectorView {
     curveRow.append(editor.getElement());
     content.push(curveRow);
 
-    const springRow = el('div', { class: 'sm-control-row' }, [
-      el('span', { class: 'sm-control-label', text: 'Spring Settings...' }),
-    ]);
-    content.push(springRow);
+    const springFreq = typed.getNumber('transition.spring.frequency', 1.0);
+    const springDamp = typed.getNumber('transition.spring.damping', 0.5);
+    const springVel = typed.getNumber('transition.spring.initialVelocity', 0.0);
 
-    const bounceRow = el('div', { class: 'sm-control-row' }, [
-      el('span', { class: 'sm-control-label', text: 'Bounce Settings...' }),
+    const bounceCount = typed.getNumber('transition.bounce.count', 3);
+    const bounceHDecay = typed.getNumber('transition.bounce.heightDecay', 0.5);
+    const bounceTDecay = typed.getNumber('transition.bounce.timeDecay', 0.5);
+    const bounceHang = typed.getNumber('transition.bounce.hangTime', 0.0);
+
+    const springContainer = el('div', { style: 'display: flex; flex-direction: column; width: 100%; gap: 4px;' }, [
+      renderNumberRow({
+        label: 'Frequency',
+        value: springFreq,
+        min: 0.1,
+        max: 50,
+        step: 0.1,
+        onChange: (v) => this.writeLogical(clipId, 'transition.spring.frequency', v),
+      }),
+      renderNumberRow({
+        label: 'Damping',
+        value: springDamp,
+        min: 0,
+        max: 5,
+        step: 0.05,
+        onChange: (v) => this.writeLogical(clipId, 'transition.spring.damping', v),
+      }),
+      renderNumberRow({
+        label: 'Initial Vel',
+        value: springVel,
+        min: -20,
+        max: 20,
+        step: 0.1,
+        onChange: (v) => this.writeLogical(clipId, 'transition.spring.initialVelocity', v),
+      }),
     ]);
-    content.push(bounceRow);
+    content.push(springContainer);
+
+    const bounceContainer = el('div', { style: 'display: flex; flex-direction: column; width: 100%; gap: 4px;' }, [
+      renderNumberRow({
+        label: 'Count',
+        value: bounceCount,
+        min: 1,
+        max: 20,
+        step: 1,
+        onChange: (v) => this.writeLogical(clipId, 'transition.bounce.count', v),
+      }),
+      renderNumberRow({
+        label: 'Height Decay',
+        value: bounceHDecay,
+        min: 0,
+        max: 1,
+        step: 0.05,
+        onChange: (v) => this.writeLogical(clipId, 'transition.bounce.heightDecay', v),
+      }),
+      renderNumberRow({
+        label: 'Time Decay',
+        value: bounceTDecay,
+        min: 0,
+        max: 1,
+        step: 0.05,
+        onChange: (v) => this.writeLogical(clipId, 'transition.bounce.timeDecay', v),
+      }),
+      renderNumberRow({
+        label: 'Hang Time',
+        value: bounceHang,
+        min: 0,
+        max: 1,
+        step: 0.05,
+        onChange: (v) => this.writeLogical(clipId, 'transition.bounce.hangTime', v),
+      }),
+    ]);
+    content.push(bounceContainer);
 
     const syncVisibility = (valIdx: number) => {
       curveRow.style.display = valIdx === 4 ? 'flex' : 'none';
-      springRow.style.display = valIdx === 5 ? 'flex' : 'none';
-      bounceRow.style.display = valIdx === 6 ? 'flex' : 'none';
+      springContainer.style.display = valIdx === 5 ? 'flex' : 'none';
+      bounceContainer.style.display = valIdx === 6 ? 'flex' : 'none';
     };
     syncVisibility(easing);
 

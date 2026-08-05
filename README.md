@@ -13,7 +13,11 @@ Currently implemented:
 
 - Host-independent CPU transform renderer
 - State A/B interpolation for position, scale, rotation, anchor, and opacity
-- Stable generated parameter contract
+- Crop and rounded rectangle masks (SDF renderer)
+- Stroke (with angle & cycle speed), glow, and drop shadow compositing
+- Multi-sample motion blur accumulation
+- Spring and bounce easing evaluators and UI controls
+- Stable generated parameter contract (70 parameters)
 - C++ and TypeScript progress engines
 - Seven progress modes
 - Three alignment modes
@@ -25,11 +29,8 @@ Currently implemented:
 
 Not currently implemented:
 
-- Certified Premiere host integration
+- Certified Premiere host integration (awaiting operator re-test)
 - GPU rendering
-- Crop and rounded masks
-- Stroke, glow, and shadow
-- Motion blur
 - Batch tools
 - Production installers
 
