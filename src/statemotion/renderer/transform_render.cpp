@@ -35,6 +35,15 @@ RendererTransformState interpolate(const RendererTransformState& a, const Render
     r.shadowAngleDeg = a.shadowAngleDeg + (b.shadowAngleDeg - a.shadowAngleDeg) * t;
     r.shadowDistance = a.shadowDistance + (b.shadowDistance - a.shadowDistance) * t;
     r.shadowSoftness = a.shadowSoftness + (b.shadowSoftness - a.shadowSoftness) * t;
+    r.strokeEnabled = (t < 0.5) ? a.strokeEnabled : b.strokeEnabled;
+    r.strokeWidth = a.strokeWidth + (b.strokeWidth - a.strokeWidth) * t;
+    r.strokeColor1 = a.strokeColor1;
+    r.strokeColor2 = a.strokeColor2;
+    r.strokeGradientAngleDeg = a.strokeGradientAngleDeg + (b.strokeGradientAngleDeg - a.strokeGradientAngleDeg) * t;
+    r.strokeGradientPhaseOffset = a.strokeGradientPhaseOffset + (b.strokeGradientPhaseOffset - a.strokeGradientPhaseOffset) * t;
+    r.glowEnabled = (t < 0.5) ? a.glowEnabled : b.glowEnabled;
+    r.glowAmount = a.glowAmount + (b.glowAmount - a.glowAmount) * t;
+    r.glowRadius = a.glowRadius + (b.glowRadius - a.glowRadius) * t;
     return r;
 }
 
@@ -91,8 +100,21 @@ CpuRenderPlan plan(const RendererTransformState& t, int srcW, int srcH) {
         p.shadowOffsetY = std::sin(radShadow) * t.shadowDistance;
     }
 
+    // Stroke & Glow calculation
+    p.strokeEnabled = t.strokeEnabled;
+    p.strokeWidthPx = t.strokeWidth;
+    p.strokeColor1 = t.strokeColor1;
+    p.strokeColor2 = t.strokeColor2;
+    p.strokeGradientPhaseOffset = t.strokeGradientPhaseOffset;
+    p.hasStroke = p.strokeEnabled && p.strokeWidthPx > 0.0;
+
+    p.glowEnabled = t.glowEnabled;
+    p.glowAmount = t.glowAmount;
+    p.glowRadiusPx = t.glowRadius;
+    p.hasGlow = p.glowEnabled && p.glowAmount > 0.0;
+
     p.identityTransform =
-        (!p.hasCropMask && !p.hasShadow &&
+        (!p.hasCropMask && !p.hasShadow && !p.hasStroke && !p.hasGlow &&
          std::abs(t.positionX - t.anchorX) < 1e-9 &&
          std::abs(t.positionY - t.anchorY) < 1e-9 &&
          std::abs(t.scaleX - 1.0) < 1e-9 && std::abs(t.scaleY - 1.0) < 1e-9 &&

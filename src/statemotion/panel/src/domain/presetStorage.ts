@@ -98,13 +98,16 @@ export class PresetRepository {
 
   async list(): Promise<StateMotionPreset[]> {
     const out: StateMotionPreset[] = [];
-    for (const f of await this.fs.listFiles(this.bundledDir())) {
-      if (!f.endsWith('.stmpreset')) continue;
-      out.push(deserializePreset(await this.fs.readFile(f)));
-    }
-    for (const f of await this.fs.listFiles(this.userDir())) {
-      if (!f.endsWith('.stmpreset')) continue;
-      out.push(deserializePreset(await this.fs.readFile(f)));
+    const dirs = [this.bundledDir(), this.userDir()];
+    for (const dir of dirs) {
+      for (const f of await this.fs.listFiles(dir)) {
+        if (!f.endsWith('.stmpreset')) continue;
+        try {
+          out.push(deserializePreset(await this.fs.readFile(f)));
+        } catch {
+          // Skip malformed preset file gracefully
+        }
+      }
     }
     return out;
   }

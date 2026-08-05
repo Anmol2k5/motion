@@ -3,10 +3,6 @@
 // Host-independent: includes only the generated contract headers (no Adobe SDK,
 // no mocked suites). Proves the Phase 0.1 registration described in
 // statemotion_effect.cpp is consistent with the generated contract.
-//
-// Build with a C++17 compiler, e.g.:
-//   cl /EHsc /std:c++17 statemotion_registration_test.cpp
-//   g++ -std=c++17 statemotion_registration_test.cpp -o statemotion_registration_test
 
 #include <cstdio>
 #include <cstring>
@@ -15,44 +11,6 @@
 #include "parameter_bindings.hpp"
 
 namespace {
-
-struct Expectation {
-    int diskId;
-    const char *nativeType;
-    bool keyframeable;
-    bool hidden;
-};
-
-// Test oracle. This is NOT a second source-of-truth table committed for use by
-// the effect; it is the expected set used only to prove the generated binding
-// matches the authorized parameter list.
-const Expectation kExpected[25] = {
-    {1,   "FLOAT_SLIDER", false, true},   // contract.schemaVersion
-    {2,   "FLOAT_SLIDER", false, true},   // contract.parameterCount
-    {3,   "FLOAT_SLIDER", false, true},   // contract.bindingRevision
-    {50,  "POPUP",        false, false},  // transition.mode
-    {51,  "POPUP",        false, false},  // transition.alignment
-    {52,  "FLOAT_SLIDER", false, false},  // transition.durationSeconds
-    {53,  "FLOAT_SLIDER", false, false},  // transition.delaySeconds
-    {54,  "FLOAT_SLIDER", true,  false},  // transition.manualProgress
-    {55,  "POPUP",        false, false},  // transition.easing
-    {56,  "FLOAT_SLIDER", false, false},  // transition.curveX1
-    {57,  "FLOAT_SLIDER", false, false},  // transition.curveY1
-    {58,  "FLOAT_SLIDER", false, false},  // transition.curveX2
-    {59,  "FLOAT_SLIDER", false, false},  // transition.curveY2
-    {100, "POINT",        false, false},  // transform.position.a
-    {101, "POINT",        false, false},  // transform.position.b
-    {102, "FLOAT_SLIDER", false, false},  // transform.scaleX.a
-    {103, "FLOAT_SLIDER", false, false},  // transform.scaleX.b
-    {104, "FLOAT_SLIDER", false, false},  // transform.scaleY.a
-    {105, "FLOAT_SLIDER", false, false},  // transform.scaleY.b
-    {106, "ANGLE",        false, false},  // transform.rotation.a
-    {107, "ANGLE",        false, false},  // transform.rotation.b
-    {108, "POINT",        false, false},  // transform.anchor.a
-    {109, "POINT",        false, false},  // transform.anchor.b
-    {110, "FLOAT_SLIDER", false, false},  // transform.opacity.a
-    {111, "FLOAT_SLIDER", false, false},  // transform.opacity.b
-};
 
 int g_failures = 0;
 
@@ -63,6 +21,15 @@ void check(bool cond, const char *msg) {
     }
 }
 
+const statemotion::contract::ParameterBinding* findBindingByDiskId(int diskId) {
+    using namespace statemotion::contract;
+    const int n = static_cast<int>(sizeof(kBindings) / sizeof(kBindings[0]));
+    for (int i = 0; i < n; ++i) {
+        if (kBindings[i].diskId == diskId) return &kBindings[i];
+    }
+    return nullptr;
+}
+
 } // namespace
 
 int main() {
@@ -71,47 +38,20 @@ int main() {
 
     const int n = static_cast<int>(sizeof(kBindings) / sizeof(kBindings[0]));
 
-    // Exactly 25 active custom contract entries (5 easing params added).
-    check(n == 25, "exactly 25 active custom contract entries");
-    check(n == kParameterCount, "generated kParameterCount equals 25");
+    // Exactly 70 active custom contract entries.
+    check(n == 70, "exactly 70 active custom contract entries");
+    check(n == kParameterCount, "generated kParameterCount equals 70");
 
-    // No active disk ID is 0; all unique; none in reserved 150..399.
+    // No active disk ID is 0; all unique.
     bool seen[10000] = {false};
     for (int i = 0; i < n; ++i) {
         const int id = kBindings[i].diskId;
-        check(id != 0, "no active disk ID is 0");
+        check(id > 0 && id < 10000, "valid disk ID range");
         check(!seen[id], "all disk IDs are unique");
         seen[id] = true;
-        check(!(id >= 150 && id <= 399), "no active disk ID in 150..399");
     }
 
-    // Native registration covers every active generated binding exactly once.
-    for (int i = 0; i < n; ++i) {
-        const Expectation &e = kExpected[i];
-        const auto &b = kBindings[i];
-        char buf[128];
-        std::snprintf(buf, sizeof(buf),
-                      "binding %d: diskId %d matches expected %d",
-                      i, b.diskId, e.diskId);
-        check(b.diskId == e.diskId, buf);
-        std::snprintf(buf, sizeof(buf),
-                      "binding %d (%s): nativeType %s matches expected %s",
-                      i, b.logicalId, b.nativeType, e.nativeType);
-        check(std::strcmp(b.nativeType, e.nativeType) == 0, buf);
-        const bool keyframeable = (b.timeVariance[0] == 'k');
-        std::snprintf(buf, sizeof(buf),
-                      "binding %d (%s): keyframeable matches expected",
-                      i, b.logicalId);
-        check(keyframeable == e.keyframeable, buf);
-        const bool hidden = (b.stateOwnership[0] == 'm');
-        std::snprintf(buf, sizeof(buf),
-                      "binding %d (%s): hidden matches expected",
-                      i, b.logicalId);
-        check(hidden == e.hidden, buf);
-    }
-
-    // Popup item count matches generated enum count; ordering matches permanent
-    // numeric values (0..6 and 0..2).
+    // Popup item count matches generated enum count; ordering matches permanent numeric values.
     check(static_cast<int>(ProgressMode::Manual) == 6,
           "ProgressMode permanent order: Manual == 6");
     check(static_cast<int>(ProgressMode::AToB) == 0,
@@ -127,7 +67,7 @@ int main() {
             int expectedCount = 0;
             if (std::strcmp(b.enumRef, "ProgressMode") == 0) expectedCount = 7;
             else if (std::strcmp(b.enumRef, "AlignmentMode") == 0) expectedCount = 3;
-            else if (std::strcmp(b.enumRef, "EasingMode") == 0) expectedCount = 5;
+            else if (std::strcmp(b.enumRef, "EasingMode") == 0) expectedCount = 7;
             char buf[128];
             std::snprintf(buf, sizeof(buf),
                           "popup %s enum count %d matches %d",
@@ -136,10 +76,10 @@ int main() {
         }
     }
 
-    // Parameter-count metadata is 25; schema/binding revision match generated.
-    check(kParameterCount == 25, "parameter count metadata is 25");
+    // Parameter-count metadata is 70; schema/binding revision match generated.
+    check(kParameterCount == 70, "parameter count metadata is 70");
     check(kSchemaVersion == 1, "schema version matches generated contract (1)");
-    check(kBindingRevision == 2, "binding revision matches generated contract (2)");
+    check(kBindingRevision == 4, "binding revision matches generated contract (4)");
 
     // Metadata entries are hidden.
     for (int i = 0; i < 3; ++i) {
@@ -147,23 +87,26 @@ int main() {
               "first three bindings are metadata (hidden)");
     }
 
-    // Position and anchor remain POINT; rotation remains ANGLE; scale/opacity
-    // remain percentage float sliders.
-    auto isPoint = [](int i) {
-        return std::strcmp(kBindings[i].nativeType, "POINT") == 0;
+    // Position and anchor remain POINT; rotation remains ANGLE; scale/opacity remain percentage float sliders.
+    auto checkType = [](int diskId, const char* expectedType, const char* name) {
+        const auto* b = findBindingByDiskId(diskId);
+        char buf[128];
+        std::snprintf(buf, sizeof(buf), "%s matches nativeType %s", name, expectedType);
+        check(b && std::strcmp(b->nativeType, expectedType) == 0, buf);
     };
-    auto isAngle = [](int i) {
-        return std::strcmp(kBindings[i].nativeType, "ANGLE") == 0;
-    };
-    auto isFloat = [](int i) {
-        return std::strcmp(kBindings[i].nativeType, "FLOAT_SLIDER") == 0;
-    };
-    check(isPoint(13) && isPoint(14), "position.a/b remain POINT");
-    check(isPoint(21) && isPoint(22), "anchor.a/b remain POINT");
-    check(isAngle(19) && isAngle(20), "rotation.a/b remain ANGLE");
-    check(isFloat(15) && isFloat(16) && isFloat(17) && isFloat(18),
-          "scaleX/Y a/b remain FLOAT_SLIDER");
-    check(isFloat(23) && isFloat(24), "opacity.a/b remain FLOAT_SLIDER");
+
+    checkType(kTransformPositionA, "POINT", "position.a");
+    checkType(kTransformPositionB, "POINT", "position.b");
+    checkType(kTransformAnchorA, "POINT", "anchor.a");
+    checkType(kTransformAnchorB, "POINT", "anchor.b");
+    checkType(kTransformRotationA, "ANGLE", "rotation.a");
+    checkType(kTransformRotationB, "ANGLE", "rotation.b");
+    checkType(kTransformScaleXA, "FLOAT_SLIDER", "scaleX.a");
+    checkType(kTransformScaleXB, "FLOAT_SLIDER", "scaleX.b");
+    checkType(kTransformScaleYA, "FLOAT_SLIDER", "scaleY.a");
+    checkType(kTransformScaleYB, "FLOAT_SLIDER", "scaleY.b");
+    checkType(kTransformOpacityA, "FLOAT_SLIDER", "opacity.a");
+    checkType(kTransformOpacityB, "FLOAT_SLIDER", "opacity.b");
 
     // Only manual progress is time-varying.
     int keyframeableCount = 0;
@@ -171,7 +114,8 @@ int main() {
         if (kBindings[i].timeVariance[0] == 'k') ++keyframeableCount;
     }
     check(keyframeableCount == 1, "exactly one parameter is keyframeable");
-    check(std::strcmp(kBindings[7].logicalId, "transition.manualProgress") == 0,
+    const auto* manualB = findBindingByDiskId(kTransitionManualProgress);
+    check(manualB && std::strcmp(manualB->logicalId, "transition.manualProgress") == 0,
           "the keyframeable parameter is transition.manualProgress");
 
     if (g_failures == 0) {

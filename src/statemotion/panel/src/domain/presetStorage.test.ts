@@ -146,4 +146,18 @@ function samplePreset(id: string, name: string, category = 'Entrances') {
   pass('export emits serialized preset');
 })();
 
+// ---- corrupt preset skipped ----
+(async () => {
+  const fs = makeMemoryFs();
+  const repo = new PresetRepository(fs, '/data');
+  await repo.init();
+  await repo.create(samplePreset('p1', 'Valid One'));
+  await fs.writeFile('/data/user/corrupt.stmpreset', 'INVALID JSON {');
+  const items = await repo.list();
+  assert.strictEqual(items.length, 1, 'corrupt file should be skipped');
+  assert.strictEqual(items[0].presetId, 'p1', 'valid preset should still be returned');
+  pass('corrupt preset file is skipped gracefully in list()');
+})();
+
 console.log(`\nALL PASSED (${passed})`);
+

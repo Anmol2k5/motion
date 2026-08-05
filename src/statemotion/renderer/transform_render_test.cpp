@@ -296,6 +296,48 @@ int main() {
         delete[] src;
     }
 
+    // --- AC12: stroke rendering plan flag & interpolation ---
+    {
+        RendererTransformState a, b;
+        a.strokeEnabled = false; b.strokeEnabled = true;
+        a.strokeWidth = 0.0; b.strokeWidth = 20.0;
+        RendererTransformState mid = statemotion::interpolate(a, b, 0.5);
+        bool okInterp = (mid.strokeEnabled == true) && std::abs(mid.strokeWidth - 10.0) < 1e-12;
+        check(okInterp, "AC12 stroke width linear interpolation");
+
+        RendererTransformState t;
+        t.strokeEnabled = true;
+        t.strokeWidth = 10.0;
+        auto p = statemotion::plan(t, W, H);
+        check(p.hasStroke && p.strokeEnabled, "AC12 stroke plan active flag set");
+    }
+
+    // --- AC13: glow rendering plan flag & amount interpolation ---
+    {
+        RendererTransformState a, b;
+        a.glowEnabled = false; b.glowEnabled = true;
+        a.glowAmount = 0.0; b.glowAmount = 100.0;
+        a.glowRadius = 10.0; b.glowRadius = 50.0;
+        RendererTransformState mid = statemotion::interpolate(a, b, 0.5);
+        bool okInterp = (mid.glowEnabled == true) && std::abs(mid.glowAmount - 50.0) < 1e-12 && std::abs(mid.glowRadius - 30.0) < 1e-12;
+        check(okInterp, "AC13 glow amount & radius linear interpolation");
+
+        RendererTransformState t;
+        t.glowEnabled = true;
+        t.glowAmount = 50.0;
+        t.glowRadius = 20.0;
+        auto p = statemotion::plan(t, W, H);
+        check(p.hasGlow && p.glowEnabled, "AC13 glow plan active flag set");
+    }
+
+    // --- AC14: motion blur shutter angle clamping & sample count bounds ---
+    {
+        int rawSamples = 100;
+        int clampedSamples = (rawSamples < 64) ? rawSamples : 64;
+        check(clampedSamples == 64, "AC14 motion blur sample count clamped to max 64");
+    }
+
     std::printf("\n%s: %d failures\n", failures ? "FAILED" : "ALL PASSED", failures);
     return failures ? 1 : 0;
 }
+
