@@ -15,7 +15,9 @@ export class ManageView {
 
   async render(container: HTMLElement): Promise<void> {
     clear(container);
+    showState(container, '⏳', 'Loading presets...', '');
     const all = await this.repo.list();
+    clear(container);
     const library = this.getLibrary();
     const userPresets = all.filter((p) => p.presetId.startsWith('user-'));
 
