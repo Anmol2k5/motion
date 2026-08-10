@@ -15,7 +15,9 @@ export class ManageView {
 
   async render(container: HTMLElement): Promise<void> {
     clear(container);
+    showState(container, '⏳', 'Loading presets...', '');
     const all = await this.repo.list();
+    clear(container);
     const library = this.getLibrary();
     const userPresets = all.filter((p) => p.presetId.startsWith('user-'));
 
@@ -108,8 +110,16 @@ export class ManageView {
       await this.repo.update({ ...p, name, modifiedAt: new Date().toISOString() });
       this.render(this.lastContainer!);
     });
-    const dup = el('button', { class: 'sm-btn secondary', text: 'Duplicate' });
-    dup.addEventListener('click', async () => { await this.repo.duplicate(p.presetId); this.render(this.lastContainer!); });
+    const dup = el('button', { class: 'sm-btn secondary', text: 'Duplicate' }) as HTMLButtonElement;
+    dup.addEventListener('click', async () => {
+      dup.disabled = true;
+      try {
+        await this.repo.duplicate(p.presetId);
+        this.render(this.lastContainer!);
+      } finally {
+        dup.disabled = false;
+      }
+    });
     const exp = el('button', { class: 'sm-btn secondary', text: 'Export' });
     exp.addEventListener('click', async () => {
       const text = await this.repo.export(p.presetId);

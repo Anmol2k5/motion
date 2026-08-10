@@ -148,5 +148,30 @@ console.log('== easing regression: custom bezier equals legacy smoothstep (TS) =
   }
 }
 
+console.log('== easing parity: spring + bounce fixtures (TS) ==');
+{
+  const easingFixturePath = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    '../../../shared/fixtures/easing-fixtures.json',
+  );
+  const fx: Json = JSON.parse(fs.readFileSync(easingFixturePath, 'utf8'));
+  for (const c of fx.spring as Json[]) {
+    const curve: EasingCurve = { x1: 0, y1: 0, x2: 1, y2: 1,
+      springFrequency: c.springFrequency, springDamping: c.springDamping,
+      springInitialVelocity: c.springInitialVelocity,
+      bounceCount: 3, bounceHeightDecay: 0.5, bounceTimeDecay: 0.5, bounceHangTime: 0 };
+    const got = evaluateEasing(EasingMode.SPRING, curve, c.progress);
+    check(maxErr(got, c.eased) <= 1e-6, `spring fixture p=${c.progress}`);
+  }
+  for (const c of fx.bounce as Json[]) {
+    const curve: EasingCurve = { x1: 0, y1: 0, x2: 1, y2: 1,
+      springFrequency: 1, springDamping: 0.5, springInitialVelocity: 0,
+      bounceCount: c.bounceCount, bounceHeightDecay: c.bounceHeightDecay,
+      bounceTimeDecay: c.bounceTimeDecay, bounceHangTime: c.bounceHangTime };
+    const got = evaluateEasing(EasingMode.BOUNCE, curve, c.progress);
+    check(maxErr(got, c.eased) <= 1e-6, `bounce fixture p=${c.progress}`);
+  }
+}
+
 console.log(`\n${failures ? 'FAILED' : 'ALL PASSED'}: ${failures} failures`);
 process.exit(failures ? 1 : 0);

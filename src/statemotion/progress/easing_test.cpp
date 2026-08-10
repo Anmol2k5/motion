@@ -92,6 +92,8 @@ struct NamedCase { EasingMode mode; double progress; double eased; };
 struct CustomCase { double x1, y1, x2, y2; double progress; double eased; };
 struct InvalidCase { double x1, y1, x2, y2; double progress; double eased; };
 struct RegressionCase { double x1, y1, x2, y2; double progress; double eased; double smoothstep; };
+struct SpringCase { double springFrequency, springDamping, springInitialVelocity; double progress; double eased; };
+struct BounceCase { double bounceCount, bounceHeightDecay, bounceTimeDecay, bounceHangTime; double progress; double eased; };
 
 EasingMode modeFromName(const std::string& s) {
     if (s == "LINEAR") return EasingMode::LINEAR;
@@ -103,7 +105,9 @@ EasingMode modeFromName(const std::string& s) {
 }
 
 int loadFixture(const char* path, std::vector<NamedCase>& named, std::vector<CustomCase>& custom,
-                std::vector<InvalidCase>& invalid, std::vector<RegressionCase>& regression, double& tol) {
+                std::vector<InvalidCase>& invalid, std::vector<RegressionCase>& regression,
+                std::vector<SpringCase>& spring, std::vector<BounceCase>& bounce,
+                double& tol) {
     FILE* f = std::fopen(path, "rb");
     if (!f) { std::printf("fixture open failed: %s\n", path); return 1; }
     std::string buf; char c;
@@ -127,6 +131,15 @@ int loadFixture(const char* path, std::vector<NamedCase>& named, std::vector<Cus
         regression.push_back({ e.obj.at("x1").num, e.obj.at("y1").num, e.obj.at("x2").num, e.obj.at("y2").num,
                                e.obj.at("progress").num, e.obj.at("eased").num, e.obj.at("smoothstep").num });
     }
+    for (const auto& e : root.obj["spring"].arr) {
+        spring.push_back({ e.obj.at("springFrequency").num, e.obj.at("springDamping").num,
+                           e.obj.at("springInitialVelocity").num, e.obj.at("progress").num, e.obj.at("eased").num });
+    }
+    for (const auto& e : root.obj["bounce"].arr) {
+        bounce.push_back({ e.obj.at("bounceCount").num, e.obj.at("bounceHeightDecay").num,
+                           e.obj.at("bounceTimeDecay").num, e.obj.at("bounceHangTime").num,
+                           e.obj.at("progress").num, e.obj.at("eased").num });
+    }
     return 0;
 }
 
@@ -143,7 +156,9 @@ int main() {
     std::vector<CustomCase> custom;
     std::vector<InvalidCase> invalid;
     std::vector<RegressionCase> regression;
-    if (loadFixture("shared/fixtures/easing-fixtures.json", named, custom, invalid, regression, tol)) return 1;
+    std::vector<SpringCase> spring;
+    std::vector<BounceCase> bounce;
+    if (loadFixture("shared/fixtures/easing-fixtures.json", named, custom, invalid, regression, spring, bounce, tol)) return 1;
 
     // Named modes vs fixture.
     for (const auto& c : named) {
@@ -200,6 +215,27 @@ int main() {
             check(std::abs(named - c.smoothstep) <= tol, ("EASE_IN_OUT == smoothstep " + std::to_string(idx)).c_str());
             idx++;
         }
+    }
+
+    // Spring fixtures
+    for (const auto& c : spring) {
+        EasingCurve curve;
+        curve.springFrequency = c.springFrequency;
+        curve.springDamping = c.springDamping;
+        curve.springInitialVelocity = c.springInitialVelocity;
+        double got = statemotion::evaluateEasing(EasingMode::SPRING, curve, c.progress);
+        check(std::abs(got - c.eased) <= tol, "spring fixture");
+    }
+
+    // Bounce fixtures
+    for (const auto& c : bounce) {
+        EasingCurve curve;
+        curve.bounceCount = c.bounceCount;
+        curve.bounceHeightDecay = c.bounceHeightDecay;
+        curve.bounceTimeDecay = c.bounceTimeDecay;
+        curve.bounceHangTime = c.bounceHangTime;
+        double got = statemotion::evaluateEasing(EasingMode::BOUNCE, curve, c.progress);
+        check(std::abs(got - c.eased) <= tol, "bounce fixture");
     }
 
     if (failures) { std::printf("\nFAILED: %d failures\n", failures); return 1; }

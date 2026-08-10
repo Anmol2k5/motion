@@ -41,6 +41,55 @@ function solveBezierTRef(targetX, x1, x2) {
   return t;
 }
 
+// Independent SPRING reference — damped harmonic oscillator step response.
+// ODE: x'' + 2ζω₀x' + ω₀²x = ω₀²  with x(0)=0, x'(0)=v₀.
+function refSpring(x, freq, damping, initVel) {
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  const omega0 = 2 * Math.PI * Math.max(0.01, freq);
+  const zeta = Math.max(0, damping);
+  let rawAtX, rawAt1;
+  if (zeta < 1) {
+    const omegaD = omega0 * Math.sqrt(1 - zeta * zeta);
+    const A = 1;
+    const B = (zeta * omega0 - initVel) / omegaD;
+    rawAtX = 1 - Math.exp(-zeta * omega0 * x) * (A * Math.cos(omegaD * x) + B * Math.sin(omegaD * x));
+    rawAt1 = 1 - Math.exp(-zeta * omega0) * (A * Math.cos(omegaD) + B * Math.sin(omegaD));
+  } else {
+    const A = 1;
+    const B = omega0 - initVel;
+    rawAtX = 1 - Math.exp(-omega0 * x) * (A + B * x);
+    rawAt1 = 1 - Math.exp(-omega0) * (A + B);
+  }
+  return rawAtX + x * (1 - rawAt1);
+}
+
+// Independent BOUNCE reference — piecewise parabolic inelastic ball model.
+// Initial fall t², then geometrically decaying parabolic arcs at floor y=1.
+function refBounce(x, count, hDecay, tDecay) {
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  const n = Math.min(Math.max(Math.floor(count), 1), 8);
+  const hd = clamp01(hDecay);
+  const td = Math.min(Math.max(tDecay, 0.01), 1);
+  let totalT = 1, segDur = 1;
+  for (let i = 0; i < n; i++) { segDur *= td; totalT += segDur * 2; }
+  let t = x * totalT;
+  if (t <= 1) return t * t;
+  t -= 1;
+  let curH = 1, curDur = 1;
+  for (let i = 0; i < n; i++) {
+    curH *= hd;
+    curDur *= td;
+    if (t <= curDur * 2) {
+      const nT = (t - curDur) / curDur;
+      return 1 - curH * (1 - nT * nT);
+    }
+    t -= curDur * 2;
+  }
+  return 1;
+}
+
 function refEased(mode, curve, lin) {
   const x = clamp01(lin);
   switch (mode) {
@@ -56,7 +105,7 @@ function refEased(mode, curve, lin) {
   }
 }
 
-const fixture = { tolerance: 1e-6, named: [], custom: [], invalid: [], regression: [] };
+const fixture = { tolerance: 1e-6, named: [], custom: [], invalid: [], regression: [], spring: [], bounce: [] };
 
 // Named modes across a dense + boundary sweep.
 const namedModes = ['LINEAR', 'EASE_IN', 'EASE_OUT', 'EASE_IN_OUT'];
@@ -113,6 +162,45 @@ for (let i = 0; i <= 100; i++) {
   });
 }
 
+// Spring fixtures: 3 parameter combinations × 21 progress steps.
+const springCombos = [
+  { name: 'default',     springFrequency: 1.0, springDamping: 0.5, springInitialVelocity: 0.0 },
+  { name: 'overdamped',  springFrequency: 1.0, springDamping: 1.5, springInitialVelocity: 0.0 },
+  { name: 'bouncy',      springFrequency: 2.0, springDamping: 0.2, springInitialVelocity: 2.0 },
+];
+for (const combo of springCombos) {
+  for (let i = 0; i <= 20; i++) {
+    const p = i / 20;
+    fixture.spring.push({
+      springFrequency: combo.springFrequency,
+      springDamping: combo.springDamping,
+      springInitialVelocity: combo.springInitialVelocity,
+      progress: p,
+      eased: refSpring(p, combo.springFrequency, combo.springDamping, combo.springInitialVelocity),
+    });
+  }
+}
+
+// Bounce fixtures: 3 parameter combinations × 21 progress steps.
+const bounceCombos = [
+  { name: 'default',    bounceCount: 3, bounceHeightDecay: 0.5, bounceTimeDecay: 0.5, bounceHangTime: 0.0 },
+  { name: 'highCount',  bounceCount: 6, bounceHeightDecay: 0.3, bounceTimeDecay: 0.4, bounceHangTime: 0.0 },
+  { name: 'lowCount',   bounceCount: 2, bounceHeightDecay: 0.8, bounceTimeDecay: 0.7, bounceHangTime: 0.0 },
+];
+for (const combo of bounceCombos) {
+  for (let i = 0; i <= 20; i++) {
+    const p = i / 20;
+    fixture.bounce.push({
+      bounceCount: combo.bounceCount,
+      bounceHeightDecay: combo.bounceHeightDecay,
+      bounceTimeDecay: combo.bounceTimeDecay,
+      bounceHangTime: combo.bounceHangTime,
+      progress: p,
+      eased: refBounce(p, combo.bounceCount, combo.bounceHeightDecay, combo.bounceTimeDecay),
+    });
+  }
+}
+
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, JSON.stringify(fixture, null, 2) + '\n');
-console.log(`Wrote easing fixtures: ${fixture.named.length} named, ${fixture.custom.length} custom, ${fixture.invalid.length} invalid`);
+console.log(`Wrote easing fixtures: ${fixture.named.length} named, ${fixture.custom.length} custom, ${fixture.invalid.length} invalid, ${fixture.spring.length} spring, ${fixture.bounce.length} bounce`);
