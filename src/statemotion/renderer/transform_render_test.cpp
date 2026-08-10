@@ -307,9 +307,20 @@ int main() {
 
         RendererTransformState t;
         t.strokeEnabled = true;
-        t.strokeWidth = 10.0;
+        t.strokeWidth = 2.0;
+        t.strokeColor1 = {1.0, 0.0, 0.0, 1.0};
+        t.strokeColor2 = {1.0, 0.0, 0.0, 1.0};
         auto p = statemotion::plan(t, W, H);
-        check(p.hasStroke && p.strokeEnabled, "AC12 stroke plan active flag set");
+        
+        Pixel* src = makeSource(W, H, 0.0);
+        src[1 * W + 1] = {1.0, 1.0, 1.0, 1.0}; // center pixel
+        std::vector<statemotion::Pixel> out(W * H);
+        statemotion::render(p, sample, src, W, H, out.data());
+        
+        // Output at (2,1) should have stroke (red)
+        bool okStroke = p.hasStroke && p.strokeEnabled && out[1 * W + 2].r > 0.0 && out[1 * W + 2].g == 0.0;
+        check(okStroke, "AC12 stroke rendering active");
+        delete[] src;
     }
 
     // --- AC13: glow rendering plan flag & amount interpolation ---
@@ -324,10 +335,19 @@ int main() {
 
         RendererTransformState t;
         t.glowEnabled = true;
-        t.glowAmount = 50.0;
-        t.glowRadius = 20.0;
+        t.glowAmount = 1.0;
+        t.glowRadius = 2.0;
         auto p = statemotion::plan(t, W, H);
-        check(p.hasGlow && p.glowEnabled, "AC13 glow plan active flag set");
+
+        Pixel* src = makeSource(W, H, 0.0);
+        src[1 * W + 1] = {1.0, 1.0, 1.0, 1.0}; // center pixel
+        std::vector<statemotion::Pixel> out(W * H);
+        statemotion::render(p, sample, src, W, H, out.data());
+        
+        // Output at (2,2) should have some glow (alpha > 0)
+        bool okGlow = p.hasGlow && p.glowEnabled && out[2 * W + 2].a > 0.0;
+        check(okGlow, "AC13 glow rendering active");
+        delete[] src;
     }
 
     // --- AC14: motion blur shutter angle clamping & sample count bounds ---
