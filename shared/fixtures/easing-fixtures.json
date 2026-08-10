@@ -2462,5 +2462,954 @@
       "eased": 1,
       "smoothstep": 1
     }
+  ],
+  "spring": [
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.05,
+      "eased": 0.04471337142352218
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.1,
+      "eased": 0.15779932908624686
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.15,
+      "eased": 0.311367960894774
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.2,
+      "eased": 0.48164772108160764
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.25,
+      "eased": 0.6498720184282033
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.3,
+      "eased": 0.8025063499038896
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.35,
+      "eased": 0.9309746869227864
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.4,
+      "eased": 1.0310430988274468
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.45,
+      "eased": 1.1020047991925852
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.5,
+      "eased": 1.1457886096361498
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.55,
+      "eased": 1.1660863795690306
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.6,
+      "eased": 1.1675675510489951
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.65,
+      "eased": 1.1552233538110523
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.7,
+      "eased": 1.1338607723204759
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.75,
+      "eased": 1.1077484151604249
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.8,
+      "eased": 1.080403082439732
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.85,
+      "eased": 1.0544970284590112
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.9,
+      "eased": 1.0318611707619219
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 0.95,
+      "eased": 1.013558109113399
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 0.5,
+      "springInitialVelocity": 0,
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.05,
+      "eased": 0.04081458268856902
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.1,
+      "eased": 0.13267154850556373
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.15,
+      "eased": 0.24513203237413966
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.2,
+      "eased": 0.36045974276267956
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.25,
+      "eased": 0.46898418156817573
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.3,
+      "eased": 0.5660407334264309
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.35,
+      "eased": 0.6499743986808852
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.4,
+      "eased": 0.7208560616721873
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.45,
+      "eased": 0.7796721932341972
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.5,
+      "eased": 0.8278260193187185
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.55,
+      "eased": 0.8668411095063725
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.6,
+      "eased": 0.898194498106132
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.65,
+      "eased": 0.9232310385588778
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.7,
+      "eased": 0.94312731979521
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.75,
+      "eased": 0.9588846459624927
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.8,
+      "eased": 0.971338031365727
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.85,
+      "eased": 0.981173085557608
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.9,
+      "eased": 0.9889458804751207
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 0.95,
+      "eased": 0.9951029644651455
+    },
+    {
+      "springFrequency": 1,
+      "springDamping": 1.5,
+      "springInitialVelocity": 0,
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.05,
+      "eased": 0.2626433621961853
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.1,
+      "eased": 0.7181395237729328
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.15,
+      "eased": 1.1710920863635297
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.2,
+      "eased": 1.4703871709026501
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.25,
+      "eased": 1.5503925284746891
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.3,
+      "eased": 1.4341286616527233
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.35,
+      "eased": 1.2057919289722336
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.4,
+      "eased": 0.9687211894320785
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.45,
+      "eased": 0.8062400595997454
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.5,
+      "eased": 0.7579616210544124
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.55,
+      "eased": 0.8161226273507246
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.6,
+      "eased": 0.93873416402651
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.65,
+      "eased": 1.0713698445588262
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.7,
+      "eased": 1.1683128368124647
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.75,
+      "eased": 1.2060616037362923
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.8,
+      "eased": 1.1863308094621472
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.85,
+      "eased": 1.1298683206380318
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.9,
+      "eased": 1.0652176287622843
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 0.95,
+      "eased": 1.0173445806970367
+    },
+    {
+      "springFrequency": 2,
+      "springDamping": 0.2,
+      "springInitialVelocity": 2,
+      "progress": 1,
+      "eased": 1
+    }
+  ],
+  "bounce": [
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.05,
+      "eased": 0.018906250000000003
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.1,
+      "eased": 0.07562500000000001
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.15,
+      "eased": 0.17015624999999998
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.2,
+      "eased": 0.30250000000000005
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.25,
+      "eased": 0.47265625
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.3,
+      "eased": 0.6806249999999999
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.35,
+      "eased": 0.9264062499999999
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.4,
+      "eased": 0.8199999999999998
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.45,
+      "eased": 0.6378124999999999
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.5,
+      "eased": 0.53125
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.55,
+      "eased": 0.5003124999999999
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.6,
+      "eased": 0.5449999999999999
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.65,
+      "eased": 0.6653125000000001
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.7,
+      "eased": 0.8612499999999996
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.75,
+      "eased": 0.890625
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.8,
+      "eased": 0.7599999999999999
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.85,
+      "eased": 0.7806249999999999
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.9,
+      "eased": 0.9525000000000001
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 0.95,
+      "eased": 0.87625
+    },
+    {
+      "bounceCount": 3,
+      "bounceHeightDecay": 0.5,
+      "bounceTimeDecay": 0.5,
+      "bounceHangTime": 0,
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.05,
+      "eased": 0.01354747012096001
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.1,
+      "eased": 0.05418988048384004
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.15,
+      "eased": 0.12192723108864005
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.2,
+      "eased": 0.21675952193536016
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.25,
+      "eased": 0.3386867530240002
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.3,
+      "eased": 0.4877089243545602
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.35,
+      "eased": 0.6638260359270401
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.4,
+      "eased": 0.8670380877414406
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.45,
+      "eased": 0.9329244246207997
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.5,
+      "eased": 0.8044866476799998
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.55,
+      "eased": 0.7268518836927998
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.6,
+      "eased": 0.7000201326591999
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.65,
+      "eased": 0.7239913945792001
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.7,
+      "eased": 0.7987656694528001
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.75,
+      "eased": 0.9243429572800004
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.8,
+      "eased": 0.9435593088639996
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.85,
+      "eased": 0.9112282221160001
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.9,
+      "eased": 0.9741527846560003
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 0.95,
+      "eased": 0.9779772184075001
+    },
+    {
+      "bounceCount": 6,
+      "bounceHeightDecay": 0.3,
+      "bounceTimeDecay": 0.4,
+      "bounceHangTime": 0,
+      "progress": 1,
+      "eased": 1
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0,
+      "eased": 0
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.05,
+      "eased": 0.028561000000000003
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.1,
+      "eased": 0.11424400000000001
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.15,
+      "eased": 0.257049
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.2,
+      "eased": 0.45697600000000005
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.25,
+      "eased": 0.7140249999999999
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.3,
+      "eased": 0.96832
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.35,
+      "eased": 0.6363902040816328
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.4,
+      "eased": 0.39772081632653045
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.45,
+      "eased": 0.2523118367346938
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.5,
+      "eased": 0.20016326530612238
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.55,
+      "eased": 0.24127510204081626
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.6,
+      "eased": 0.37564734693877555
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.65,
+      "eased": 0.6032800000000001
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.7,
+      "eased": 0.9241730612244893
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.75,
+      "eased": 0.6959266972094955
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.8,
+      "eased": 0.45221757600999546
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.85,
+      "eased": 0.360770345689296
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.9,
+      "eased": 0.4215850062473968
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 0.95,
+      "eased": 0.6346615576842982
+    },
+    {
+      "bounceCount": 2,
+      "bounceHeightDecay": 0.8,
+      "bounceTimeDecay": 0.7,
+      "bounceHangTime": 0,
+      "progress": 1,
+      "eased": 1
+    }
   ]
 }
