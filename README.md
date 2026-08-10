@@ -37,7 +37,7 @@ Not currently implemented:
 ## Development status
 
 Adobe host integration must not be considered release-ready until the corrected
-25-parameter native effect has been rebuilt with the Adobe SDK and the release
+70-parameter native effect has been rebuilt with the Adobe SDK and the release
 checklist has been run inside Premiere Pro 26.3.
 
 ## Clean-room development
