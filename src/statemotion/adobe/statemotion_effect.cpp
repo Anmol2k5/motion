@@ -267,7 +267,7 @@ smIdentityCopy(const PF_EffectWorld *src, PF_EffectWorld *dst)
 }
 
 struct FrameParams {
-    statemotion::native::CanonicalState A, B;
+    statemotion::TransformState A, B;
     
     int modeIdx, alignIdx, easingIdx;
     double dur, delay, manual;
@@ -290,7 +290,7 @@ struct FrameParams {
 };
 
 static void
-ApplyCropAndShadow(const FrameParams& fp, double t, statemotion::raster::RendererTransformState& rt)
+ApplyCropAndShadow(const FrameParams& fp, double t, statemotion::RendererTransformState& rt)
 {
     rt.cropLeft      = statemotion::native::percentToFraction(fp.cropLA  + (fp.cropLB  - fp.cropLA)  * t);
     rt.cropRight     = statemotion::native::percentToFraction(fp.cropRA  + (fp.cropRB  - fp.cropRA)  * t);
@@ -304,7 +304,7 @@ ApplyCropAndShadow(const FrameParams& fp, double t, statemotion::raster::Rendere
 }
 
 static void
-ApplyStrokeAndGlow(const FrameParams& fp, double t, double timeSeconds, statemotion::raster::RendererTransformState& rt)
+ApplyStrokeAndGlow(const FrameParams& fp, double t, double timeSeconds, statemotion::RendererTransformState& rt)
 {
     rt.strokeEnabled = (t < 0.5) ? fp.strokeEnA : fp.strokeEnB;
     rt.strokeWidth = fp.strokeWidthA + (fp.strokeWidthB - fp.strokeWidthA) * t;
