@@ -1,116 +1,110 @@
-# StateMotion Phase 0.1 Comprehensive Audit Report
+# Audit Report — StateMotion
 
-**Date:** August 5, 2026  
-**Repository:** StateMotion (`e:\motion`)  
-**Target Milestone:** v0.1 Private Alpha Candidate  
+**Audit date:** 2026-10-10  
+**Repository:** Anmol2k5/motion, default branch `main`  
+**Scope:** GitHub-sourced code and documentation review; attempted terminal clone.  
+**Evidence distinction:** CONFIRMED = directly observed in current source; RECORDED = repository's previous operator/test logs; NOT VERIFIED = cannot validate in current runtime.
 
----
+## 1. Summary
 
-## 1. Executive Summary
+**Verdict: Not ready for public launch; private alpha also blocked pending host certification.** StateMotion is a C++17 native effect and TypeScript/UXP panel for Premiere Pro 26.3. Its host-independent renderer, generated 70-parameter contract, easing, presets, inspector, and tests are implemented (README.md:1-45; src/statemotion/panel/package.json:1-20). This is beyond a prototype but **not an end-to-end verified plugin**.
 
-A comprehensive code, documentation, and test suite audit was performed across the StateMotion project. StateMotion is an independently developed motion-transition effect and UXP control panel for Adobe Premiere Pro.
+The most serious recorded blocker is Premiere's `StateMotion (AEVideoFilter:11)` low-level render exception. A depth/stride adapter fix was compiled and unit tested, but the release ledger expressly says a fresh in-host operator retest is pending (docs/releases/v0.1-alpha-host-status.md, 'First live Premiere native render test' and 'Native render BLOCKER — root cause + fix'). No current operator evidence closes the gate. Major additional source-confirmed quality problems include swallowed parameter-write errors, possible non-atomic parameter writes, silent selection refresh failure, and diagnostics that always report placeholder statuses.
 
-While the overall code architecture is exceptionally modular, clean, and well-separated between host-independent math/render engines and Adobe/UXP adapters, the audit uncovered **consequential documentation drift, test suite crashes, missing UI controls, and fragile error handling** that must be resolved before host certification.
+The repository already contains an **outdated** August 5 audit. It incorrectly describes currently repaired issues: registration test now expects 70 entries (src/statemotion/adobe/statemotion_registration_test.cpp:29-35), preset listing catches per-file failures (src/statemotion/panel/src/domain/presetStorage.ts:101-111), spring/bounce controls exist (src/statemotion/panel/src/ui/inspector.ts:185-260), and README already lists the renderer features (README.md:6-34). These must **not** be treated as open bugs.
 
----
+No honest numeric percent-complete estimate is possible without measuring end-to-end Adobe host functionality; do not substitute source-code volume for feature completion.
 
-## 2. Key Findings & Status Discrepancies
+## 2. Build/Run/Test Results
 
-### 2.1 Stale Documentation vs. Actual Code & Commit History
-
-* **Finding:** The root [README.md](file:///e:/motion/README.md#L26-L35) claims that several key features are **"Not currently implemented"**:
-  * Crop and rounded masks
-  * Stroke, glow, and shadow
-  * Motion blur
-* **Actual Reality:**
-  * **Crop & Corner Radius:** Fully implemented in [transform_render.cpp](file:///e:/motion/src/statemotion/renderer/transform_render.cpp) using SDF rounded rectangle masking, verified by AC9 and AC10 tests in [transform_render_test.cpp](file:///e:/motion/src/statemotion/renderer/transform_render_test.cpp#L238-L275).
-  * **Drop Shadow:** Fully implemented in [transform_render.cpp](file:///e:/motion/src/statemotion/renderer/transform_render.cpp) via Porter-Duff alpha compositing, verified by AC11 tests in [transform_render_test.cpp](file:///e:/motion/src/statemotion/renderer/transform_render_test.cpp#L277-L297).
-  * **Stroke & Glow:** Defined in [transform_render.h](file:///e:/motion/src/statemotion/renderer/transform_render.h#L50-L59), rasterized in `transform_render.cpp`, and read/interpolated per-parameter in native Adobe effect rendering [statemotion_effect.cpp](file:///e:/motion/src/statemotion/adobe/statemotion_effect.cpp#L345-L362).
-  * **Motion Blur:** Multi-sample accumulation loop implemented in [statemotion_effect.cpp](file:///e:/motion/src/statemotion/adobe/statemotion_effect.cpp#L365-L370) and lines 453–533.
-  * **Commit History:** Merge commits explicitly document these additions (`Implement Motion Blur`, `Implement Spring and Bounce Easing`, `feat: implement stroke and glow in renderer and UXP panel`, `feat(native): wire crop, shadow, and spring/bounce into Premiere Render() path`).
-
-### 2.2 Test Coverage Gaps (Stroke, Glow, Motion Blur)
-
-* **Finding:** In [transform_render_test.cpp](file:///e:/motion/src/statemotion/renderer/transform_render_test.cpp), test assertions exist for AC1–AC11 (Identity, Translation, Scale, Rotation, Opacity, Off-screen, Premultiplied compositing, SafeScale, Degenerate scale, Overshoot, Rerender determinism, Monotonic easing, Crop, Corner radius, Drop shadow).
-* **Gap:** **Stroke, Glow, and Motion Blur have ZERO dedicated unit test cases** (AC12/AC13/AC14 are missing).
-* **Impact:** Regressions in stroke gradient phase, glow radius calculation, or motion blur temporal sample offsets could occur undetected during refactoring.
-
-### 2.3 C++ Test Suite Segfault (Buffer Overflow)
-
-* **Location:** [statemotion_registration_test.cpp](file:///e:/motion/src/statemotion/adobe/statemotion_registration_test.cpp#L29-L55)
-* **Root Cause:** The test oracle array `kExpected` is hardcoded with 25 elements. However, [parameter_ids.hpp](file:///e:/motion/shared/generated/parameter_ids.hpp#L36) was updated to 70 parameters (`kParameterCount = 70`, Binding Revision 4).
-* **Failure Mechanism:** The test loop `for (int i = 0; i < n; ++i)` (where `n` = 70) reads `kExpected[i]`, causing a global buffer overflow out-of-bounds access on indices 25–69 and crashing with a segfault under AddressSanitizer.
-
-### 2.4 Missing Spring / Bounce UI Controls & Shared Fixture Coverage
-
-* **Location:** [inspector.ts](file:///e:/motion/src/statemotion/panel/src/ui/inspector.ts#L184-L193)
-* **Issue:** While Spring and Bounce easing math are fully implemented in both C++ and TypeScript, the UXP panel inspector renders only static placeholder labels (`"Spring Settings..."` and `"Bounce Settings..."`).
-* **Impact:** Users cannot modify the 7 spring/bounce parameters (`transition.springFrequency`, `transition.springDamping`, `transition.springInitialVelocity`, `transition.bounceCount`, `transition.bounceHeightDecay`, `transition.bounceTimeDecay`, `transition.bounceHangTime`) through the panel UI. Additionally, spring/bounce lack shared parity fixture validation across C++ and TS.
-
-### 2.5 Unhandled Error Vulnerability in Preset Loading
-
-* **Location:** [presetStorage.ts](file:///e:/motion/src/statemotion/panel/src/domain/presetStorage.ts#L99-L110) (`PresetRepository.list()`)
-* **Issue:** `list()` loops through files in `bundled` and `user` directories and calls `deserializePreset(await this.fs.readFile(f))` without wrapping per-file reads in a `try...catch` block.
-* **Impact:** A single corrupted or malformed `.stmpreset` file in the user's directory will throw an unhandled exception, causing `list()` to fail completely and blanking out the panel preset view.
-
-### 2.6 Native Render Status & Host Status Ledger Debt
-
-* **Location:** [v0.1-alpha-host-status.md](file:///e:/motion/docs/releases/v0.1-alpha-host-status.md#L206-L210)
-* **Issue:** The ledger records a critical native-render low-level exception (`AEVideoFilter:11`) that occurred during live Premiere Pro testing. The issue was root-caused (8-bit host world misread as 16-byte float pixels) and fixed via `statemotion_world_pixels.hpp`.
-* **Debt:** The ledger remains stuck at **"awaiting operator re-test"**, and parameter count in the contract documentation section (line 38) still says 43 instead of 70. Real Premiere Pro 2026 verification remains pending.
-
----
-
-## 3. Component Verification Summary
-
-| Component | Status | Details |
+| Check | Result | Evidence |
 |---|---|---|
-| **TypeScript Panel** | ✅ SOLID | Clean typecheck, 24/24 test suites pass, `npm run build` succeeds |
-| **C++ Progress Engine** | ✅ SOLID | Evaluators and easing math build and pass |
-| **C++ World Pixels Adapter** | ✅ SOLID | 12/12 SDK-free C++ test cases pass |
-| **C++ Renderer Suite** | ⚠️ GAPS | Passes AC1–AC11; missing stroke, glow, and motion blur test cases |
-| **C++ Registration Suite** | ❌ FAILING | Segfaults due to 25 vs 70 parameter count mismatch in oracle array |
-| **UXP Inspector UI** | ⚠️ INCOMPLETE | Spring & Bounce controls stubbed out as static text labels |
-| **Preset Storage** | ⚠️ FRAGILE | Missing per-file exception handling in `PresetRepository.list()` |
-| **Documentation** | ❌ DRIFTED | README undersells built features; host status ledger outdated |
+| GitHub repository/file access | PASS | GitHub connector retrieved repository, README, manifest, TypeScript and C++ sources. |
+| Terminal clone | **BLOCKED** | Executed `git clone --depth 1 https://github.com/Anmol2k5/motion.git /mnt/data/motion`; output: `fatal: unable to access 'https://github.com/Anmol2k5/motion.git/': Could not resolve host: github.com`. |
+| Fresh `npm ci`, typecheck, tests, panel build | **NOT RUN** | No local checkout; commands defined at src/statemotion/panel/package.json:8-15. Existing August audit's green outcome is historical, not a fresh result. |
+| Fresh C++ tests / SDK native build | **NOT RUN** | No local checkout, Adobe SDK/Premiere host inaccessible in the current runtime. |
+| Actual Premiere plugin load/render, panel UX and presets | **NOT VERIFIED** | docs/releases/v0.1-alpha-host-status.md: summary and final 'awaiting operator re-test' status. |
+| GitHub Actions CI | NOT ASSESSED | No fresh workflow run performed. |
+| Linter | NOT CONFIGURED in inspected panel package scripts | src/statemotion/panel/package.json:8-15 lists build/typecheck/test but no lint task. |
+
+**Commands required to complete the verification on a Windows workstation with Adobe SDK, VS/MSVC and Premiere Pro 26.3:** `node tools/generate-contract.js --check`; `node tools/generate-contract.test.js`; `cd src/statemotion/panel && npm ci && npm run typecheck && npm test && npm run build`; then run the C++ suites, build the AEX from src/statemotion/adobe/statemotion_effect.sln, install the AEX and load the panel via UXP Developer Tool. Record version, full stdout/stderr, native hash, and video/screenshots of the host test checklist (docs/releases/v0.1-alpha-test-checklist.md). Historical test counts from docs cannot replace these runs.
+
+## 3. Critical Issues (breaks core functionality)
+
+- [ ] **BLOCKER — In-host render cannot be certified** — docs/releases/v0.1-alpha-host-status.md, 'First live Premiere native render test' and 'Native render BLOCKER' sections. The operator observed AEVideoFilter:11; current patch has only build and unit-test confirmation. **Fix:** rebuild the current AEX, verify installed artifact hash, retest 8-bit and 16-bit video, progress at 0/50/100, resize, crop, alpha, and timeline scrubbing in Premiere; retain host artifacts and close gate only on reproducible evidence.
+- [ ] **HIGH — Parameter updates silently lose failures** — src/statemotion/panel/src/ui/inspector.ts:267-269. `writeLogical(...).catch(() => {})` discards errors for virtually all inspector controls. **Fix:** return/await the promise, present inline error and retry state, revert the optimistic UI value, and record contextual diagnostics.
+- [ ] **HIGH — Failure during multi-property curve updates can leave partial state** — src/statemotion/panel/src/ui/inspector.ts:174-179. Four independent unawaited writes start from one curve callback. **Fix:** host-side group transaction if supported; otherwise deterministic sequential writes with all-or-nothing recovery/reporting, and integration tests for partial failure.
+- [ ] **HIGH — Per-clip bulk actions lack partial-failure UI** — src/statemotion/panel/src/ui/inspector.ts:52-64. Swap/remove loop through supported clips; errors interrupt later clips with no rendered failure summary. **Fix:** disable buttons during work, use per-clip settle/report, render successfully changed vs failed counts, refresh in `finally`.
+
+## 4. Broken / Non-Working Features
+
+- [ ] **HIGH — Host-dependent features not certified** — docs/releases/v0.1-alpha-host-status.md: summary ledger. Actual UXP panel loading, parameter persistence, safe writes, preset apply, undo, and multi-selection remain marked NOT YET VERIFIED; treat as unproven, not as broken. **Fix:** complete corresponding host checklist and attach proofs.
+- [ ] **MEDIUM — Diagnostics not live** — src/statemotion/panel/src/main.ts:64-69. `contractStatus: 'unknown'` and `lastOperation: 'none'` are constant, not collected from the adapter. **Fix:** wire a typed telemetry/last-operation state with explicit unknown/error values; test transitions.
+- [ ] **MEDIUM — Tab switch can leave stale screen or unhandled rejection** — src/statemotion/panel/src/main.ts:84-89. `refreshSelection().then(...render())` has no rejection handler or stale-request cancellation; rapid switches can render an old tab. **Fix:** monotonic selection request ID or AbortController where supported, `try/catch`, loading state, and stale-result guard.
+- [ ] **MEDIUM — Inspector's Apply button does not await or explain outcome** — src/statemotion/panel/src/ui/inspector.ts:39-43. Callback fires an asynchronous apply without capturing result/rejection. **Fix:** async handler, disabled/loading state and success/partial-failure feedback.
+- [ ] **MEDIUM — Read failure is disguised as default values** — src/statemotion/panel/src/ui/inspector.ts:95-101. `readConfig` returns an empty typed config on any exception, risking user confidence in fictitious defaults. **Fix:** explicit error state and disable edits until a successful read.
+
+## 5. Hardcoded Values & Mock Data
+
+- [ ] src/statemotion/panel/src/main.ts:24 — `statemotion-panel-data` storage root. Constant may be intentional but should be versioned/configurable for migrations and test isolation.
+- [ ] src/statemotion/panel/src/main.ts:66-69 — diagnostic status and last-operation placeholders. Replace with live adapter observations.
+- [ ] src/statemotion/panel/src/ui/inspector.ts:107-110 — duplicate static mode/alignment/easing labels. Generate/validate against shared contract to prevent index drift.
+- [ ] src/statemotion/panel/src/ui/inspector.ts:185-192 — hardcoded fallback spring/bounce parameters. Match schema defaults automatically and verify native parity.
+- [ ] src/statemotion/panel/src/ui/inspector.ts:193,221 — inline `gap:4px` layout styles. Move to CSS spacing tokens for consistent UI.
+- [ ] src/statemotion/panel/manifest.json:7-19 — fixed Premiere minimum version and default panel width/height, both intentional release constraints; validate rather than automatically removing.
+- [ ] src/statemotion/panel/src/ui/styles.css:2-14 — centralized hardcoded theme values; acceptable design tokens, not mock data.
+- [ ] src/statemotion/panel/src/domain/presetStorage.ts:142,162 — timestamp-based imported/duplicate preset IDs. Improve collision resistance with UUIDs; clock resolution is not uniqueness.
+- [ ] docs/releases/v0.1-alpha-host-status.md, 'Certification milestone attempt' — stale historic '43 params' claim within a July record; label explicitly historical and add an updated result instead of rewriting the historical observation.
+- [ ] Previous AUDIT_REPORT.md: references to `file:///e:/motion` — non-portable report links. Use repository-relative references instead.
+
+## 6. TODO/FIXME Inventory
+
+This audit could not execute a full-repository grep because the clone failed. No defensible exhaustive TODO/FIXME inventory can be claimed. **Required:** `git grep -nEI 'TODO|FIXME|HACK|XXX|not implemented|placeholder|mock|localhost|127\\.0\\.0\\.1'` from checkout; exclude generated fixture data only after reviewing matches. Record every relevant file:line and disposition. Historical plans and reviews in `.superpowers/` and `docs/` must be labeled as historical if no longer actionable.
+
+## 7. Security & Config Issues
+
+- [ ] **MEDIUM — Silent input/storage loss** — src/statemotion/panel/src/domain/presetStorage.ts:58-70. Malformed `library.json` resets metadata then overwrites the file on init, potentially destroying recoverable favorites/collections. **Fix:** preserve invalid original under timestamped backup, display recovery warning, validate shape before replacing.
+- [ ] **MEDIUM — Invalid individual presets are silently skipped** — src/statemotion/panel/src/domain/presetStorage.ts:101-110. Defensive behavior fixes earlier crash, but gives no indication of lost presets. **Fix:** collect filenames/errors (sanitized, no content leakage) and show a non-blocking 'N presets could not be loaded' message.
+- [ ] **MEDIUM — Duplicate ID race/collision** — src/statemotion/panel/src/domain/presetStorage.ts:140-145,159-165. Timestamp-based names can collide and no exists check precedes these writes. **Fix:** `crypto.randomUUID()` where UXP supports it or an injected secure ID generator; retry collisions and do not overwrite.
+- [ ] **LOW — Secret ignore patterns present** — .gitignore:34-41 excludes `.env`, `*.pem`, `*.key`, secrets and credentials dirs. This is necessary but **not proof of no committed secrets**. Perform `gitleaks detect` or `trufflehog git` against history plus repository grep.
+- [ ] **LOW — Narrow UXP permissions** — src/statemotion/panel/manifest.json:9-13 declares plugin-local filesystem, no network, no code generation. Positive least-privilege configuration; verify runtime permissions in Premiere rather than assuming they work.
+
+## 8. UI/UX Issues & Fixes
+
+UI review here is **source-based only**, not a pixel-perfect visual inspection in Adobe's host.
+
+- [ ] **HIGH — No meaningful write failure state** — inspector.ts:267-269. Add per-control pending indicator (150ms delay before spinner), error label beneath row, and transient retry affordance; maintain previous value until write confirmed.
+- [ ] **MEDIUM — 11px/10px labels reduce legibility** — src/statemotion/panel/src/ui/styles.css:34,82,111,161. Increase primary labels to 12–13px, tertiary minimum 11px, maintain line-height ~1.4; validate host font rendering at 100%/150% OS scaling.
+- [ ] **MEDIUM — Compact target sizing** — src/statemotion/panel/src/ui/styles.css:147-165. Enforce at least 32px button height and 36px on primary actions, 8px minimum inter-control spacing; verify 320px panel width and narrow resizes.
+- [ ] **MEDIUM — Tab loading/stale result** — src/statemotion/panel/src/main.ts:84-89. Render skeleton immediately (or after 150ms), lock result to active tab identity, report failures inline. Keep transitions 120–160ms and disable motion for reduced-motion settings.
+- [ ] **MEDIUM — Inconsistent mixed inline styling** — src/statemotion/panel/src/ui/inspector.ts:83,170,193,221. Use CSS tokens `--space-1:4px`, `--space-2:8px`, `--space-3:12px`, `--space-4:16px`, 6px control radius.
+- [ ] **MEDIUM — Empty selection display exists but error distinction is missing** — src/statemotion/panel/src/ui/inspector.ts:20-32,95-101. Keep current clear empty-state messages, but create a separate host-read-error state to prevent 'nothing selected' from hiding API errors.
+- [ ] **LOW — Accessibility needs host testing** — src/statemotion/panel/src/main.ts:21,85-93. Buttons have tablist/tab roles but no demonstrated arrow-key roving focus or `aria-controls`. Implement keyboard tabs, visible focus and screen-reader status announcements after confirming UXP DOM behavior.
+
+## 9. Prioritized Fix Plan
+
+| Priority | Work | Effort | Release gate |
+|---|---|---|---|
+| Critical | Rebuild/reinstall AEX, capture real Premiere render proof for all smoke cases | Rework | Required |
+| Critical | Verify native/panel contract, persistence and preset write paths in Premiere | Rework | Required |
+| High | Await parameter writes; show failures; prevent partial writes | Moderate | Required |
+| High | Add bulk apply/remove/swap failure handling and targeted regression tests | Moderate | Required |
+| High | Turn unknown diagnostics into real tracked state | Moderate | Recommended |
+| Medium | Fix tab race/rejected promise and read error fallback | Quick–moderate | Recommended |
+| Medium | Preserve malformed library metadata, warn on skipped presets | Moderate | Recommended |
+| Medium | Audit preset ID generation/migration and collision prevention | Quick | Recommended |
+| Medium | Fresh `npm ci`/typecheck/test/build, C++ compile and lint/security scan | Moderate | Required |
+| Low | Panel typography, keyboard tabs, spacing, responsiveness | Moderate | Recommended |
+| Low | CI automation, add ESLint and cross-platform build instructions | Moderate | Recommended |
+| Low | Correct historical audit links and reconcile status documents | Quick | Recommended |
+
+## 10. Nice-to-haves
+
+- Visual regression screenshots under Premiere UXP at 320/420/600px widths and 100/150/200% DPI, with explicit approval baselines (manifest.json:15-19).
+- A dedicated scripted release verifier that logs contract check, TS tests, C++ tests, native DLL/AEX hash, UXP bundle manifest, and host operator sign-off (README.md:47-67; docs/releases/v0.1-alpha-test-checklist.md).
+- Test injection/fault scenarios for host write failures, rejected selection reads and corrupted preset metadata (inspector.ts:267-269; main.ts:84-89; presetStorage.ts:58-70).
+- Automated license/dependency audit and historical secret scan; report clean findings only when scanners actually execute.
+- Operator-recorded CPU render benchmarks on 1080p/4K clips with crop/shadow/glow/blur enabled, to establish performance budgets before optimizing.
 
 ---
-
-## 4. Prioritized Fix Plan
-
-```mermaid
-flowchart TD
-    A[Phase 1: Critical Fixes] --> B[Fix statemotion_registration_test.cpp Oracle]
-    A --> C[Add Try-Catch to PresetRepository.list]
-    
-    D[Phase 2: UI & Feature Completeness] --> E[Build UI Sliders for 7 Spring/Bounce Params]
-    D --> F[Add Unit Tests for Stroke, Glow, Motion Blur in transform_render_test.cpp]
-    
-    G[Phase 3: Documentation & Verification] --> H[Update README.md Status & Feature List]
-    G --> I[Update v0.1-alpha-host-status.md Ledger to 70 Params & Request Re-test]
-```
-
-### Phase 1: Critical Stability & Test Fixes (Immediate)
-
-1. **Fix `statemotion_registration_test.cpp` Segfault:**
-   * Update `kExpected` array and assertions to match the current 70-parameter contract in `parameter_ids.hpp`.
-2. **Add Per-File Resilience in `PresetRepository.list()`:**
-   * Wrap individual file deserialization in `try...catch`. Log/skip malformed preset files so valid presets still load cleanly.
-
-### Phase 2: UI Completeness & Test Coverage Expansion
-
-3. **Implement Spring/Bounce UI Controls in `inspector.ts`:**
-   * Replace placeholder rows with interactive number inputs/sliders for all 7 spring and bounce parameters.
-4. **Add Unit Tests for Stroke, Glow, and Motion Blur:**
-   * Add AC12 (Stroke rendering & gradient phase), AC13 (Glow intensity & radius), and AC14 (Motion blur shutter angle multi-sampling) to `transform_render_test.cpp`.
-
-### Phase 3: Documentation Sync & Host Certification
-
-5. **Update `README.md` Status:**
-   * Move Crop, Corner Radius, Drop Shadow, Stroke, Glow, and Motion Blur from "Not currently implemented" to "Currently implemented".
-6. **Update Host Status Ledger (`v0.1-alpha-host-status.md`):**
-   * Sync parameter count from 43 to 70.
-   * Document native render fix status and set up operator re-test checklist for Premiere Pro 2026.
-
----
-*Report generated automatically during StateMotion code audit.*
+**Audit integrity note:** Source-backed issues are confirmed at cited file lines; no panel build, native compile, fresh unit tests, real Premiere run, exhaustive repository grep, or visual render was executed in this environment. Treat this as a **source audit + runtime certification plan**, not as a completed end-to-end functional verification.
