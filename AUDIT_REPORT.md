@@ -1,17 +1,17 @@
 # Audit Report — StateMotion
 
-**Audit date:** 2026-10-10  
+**Audit date:** 2026-10-16 (updated source verification)  
 **Repository:** Anmol2k5/motion, default branch `main`  
-**Scope:** GitHub-sourced code and documentation review; attempted terminal clone.  
+**Scope:** GitHub-sourced code and documentation review; attempted terminal clone; current GitHub contents API inspection.  
 **Evidence distinction:** CONFIRMED = directly observed in current source; RECORDED = repository's previous operator/test logs; NOT VERIFIED = cannot validate in current runtime.
 
 ## 1. Summary
 
 **Verdict: Not ready for public launch; private alpha also blocked pending host certification.** StateMotion is a C++17 native effect and TypeScript/UXP panel for Premiere Pro 26.3. Its host-independent renderer, generated 70-parameter contract, easing, presets, inspector, and tests are implemented (README.md:1-45; src/statemotion/panel/package.json:1-20). This is beyond a prototype but **not an end-to-end verified plugin**.
 
-The most serious recorded blocker is Premiere's `StateMotion (AEVideoFilter:11)` low-level render exception. A depth/stride adapter fix was compiled and unit tested, but the release ledger expressly says a fresh in-host operator retest is pending (docs/releases/v0.1-alpha-host-status.md, 'First live Premiere native render test' and 'Native render BLOCKER — root cause + fix'). No current operator evidence closes the gate. Major additional source-confirmed quality problems include swallowed parameter-write errors, possible non-atomic parameter writes, silent selection refresh failure, and diagnostics that always report placeholder statuses.
+The most serious recorded blocker is Premiere's `StateMotion (AEVideoFilter:11)` low-level render exception. A depth/stride adapter fix was compiled and unit tested, but the release ledger expressly says a fresh in-host operator retest is pending (docs/releases/v0.1-alpha-host-status.md, 'First live Premiere native render test' and 'Native render BLOCKER — root cause + fix'). No current operator evidence in the inspected ledger closes the gate. Major additional source-confirmed quality problems include swallowed parameter-write errors, possible non-atomic parameter writes, silent selection refresh failure, and diagnostics that always report placeholder statuses.
 
-The repository already contains an **outdated** August 5 audit. It incorrectly describes currently repaired issues: registration test now expects 70 entries (src/statemotion/adobe/statemotion_registration_test.cpp:29-35), preset listing catches per-file failures (src/statemotion/panel/src/domain/presetStorage.ts:101-111), spring/bounce controls exist (src/statemotion/panel/src/ui/inspector.ts:185-260), and README already lists the renderer features (README.md:6-34). These must **not** be treated as open bugs.
+The repository previously contained an **outdated** August 5 audit. It incorrectly describes currently repaired issues: registration test now expects 70 entries (src/statemotion/adobe/statemotion_registration_test.cpp:29-35), preset listing catches per-file failures (src/statemotion/panel/src/domain/presetStorage.ts:101-111), spring/bounce controls exist (src/statemotion/panel/src/ui/inspector.ts:185-260), and README already lists the renderer features (README.md:6-34). These must **not** be treated as open bugs.
 
 No honest numeric percent-complete estimate is possible without measuring end-to-end Adobe host functionality; do not substitute source-code volume for feature completion.
 
@@ -20,14 +20,17 @@ No honest numeric percent-complete estimate is possible without measuring end-to
 | Check | Result | Evidence |
 |---|---|---|
 | GitHub repository/file access | PASS | GitHub connector retrieved repository, README, manifest, TypeScript and C++ sources. |
-| Terminal clone | **BLOCKED** | Executed `git clone --depth 1 https://github.com/Anmol2k5/motion.git /mnt/data/motion`; output: `fatal: unable to access 'https://github.com/Anmol2k5/motion.git/': Could not resolve host: github.com`. |
+| Terminal clone | **BLOCKED (reproduced October 16)** | Executed `git clone -q https://github.com/Anmol2k5/motion.git /mnt/data/motion-audit`; exact terminal output: `fatal: unable to access 'https://github.com/Anmol2k5/motion.git/': Could not resolve host: github.com`. Exit code 128. |
 | Fresh `npm ci`, typecheck, tests, panel build | **NOT RUN** | No local checkout; commands defined at src/statemotion/panel/package.json:8-15. Existing August audit's green outcome is historical, not a fresh result. |
 | Fresh C++ tests / SDK native build | **NOT RUN** | No local checkout, Adobe SDK/Premiere host inaccessible in the current runtime. |
 | Actual Premiere plugin load/render, panel UX and presets | **NOT VERIFIED** | docs/releases/v0.1-alpha-host-status.md: summary and final 'awaiting operator re-test' status. |
 | GitHub Actions CI | NOT ASSESSED | No fresh workflow run performed. |
+| Local verification tool availability | PASS | Executed `node --version` → `v22.16.0`; `npm --version` → `10.9.2`; `g++ --version` → `g++ (Debian 14.2.0-19)`; `git --version` → `2.47.3`. **Availability of tools is not proof of build success.** |
 | Linter | NOT CONFIGURED in inspected panel package scripts | src/statemotion/panel/package.json:8-15 lists build/typecheck/test but no lint task. |
 
 **Commands required to complete the verification on a Windows workstation with Adobe SDK, VS/MSVC and Premiere Pro 26.3:** `node tools/generate-contract.js --check`; `node tools/generate-contract.test.js`; `cd src/statemotion/panel && npm ci && npm run typecheck && npm test && npm run build`; then run the C++ suites, build the AEX from src/statemotion/adobe/statemotion_effect.sln, install the AEX and load the panel via UXP Developer Tool. Record version, full stdout/stderr, native hash, and video/screenshots of the host test checklist (docs/releases/v0.1-alpha-test-checklist.md). Historical test counts from docs cannot replace these runs.
+
+**Latest source re-check:** Confirmed the silent `writeLogical` rejection handler at `src/statemotion/panel/src/ui/inspector.ts:267-269`, the non-awaited apply/swap/remove UI actions at `:39-64`, stale tab callback at `src/statemotion/panel/src/main.ts:84-89`, destructive malformed metadata fallback at `src/statemotion/panel/src/domain/presetStorage.ts:58-70`, and timestamp-based preset IDs at `:142,162`. The package scripts remain `build`, `typecheck`, `test` without `lint` (`src/statemotion/panel/package.json:8-15`). These are source-confirmed, not runtime reproduced.
 
 ## 3. Critical Issues (breaks core functionality)
 
@@ -59,7 +62,7 @@ No honest numeric percent-complete estimate is possible without measuring end-to
 
 ## 6. TODO/FIXME Inventory
 
-This audit could not execute a full-repository grep because the clone failed. No defensible exhaustive TODO/FIXME inventory can be claimed. **Required:** `git grep -nEI 'TODO|FIXME|HACK|XXX|not implemented|placeholder|mock|localhost|127\\.0\\.0\\.1'` from checkout; exclude generated fixture data only after reviewing matches. Record every relevant file:line and disposition. Historical plans and reviews in `.superpowers/` and `docs/` must be labeled as historical if no longer actionable.
+This audit could not execute a full-repository grep because the clone failed on October 16. No defensible exhaustive TODO/FIXME inventory can be claimed. **Required:** `git grep -nEI 'TODO|FIXME|HACK|XXX|not implemented|placeholder|mock|localhost|127\\.0\\.0\\.1'` from checkout; exclude generated fixture data only after reviewing matches. Record every relevant file:line and disposition. Historical plans and reviews in `.superpowers/` and `docs/` must be labeled as historical if no longer actionable.
 
 ## 7. Security & Config Issues
 
