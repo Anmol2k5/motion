@@ -1,6 +1,6 @@
 // StateMotion native effect - entry point and CPU transform render.
 //
-// Registers the "StateMotion" effect with the permanent match name and its 43
+// Registers the "StateMotion" effect with the permanent match name and its 70
 // parameters (progress, transform, crop, shadow). Render() reads native params
 // via disk-ID adapters, builds canonical A/B states, evaluates progress from
 // clip-local host time, interpolates, converts to renderer units, and
@@ -13,6 +13,7 @@
 #include "statemotion_effect.h"
 #include "statemotion_point_default.hpp"
 #include "statemotion_world_pixels.hpp"
+#include "../renderer/frame_render.hpp"
 
 // Minimal error-propagation macro: run the call and return on the first error.
 #define SM_ERR(x)                    \
@@ -397,140 +398,56 @@ Render(
     };
     dstPix.resize(static_cast<size_t>(W) * H);
 
-    if (!mblurEnabled || mblurSamples <= 1 || mblurAngle <= 0.0) {
-        // Single sample path
-        auto pin = statemotion::host::buildProgressInput(
-            in_data->current_time, in_data->total_time, in_data->time_scale,
-            statemotion::native::modeFromPopup(modeIdx),
-            statemotion::native::alignmentFromPopup(alignIdx),
-            dur, delay, manual,
-            static_cast<statemotion::EasingMode>(easingIdx),
-            {cx1, cy1, cx2, cy2, springFreq, springDamp, springVel, bounceCount, bounceHDecay, bounceTDecay, bounceHang});
-
-        auto pe = statemotion::evaluateProgress(pin);
-        if (!pe.ok) {
-            smIdentityCopy(src, dst);
-            return err;
-        }
-
-        auto canon = statemotion::interpolateCanonical(A, B, pe.result.easedProgress);
-        statemotion::raster::RenderDimensions dims{W, H, SW, SH};
-        auto rt = statemotion::raster::toRendererTransformState(canon, dims);
-
-        const double t = std::clamp(pe.result.easedProgress, 0.0, 1.0);
-        rt.cropLeft      = statemotion::native::percentToFraction(cropLA  + (cropLB  - cropLA)  * t);
-        rt.cropRight     = statemotion::native::percentToFraction(cropRA  + (cropRB  - cropRA)  * t);
-        rt.cropTop       = statemotion::native::percentToFraction(cropTA  + (cropTB  - cropTA)  * t);
-        rt.cropBottom    = statemotion::native::percentToFraction(cropBA  + (cropBB  - cropBA)  * t);
-        rt.cornerRadius  = statemotion::native::percentToFraction(cropCRA + (cropCRB - cropCRA) * t);
-        rt.shadowOpacity = statemotion::native::percentToOpacity( shadOpA + (shadOpB - shadOpA) * t);
-        rt.shadowAngleDeg  = shadAngA + (shadAngB - shadAngA) * t;
-        rt.shadowDistance  = shadDistA + (shadDistB - shadDistA) * t;
-        rt.shadowSoftness  = shadSoftA + (shadSoftB - shadSoftA) * t;
-        rt.strokeEnabled = (t < 0.5) ? strokeEnA : strokeEnB;
-        rt.strokeWidth = strokeWidthA + (strokeWidthB - strokeWidthA) * t;
-        rt.strokeColor1.r = strokeC1A.r + (strokeC1B.r - strokeC1A.r) * t;
-        rt.strokeColor1.g = strokeC1A.g + (strokeC1B.g - strokeC1A.g) * t;
-        rt.strokeColor1.b = strokeC1A.b + (strokeC1B.b - strokeC1A.b) * t;
-        rt.strokeColor1.a = strokeC1A.a + (strokeC1B.a - strokeC1A.a) * t;
-        rt.strokeColor2.r = strokeC2A.r + (strokeC2B.r - strokeC2A.r) * t;
-        rt.strokeColor2.g = strokeC2A.g + (strokeC2B.g - strokeC2A.g) * t;
-        rt.strokeColor2.b = strokeC2A.b + (strokeC2B.b - strokeC2A.b) * t;
-        rt.strokeColor2.a = strokeC2A.a + (strokeC2B.a - strokeC2A.a) * t;
-        rt.strokeGradientAngleDeg = strokeAngA + (strokeAngB - strokeAngA) * t;
-        rt.strokeGradientPhaseOffset = (in_data->current_time / static_cast<double>(in_data->time_scale)) * strokeSpeed;
-        rt.glowEnabled = (t < 0.5) ? glowEnA : glowEnB;
-        rt.glowAmount = (glowAmountA + (glowAmountB - glowAmountA) * t) / 100.0;
-        rt.glowRadius = glowRadiusA + (glowRadiusB - glowRadiusA) * t;
-
-        auto plan = statemotion::plan(rt, SW, SH);
-        if (plan.identityTransform) {
-            smIdentityCopy(src, dst);
-            return err;
-        }
-
-        statemotion::render(plan, sample, &ctx, W, H, dstPix.data());
-    } else {
-        // Multi-sample motion blur accumulation path
-        std::vector<statemotion::Pixel> accum(W * H, statemotion::Pixel{0,0,0,0});
-        std::vector<statemotion::Pixel> tempPix(W * H);
-        
-        int validSamples = 0;
-        double shutterDuration = static_cast<double>(in_data->time_step) * (mblurAngle / 360.0);
-        
-        for (int i = 0; i < mblurSamples; ++i) {
-            double st = static_cast<double>(i) / (mblurSamples - 1);
-            double offset = (st - 0.5) * shutterDuration;
-            A_long sampleTime = in_data->current_time + static_cast<A_long>(std::round(offset));
-            
-            auto pin = statemotion::host::buildProgressInput(
-                sampleTime, in_data->total_time, in_data->time_scale,
-                statemotion::native::modeFromPopup(modeIdx),
-                statemotion::native::alignmentFromPopup(alignIdx),
-                dur, delay, manual,
-                static_cast<statemotion::EasingMode>(easingIdx),
-                {cx1, cy1, cx2, cy2, springFreq, springDamp, springVel, bounceCount, bounceHDecay, bounceTDecay, bounceHang});
-
-            auto pe = statemotion::evaluateProgress(pin);
-            if (!pe.ok) continue;
-
-            auto canon = statemotion::interpolateCanonical(A, B, pe.result.easedProgress);
-            statemotion::raster::RenderDimensions dims{W, H, SW, SH};
-            auto rt = statemotion::raster::toRendererTransformState(canon, dims);
-
-            const double t = std::clamp(pe.result.easedProgress, 0.0, 1.0);
-            rt.cropLeft      = statemotion::native::percentToFraction(cropLA  + (cropLB  - cropLA)  * t);
-            rt.cropRight     = statemotion::native::percentToFraction(cropRA  + (cropRB  - cropRA)  * t);
-            rt.cropTop       = statemotion::native::percentToFraction(cropTA  + (cropTB  - cropTA)  * t);
-            rt.cropBottom    = statemotion::native::percentToFraction(cropBA  + (cropBB  - cropBA)  * t);
-            rt.cornerRadius  = statemotion::native::percentToFraction(cropCRA + (cropCRB - cropCRA) * t);
-            rt.shadowOpacity = statemotion::native::percentToOpacity( shadOpA + (shadOpB - shadOpA) * t);
-            rt.shadowAngleDeg  = shadAngA + (shadAngB - shadAngA) * t;
-            rt.shadowDistance  = shadDistA + (shadDistB - shadDistA) * t;
-            rt.shadowSoftness  = shadSoftA + (shadSoftB - shadSoftA) * t;
-            rt.strokeEnabled = (t < 0.5) ? strokeEnA : strokeEnB;
-            rt.strokeWidth = strokeWidthA + (strokeWidthB - strokeWidthA) * t;
-            rt.strokeColor1.r = strokeC1A.r + (strokeC1B.r - strokeC1A.r) * t;
-            rt.strokeColor1.g = strokeC1A.g + (strokeC1B.g - strokeC1A.g) * t;
-            rt.strokeColor1.b = strokeC1A.b + (strokeC1B.b - strokeC1A.b) * t;
-            rt.strokeColor1.a = strokeC1A.a + (strokeC1B.a - strokeC1A.a) * t;
-            rt.strokeColor2.r = strokeC2A.r + (strokeC2B.r - strokeC2A.r) * t;
-            rt.strokeColor2.g = strokeC2A.g + (strokeC2B.g - strokeC2A.g) * t;
-            rt.strokeColor2.b = strokeC2A.b + (strokeC2B.b - strokeC2A.b) * t;
-            rt.strokeColor2.a = strokeC2A.a + (strokeC2B.a - strokeC2A.a) * t;
-            rt.strokeGradientAngleDeg = strokeAngA + (strokeAngB - strokeAngA) * t;
-            rt.strokeGradientPhaseOffset = (sampleTime / static_cast<double>(in_data->time_scale)) * strokeSpeed;
-            rt.glowEnabled = (t < 0.5) ? glowEnA : glowEnB;
-            rt.glowAmount = (glowAmountA + (glowAmountB - glowAmountA) * t) / 100.0;
-            rt.glowRadius = glowRadiusA + (glowRadiusB - glowRadiusA) * t;
-
-            auto plan = statemotion::plan(rt, SW, SH);
-            
-            // Re-render over tempPix. Identity plan will just return the source correctly mapped.
-            statemotion::render(plan, sample, &ctx, W, H, tempPix.data());
-            
-            for (size_t p = 0; p < accum.size(); ++p) {
-                accum[p].r += tempPix[p].r;
-                accum[p].g += tempPix[p].g;
-                accum[p].b += tempPix[p].b;
-                accum[p].a += tempPix[p].a;
-            }
-            validSamples++;
-        }
-        
-        if (validSamples > 0) {
-            double inv = 1.0 / validSamples;
-            for (size_t p = 0; p < dstPix.size(); ++p) {
-                dstPix[p].r = accum[p].r * inv;
-                dstPix[p].g = accum[p].g * inv;
-                dstPix[p].b = accum[p].b * inv;
-                dstPix[p].a = accum[p].a * inv;
-            }
-        } else {
-            smIdentityCopy(src, dst);
-            return err;
-        }
-    }
+    statemotion::FrameRenderInput frame;
+    frame.a=A; frame.b=B;
+    frame.dimensions={W,H,SW,SH};
+    frame.progress=statemotion::host::buildProgressInput(
+        in_data->current_time,in_data->total_time,in_data->time_scale,
+        statemotion::native::modeFromPopup(modeIdx),statemotion::native::alignmentFromPopup(alignIdx),
+        dur,delay,manual,static_cast<statemotion::EasingMode>(easingIdx),
+        {cx1,cy1,cx2,cy2,springFreq,springDamp,springVel,bounceCount,bounceHDecay,bounceTDecay,bounceHang});
+    if(!statemotion::evaluateProgress(frame.progress).ok){smIdentityCopy(src,dst);return err;}
+    frame.sampleCount=mblurEnabled?mblurSamples:1;
+    frame.shutterSeconds=(mblurEnabled&&in_data->time_scale>0)?
+        static_cast<double>(in_data->time_step)/in_data->time_scale*(mblurAngle/360.0):0;
+    frame.gradientCycleSpeed=strokeSpeed;
+    auto &fxA=frame.effectsA;
+    fxA.cropLeft=statemotion::native::percentToFraction(cropLA);
+    fxA.cropRight=statemotion::native::percentToFraction(cropRA);
+    fxA.cropTop=statemotion::native::percentToFraction(cropTA);
+    fxA.cropBottom=statemotion::native::percentToFraction(cropBA);
+    fxA.cornerRadius=statemotion::native::percentToFraction(cropCRA);
+    fxA.shadowOpacity=(shadOpA/100.0);
+    fxA.shadowAngleDeg=shadAngA;
+    fxA.shadowDistance=shadDistA;
+    fxA.shadowSoftness=shadSoftA;
+    fxA.strokeEnabled=strokeEnA;
+    fxA.strokeWidth=strokeWidthA;
+    fxA.strokeColor1=strokeC1A;
+    fxA.strokeColor2=strokeC2A;
+    fxA.strokeGradientAngleDeg=strokeAngA;
+    fxA.glowEnabled=glowEnA;
+    fxA.glowAmount=(glowAmountA/100.0);
+    fxA.glowRadius=glowRadiusA;
+    auto &fxB=frame.effectsB;
+    fxB.cropLeft=statemotion::native::percentToFraction(cropLB);
+    fxB.cropRight=statemotion::native::percentToFraction(cropRB);
+    fxB.cropTop=statemotion::native::percentToFraction(cropTB);
+    fxB.cropBottom=statemotion::native::percentToFraction(cropBB);
+    fxB.cornerRadius=statemotion::native::percentToFraction(cropCRB);
+    fxB.shadowOpacity=(shadOpB/100.0);
+    fxB.shadowAngleDeg=shadAngB;
+    fxB.shadowDistance=shadDistB;
+    fxB.shadowSoftness=shadSoftB;
+    fxB.strokeEnabled=strokeEnB;
+    fxB.strokeWidth=strokeWidthB;
+    fxB.strokeColor1=strokeC1B;
+    fxB.strokeColor2=strokeC2B;
+    fxB.strokeGradientAngleDeg=strokeAngB;
+    fxB.glowEnabled=glowEnB;
+    fxB.glowAmount=(glowAmountB/100.0);
+    fxB.glowRadius=glowRadiusB;
+    statemotion::renderFrame(frame,sample,&ctx,W,H,dstPix.data());
 
     smPixelsToWorld(dstPix, dst);
 
