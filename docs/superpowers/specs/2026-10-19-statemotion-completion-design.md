@@ -1,6 +1,7 @@
 # StateMotion existing-feature completion design
 
-Date: 2026-10-19. Status: proposed written specification, awaiting user review.
+Date: 2026-10-19. Status: approved by the user's instruction to start work after
+the written design was presented.
 
 ## Intent and acceptance boundary
 
