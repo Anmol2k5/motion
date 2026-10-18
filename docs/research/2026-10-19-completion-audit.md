@@ -112,3 +112,20 @@ features are required for the user's intended workflow.
 
 This is an audit and proposed acceptance boundary, not an approved implementation
 specification. No product code was changed during this analysis.
+
+## Implementation follow-up
+
+The approved repair plan has now implemented renderer/easing/blur fixes,
+canonical validation and explicit migrations, storage recovery, cancelable host
+operations, complete inspector controls and capture, actual movement presets,
+collections and picker workflows, routing/diagnostic improvements and entry CSS.
+The verifier currently passes 14 SDK-free C++ suites and 39 panel test files,
+plus contract/progress/typecheck/build/package checks. See the current host ledger
+and `docs/releases/v0.1-alpha-installation.md` for exact evidence and open gates.
+
+New runtime review corrected the UXP manifest's unsupported schema, host ID and
+entrypoint capitalization. Native popup values were confirmed one-based by the
+existing parameter research; binding revision 5 now selects corrected conversion
+for new instances while preserving the legacy interpretation of older projects.
+Current panel writes require revision 5; revision-4 preset migration is explicit.
+No production claim of current Adobe host certification or demo parity is made.

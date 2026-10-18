@@ -87,7 +87,7 @@ export function toNative(logicalId: string, canonical: ParameterValue, binding: 
   if (!kind) throw new UnknownLogicalId(logicalId);
   guard(logicalId, kind, binding);
   switch (kind) {
-    case 'identity': return canonical as NativeValue;
+    case 'identity': return binding.nativeType==='POPUP'?(canonical as number)+1:canonical as NativeValue;
     case 'percent': return (canonical as number) * 100;
     case 'degrees': return (canonical as number) * 180 / Math.PI;
     case 'point': {
@@ -105,7 +105,7 @@ export function toCanonical(logicalId: string, native: NativeValue, binding: Par
   if (!kind) throw new UnknownLogicalId(logicalId);
   guard(logicalId, kind, binding);
   switch (kind) {
-    case 'identity': return native as ParameterValue;
+    case 'identity': return binding.nativeType==='POPUP'?(native as number)-1:native as ParameterValue;
     case 'percent': {
       const v = (native as number) / 100;
       return (logicalId.startsWith('transform.opacity') || logicalId.startsWith('crop.') || logicalId.startsWith('glow.amount')) ? Math.min(1, Math.max(0, v)) : v;
@@ -119,6 +119,6 @@ export function toCanonical(logicalId: string, native: NativeValue, binding: Par
       if (Math.abs(norm.x - 0.5) < 1e-9 && Math.abs(norm.y - 0.5) < 1e-9) return 'frameCenter';
       return norm;
     }
-    case 'boolean': return (native as number) !== 0;
+    case 'boolean': return native === true || native === 1;
   }
 }

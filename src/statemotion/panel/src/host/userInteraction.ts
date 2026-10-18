@@ -26,13 +26,15 @@ export class UxpUserInteraction implements UserInteraction {
      dialog.append(el('p',{text:message}));
      const input=initial===undefined?null:el('input',{class:'sm-input',value:initial,'aria-label':message});
      if(input)dialog.append(input);
-     const finish=(result:string|null)=>{if(typeof dialog.close==='function')dialog.close();dialog.remove();resolve(result);};
+     let settled=false;
+     const finish=(result:string|null)=>{if(settled)return;settled=true;if(typeof dialog.close==='function')dialog.close(result??undefined);dialog.remove();resolve(result);};
      const ok=el('button',{class:'sm-btn',text:'Continue',type:'button'}),cancel=el('button',{class:'sm-btn secondary',text:'Cancel',type:'button'});
      ok.addEventListener('click',()=>finish(input?input.value:'yes'));cancel.addEventListener('click',()=>finish(null));
      dialog.addEventListener('cancel',event=>{event.preventDefault();finish(null);});
      input?.addEventListener('keydown',event=>{if(event.key==='Enter')finish(input.value);});
      dialog.append(el('div',{class:'sm-actionbar'},[cancel,ok]));document.body.append(dialog);
-     if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');input?.focus();
+     if(typeof (dialog as any).uxpShowModal==='function')void (dialog as any).uxpShowModal({title:'StateMotion',resize:'none',size:{width:320,height:200}}).then((result:unknown)=>finish(typeof result==='string'?result:null),()=>finish(null));
+     else if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');input?.focus();
    });
  }
  async prompt(message:string,initial=''):Promise<string|null>{return this.dialog(message,initial);}

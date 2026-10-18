@@ -28,7 +28,7 @@ export enum EasingMode {
 }
 
 export const SCHEMA_VERSION = 1;
-export const BINDING_REVISION = 4;
+export const BINDING_REVISION = 5;
 export const PARAMETER_COUNT = 70;
 
 export const ContractSchemaVersion = 1;

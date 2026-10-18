@@ -1,3 +1,4 @@
+import {cloneJson} from './jsonData.ts';
 import { newId } from './ids.ts';
 import { isRecord, validateParameterValues, canonicalDefault } from './parameterValues.ts';
 // StateMotion Preset Panel — preset domain model + schema validation.
@@ -103,7 +104,7 @@ export function validatePreset(preset: unknown): ValidationResult {
 }
 
 // Historical contract pairs verified from committed schema history.
-const LEGACY_CONTRACTS=new Set(['1:20','2:25','2:43','3:60','3:67']);
+const LEGACY_CONTRACTS=new Set(['1:20','2:25','2:43','3:60','3:67','4:70']);
 export function migratePreset(raw: unknown): StateMotionPreset {
   if(!isRecord(raw)||raw.formatId!==FORMAT_ID)throw new Error('unsupported preset format');
   if(raw.schemaVersion!==0&&raw.schemaVersion!==CURRENT_SCHEMA_VERSION)throw new Error('unsupported schemaVersion');
@@ -111,7 +112,7 @@ export function migratePreset(raw: unknown): StateMotionPreset {
   if(!isRecord(contract)||contract.schemaVersion!==SCHEMA_VERSION)throw new Error('incompatible contract');
   const current=contract.bindingRevision===BINDING_REVISION&&contract.parameterCount===PARAMETER_COUNT;
   if(!current&&!LEGACY_CONTRACTS.has(`${contract.bindingRevision}:${contract.parameterCount}`))throw new Error('unsupported historical contract');
-  const preset=structuredClone(raw) as unknown as StateMotionPreset;
+  const preset=cloneJson(raw) as unknown as StateMotionPreset;
   // Legacy fixtures use the same canonical units; only introduced fields/defaults differ.
   preset.schemaVersion=CURRENT_SCHEMA_VERSION;
   preset.compatibleContract={schemaVersion:SCHEMA_VERSION,bindingRevision:BINDING_REVISION,parameterCount:PARAMETER_COUNT};

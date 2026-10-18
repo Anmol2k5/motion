@@ -8,7 +8,7 @@ export function canonicalDefault(logicalId: string): ParameterValue | undefined 
   const binding=getBinding(logicalId);
   if(!binding)return undefined;
   // The schema stores ANGLE defaults in radians, POINT defaults as tokens.
-  if(binding.nativeType==='POINT'||binding.nativeType==='ANGLE'||binding.nativeType==='CHECKBOX')return binding.defaultVal;
+  if(binding.nativeType==='POPUP'||binding.nativeType==='POINT'||binding.nativeType==='ANGLE'||binding.nativeType==='CHECKBOX')return binding.defaultVal;
   return toCanonical(logicalId,binding.defaultVal,binding);
 }
 export function validateParameterValues(values: unknown): ValidationResult {

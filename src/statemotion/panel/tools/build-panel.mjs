@@ -17,7 +17,7 @@ await build({
   entryPoints: [path.resolve(panelDir, 'src', 'main.ts')],
   bundle: true,
   outfile: path.resolve(outDir, 'main.js'),
-  format: 'esm',
+  format: 'iife',
   target: 'es2020',
   loader: { '.css': 'css' },
   // The generated contract mirror and bundled presets are static TS; bundle them.

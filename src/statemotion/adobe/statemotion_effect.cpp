@@ -133,13 +133,13 @@ registerStateMotionParameters(
                 items = "Linear|EaseIn|EaseOut|EaseInOut|Custom|Spring|Bounce";
             }
             def.u.pd.num_choices = static_cast<A_short>(b.enumCount);
-            def.u.pd.dephault = static_cast<A_short>(b.defaultNum);
+            def.u.pd.dephault = static_cast<A_short>(statemotion::native::popupDefault(static_cast<int>(b.defaultNum)));
             def.u.pd.value = static_cast<PF_ParamValue>(b.oldDefaultNum);
             def.u.pd.u.namesptr = items;
         } else if (::strcmp(nativeType, "ANGLE") == 0) {
             def.param_type = PF_Param_ANGLE;
             def.flags = static_cast<PF_ParamFlags>(timeFlag | oldFlag);
-            const double deg = b.defaultNum;
+            const double deg = statemotion::native::angleDefaultDegrees(b.defaultNum);
             def.u.ad.dephault = static_cast<PF_Fixed>(deg * 65536.0);
             def.u.ad.value = static_cast<PF_Fixed>(b.oldDefaultNum * 65536.0);
         } else if (::strcmp(nativeType, "POINT") == 0) {
@@ -288,6 +288,7 @@ Render(
 
     // 1. Read registered params by disk ID (runtime index resolved via smParamIndex).
     #define SM_RD(did) params[smParamIndex(statemotion::ids::did)]
+    const int bindingRevision = static_cast<int>(SM_RD(kContractBindingRevision)->u.fs_d.value);
     const int modeIdx = static_cast<int>(SM_RD(kTransitionMode)->u.pd.value);
     const int alignIdx = static_cast<int>(SM_RD(kTransitionAlignment)->u.pd.value);
     const double dur = SM_RD(kTransitionDurationSeconds)->u.fs_d.value;
@@ -403,8 +404,8 @@ Render(
     frame.dimensions={W,H,SW,SH};
     frame.progress=statemotion::host::buildProgressInput(
         in_data->current_time,in_data->total_time,in_data->time_scale,
-        statemotion::native::modeFromPopup(modeIdx),statemotion::native::alignmentFromPopup(alignIdx),
-        dur,delay,manual,static_cast<statemotion::EasingMode>(easingIdx),
+        statemotion::native::modeFromPopup(modeIdx,bindingRevision),statemotion::native::alignmentFromPopup(alignIdx,bindingRevision),
+        dur,delay,manual,static_cast<statemotion::EasingMode>(statemotion::native::popupValue(easingIdx,7,bindingRevision)),
         {cx1,cy1,cx2,cy2,springFreq,springDamp,springVel,bounceCount,bounceHDecay,bounceTDecay,bounceHang});
     if(!statemotion::evaluateProgress(frame.progress).ok){smIdentityCopy(src,dst);return err;}
     frame.sampleCount=mblurEnabled?mblurSamples:1;

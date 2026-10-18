@@ -49,7 +49,7 @@ function samplePreset(id: string, name: string, category = 'Entrances') {
     tags: [],
     category,
     collectionIds: [],
-    compatibleContract: { schemaVersion: 1, bindingRevision: 4, parameterCount: 70 },
+    compatibleContract: { schemaVersion: 1, bindingRevision:5, parameterCount: 70 },
     parameters: {},
     preview: { kind: 'generated' },
   };

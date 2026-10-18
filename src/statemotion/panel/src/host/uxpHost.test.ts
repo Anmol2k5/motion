@@ -56,7 +56,7 @@ const clip = selection[0];
 assert.deepStrictEqual(await bridge.getContract(clip), {
   schemaVersion: 1,
   parameterCount: 70,
-  bindingRevision: 4,
+  bindingRevision:5,
 });
 
 await bridge.writeLogical(clip, 'transition.manualProgress', 0.5);

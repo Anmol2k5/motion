@@ -78,7 +78,7 @@ function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
 (() => {
   const ro = checkCompatibility({ schemaVersion: 1, bindingRevision: 1, parameterCount: 20 });
   assert.strictEqual(ro.level, CompatLevel.ReadOnly, 'older project is read-only');
-  const cur = checkCompatibility({ schemaVersion: 1, bindingRevision: 4, parameterCount: PARAMETER_COUNT });
+  const cur = checkCompatibility({ schemaVersion: 1, bindingRevision:5, parameterCount: PARAMETER_COUNT });
   assert.strictEqual(cur.level, CompatLevel.Ok, 'current contract is Ok');
   pass('C: older project contract is ReadOnly');
 })();

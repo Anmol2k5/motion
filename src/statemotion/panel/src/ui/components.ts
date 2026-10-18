@@ -31,8 +31,11 @@ export function showState(container: HTMLElement, icon: string, title: string, d
 }
 
 export function svgFromString(markup: string): SVGElement {
-  const doc = new DOMParser().parseFromString(markup, 'image/svg+xml');
-  return doc.documentElement as unknown as SVGElement;
+  const container=document.createElement('div');
+  container.innerHTML=markup;
+  const svg=container.querySelector('svg');
+  if(!svg)throw new Error('Invalid generated SVG');
+  return svg;
 }
 
 export function accordion(title: string, content: HTMLElement[], isOpen = false): HTMLElement {

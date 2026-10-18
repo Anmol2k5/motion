@@ -12,9 +12,9 @@ import { PARAMETER_COUNT } from '../domain/presetSchema.ts';
 let passed = 0;
 function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
 
-const CURRENT_CONTRACT = { schemaVersion: 1, bindingRevision: 4, parameterCount: PARAMETER_COUNT };
+const CURRENT_CONTRACT = { schemaVersion: 1, bindingRevision:5, parameterCount: PARAMETER_COUNT };
 const OLDER_CONTRACT = { schemaVersion: 1, bindingRevision: 1, parameterCount: 20 };
-const NEWER_CONTRACT = { schemaVersion: 2, bindingRevision: 4, parameterCount: PARAMETER_COUNT };
+const NEWER_CONTRACT = { schemaVersion: 2, bindingRevision:5, parameterCount: PARAMETER_COUNT };
 
 // --- pure plan classification ------------------------------------------------
 {

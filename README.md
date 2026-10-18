@@ -5,40 +5,28 @@ panel for Adobe Premiere Pro.
 
 ## Status
 
-StateMotion is currently a v0.1 private-alpha candidate. Host-independent code
-is implemented; the current native binary must still be rebuilt and the combined
-native effect + UXP panel must be certified in Premiere Pro 26.3.
+StateMotion is a development alpha with a C++17 CPU renderer and a UXP panel
+for Premiere Pro 26.3+. The current code needs a fresh Windows native rebuild
+and Adobe host certification before release.
 
-Currently implemented:
+Implemented development workflow:
 
-- Host-independent CPU transform renderer
-- State A/B interpolation for position, scale, rotation, anchor, and opacity
-- Crop and rounded rectangle masks (SDF renderer)
-- Stroke (with angle & cycle speed), glow, and drop shadow compositing
-- Multi-sample motion blur accumulation
-- Spring and bounce easing evaluators and UI controls
-- Stable generated parameter contract (70 parameters)
-- C++ and TypeScript progress engines
-- Seven progress modes
-- Three alignment modes
-- Shared C++/TypeScript parity fixtures
-- Deterministic contract generation and validation tests
-- Native effect parameter registration and CPU render integration
-- Premiere Pro 26.3 UXP panel adapter and preset library
-- Local user presets, favorites, collections, import/export, and diagnostics
+- A/B position, scale, rotation, anchor and opacity controls
+- Seven progress modes, three alignments, custom easing, spring and bounce
+- Crop/rounded masks, gradient strokes, alpha glow, shadows and shutter sampling
+- Safe staged parameter transactions with per-clip results and explicit cancellation
+- Original presets, live capture, search, favorites, collections, import/export
+- Canonical-value validation, explicit legacy preset migration and storage recovery
+- Diagnostics, deterministic contract generation and reproducible panel packaging
 
-Not currently implemented:
+Linux verification covers SDK-free math/rendering and injected host/UI behavior.
+It does not certify Premiere load/render, saved projects, native undo or export.
+GPU rendering, a macOS native port and consumer installers remain outside this alpha.
 
-- Certified Premiere host integration (awaiting operator re-test)
-- GPU rendering
-- Batch tools
-- Production installers
-
-## Development status
-
-Adobe host integration must not be considered release-ready until the corrected
-25-parameter native effect has been rebuilt with the Adobe SDK and the release
-checklist has been run inside Premiere Pro 26.3.
+Binding revision 5 corrects popup wire indexing while retaining the 70 parameter
+IDs. Older project effects retain their historical native interpretation and are
+read-only to the new panel; supported historical preset files can be imported.
+See [development installation](docs/releases/v0.1-alpha-installation.md).
 
 ## Clean-room development
 
@@ -68,24 +56,23 @@ node tools/generate-contract.js --check
 node tools/generate-contract.test.js
 ```
 
-## Running tests
+## Development verification and package
 
-C++ renderer and progress-engine tests are built and run with a C++17 compiler
-(for example MinGW-w64 GCC). TypeScript progress-engine tests:
+Requires Node.js 24 and a C++17 compiler. From the repository root:
 
-```
-node --experimental-transform-types src/statemotion/progress/progressEngine.test.ts
-```
-
-Panel verification:
-
-```
-cd src/statemotion/panel
-npm ci
-npm run typecheck
-npm test
-npm run build
+```sh
+npm --prefix src/statemotion/panel ci
+node tools/verify-development.mjs
+node tools/package-panel.mjs
 ```
 
-Host-side certification status is tracked in
-`docs/releases/v0.1-alpha-host-status.md`.
+The verifier runs contract generation checks, TypeScript progress tests, all
+SDK-free C++ suites, panel typecheck/tests/build, and packaging checks. It prints
+current logs under `build/verification/`. The panel ZIP is
+`dist/statemotion-panel-dev.zip`; load its **manifest.json** through UXP Developer
+Tool after building/installing the matching native effect.
+
+See [installation](docs/releases/v0.1-alpha-installation.md) and
+[host certification status](docs/releases/v0.1-alpha-host-status.md). Native build,
+point/popup host units, timing after trims, save/reopen, undo and export remain
+operator checks.

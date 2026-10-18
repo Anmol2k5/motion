@@ -6,3 +6,8 @@ const interaction=new UxpUserInteraction(fs);
 assert.equal(await interaction.importPreset(),'{"test":true}');await interaction.exportPreset('original.stmpreset','payload');assert.equal(saved,'payload');
 const canceled=new UxpUserInteraction({getFileForOpening:async()=>null,getFileForSaving:async()=>null});assert.equal(await canceled.importPreset(),null);assert.equal(await canceled.exportPreset('x.stmpreset','x'),false,'cancel must not report a saved file');
 console.log('PASS UXP picker IO and cancellation');
+const {installDom,TestElement}=await import('../testing/dom.ts');
+const {document}=installDom();const originalCreate=document.createElement;let nativeModal=false;
+document.createElement=(tag:string)=>{const node=originalCreate(tag);if(tag==='dialog')(node as any).uxpShowModal=()=>{nativeModal=true;return new Promise(()=>{});};return node;};
+const answer=interaction.prompt('Name','Original');assert.equal(nativeModal,true,'use documented UXP modal method');
+const dialog=document.body.querySelector('dialog')!;const input=dialog.querySelector('input')!;input.value='New name';await dialog.querySelectorAll('button')[1].click();assert.equal(await answer,'New name');

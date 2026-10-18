@@ -11,7 +11,7 @@ const project={getActiveSequence:async()=>({getSelection:async()=>({getTrackItem
 class Color {constructor(public red:number,public green:number,public blue:number,public alpha:number){}}
 const bridge=new UxpHostBridge({Project:{getActiveProject:async()=>project},Color} as never);
 const [clip]=await bridge.getSelection();
-assert.deepEqual(await bridge.getContract(clip),{schemaVersion:1,parameterCount:70,bindingRevision:4},'metadata resolves by identity');
+assert.deepEqual(await bridge.getContract(clip),{schemaVersion:1,parameterCount:70,bindingRevision:5},'metadata resolves by identity');
 assert.equal(await bridge.enumerateParamIndex(clip,'SM Manual Progress'),bindings.findIndex(x=>x.logicalId==='transition.manualProgress'));
 await bridge.beginUndo('cancel test');await bridge.writeLogical(clip,'transition.manualProgress',.4);await bridge.cancelUndo();
 assert.equal(commits,0);assert.equal(values.get('transition.manualProgress'),0);

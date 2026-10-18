@@ -4,6 +4,12 @@ export class TestElement {
   listeners:Record<string,((e:any)=>unknown)[]>={};value='';checked=false;disabled=false;style:Record<string,string>={};dataset:Record<string,string>={};
   private text='';tagName:string;
   constructor(tag:string){this.tagName=tag.toUpperCase();}
+  set innerHTML(markup:string){
+    this.children=[];
+    const tags=[...markup.matchAll(/<([a-z]+)([^>]*)>/g)];
+    let root:TestElement|null=null;
+    for(const match of tags){const node=new TestElement(match[1]);for(const attr of match[2].matchAll(/([\w-]+)="([^"]*)"/g))node.setAttribute(attr[1],attr[2]);if(!root){root=node;this.append(node);}else root.append(node);}
+  }
   get textContent():string{return this.text+this.children.map(c=>c.textContent).join('');}
   set textContent(value:string){this.text=value;this.children=[];}
   get className(){return this.attributes.class??'';}set className(v:string){this.attributes.class=v;}

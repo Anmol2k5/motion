@@ -61,7 +61,7 @@ import { PARAMETER_COUNT } from '../domain/presetSchema.ts';
     'transform.opacity.b': 100,
     'contract.schemaVersion': 1,
     'contract.parameterCount': PARAMETER_COUNT,
-    'contract.bindingRevision': 4,
+    'contract.bindingRevision':5,
   }));
   const cfg = await adapter.readState({ clipId: 'c1' });
   assert.strictEqual(cfg.parameters['transition.manualProgress'], 0.5);

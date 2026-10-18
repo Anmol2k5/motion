@@ -5,7 +5,7 @@ import {BUNDLED_PRESETS} from '../starter/bundledPresets.ts';
 const {container}=installDom(),root=container as unknown as TestElement;let saved=0,selected=true,applies=0;
 const library={favoritePresetIds:[],collectionIds:[],collections:{},recentlyUsed:[]};
 const repo={init:async()=>{},installBundled:async()=>{},getLibrary:()=>library,list:async()=>[BUNDLED_PRESETS[0]],getWarnings:()=>[],saveLibrary:async()=>{saved++;}};
-const adapter={detectSelection:async()=>({supported:selected?[{clipId:'a'}]:[],unsupported:[]}),getContract:async()=>({schemaVersion:1,bindingRevision:4,parameterCount:70}),applyPresetToSelection:async()=>{applies++;return {applied:[],failed:['a'],skipped:[],reasons:{a:'failed'}};}};
+const adapter={detectSelection:async()=>({supported:selected?[{clipId:'a'}]:[],unsupported:[]}),getContract:async()=>({schemaVersion:1,bindingRevision:5,parameterCount:70}),applyPresetToSelection:async()=>{applies++;return {applied:[],failed:['a'],skipped:[],reasons:{a:'failed'}};}};
 const interaction={prompt:async()=>null,confirm:async()=>false,importPreset:async()=>null,exportPreset:async()=>false};
 await startPanel(container,{repo,adapter,interaction} as never);await root.querySelector('.sm-card')!.click();
 assert.equal(saved,0,'failed apply must not update recent history');

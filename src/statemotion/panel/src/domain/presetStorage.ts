@@ -1,3 +1,4 @@
+import {cloneJson} from './jsonData.ts';
 import { newId, assertSafeId } from './ids.ts';
 import { isRecord } from './parameterValues.ts';
 // StateMotion Preset Panel — local preset repository (storage).
@@ -54,7 +55,7 @@ function validLibrary(value: unknown): value is LibraryModel {
 }
 
 export class PresetRepository {
-  private library: LibraryModel = structuredClone(EMPTY_LIBRARY);
+  private library: LibraryModel = cloneJson(EMPTY_LIBRARY);
   private pending: Promise<unknown> = Promise.resolve();
   private warnings = new Set<string>();
   private mutate<T>(operation:()=>Promise<T>): Promise<T> {
@@ -82,7 +83,7 @@ export class PresetRepository {
   async init(): Promise<void> {
     return this.mutate(async()=>{
       await this.fs.mkdir(this.bundledDir()); await this.fs.mkdir(this.userDir());
-      let recovered=structuredClone(EMPTY_LIBRARY);
+      let recovered=cloneJson(EMPTY_LIBRARY);
       if(await this.fs.exists(this.libPath())){
         const original=await this.fs.readFile(this.libPath());
         try{
@@ -101,7 +102,7 @@ export class PresetRepository {
   }
 
   getLibrary(): LibraryModel {
-    return structuredClone(this.library);
+    return cloneJson(this.library);
   }
 
   async installBundled(presets: StateMotionPreset[]): Promise<void> { return this.mutate(()=>this.doInstallBundled(presets)); }
@@ -121,7 +122,7 @@ export class PresetRepository {
   async saveLibrary(lib: LibraryModel): Promise<void> {
     return this.mutate(async()=>{
       if(!validLibrary(lib))throw new Error('Invalid library metadata');
-      const next=structuredClone(lib);
+      const next=cloneJson(lib);
       await this.fs.writeFile(this.libPath(),JSON.stringify(next,null,2));
       this.library=next;
     });
@@ -188,7 +189,7 @@ export class PresetRepository {
     if (!src) throw new Error('unknown preset: ' + id);
     const newId = await this.freshId();
     const copy: StateMotionPreset = {
-      ...structuredClone(src),
+      ...cloneJson(src),
       presetId: newId,
       name: src.name,
       createdAt: new Date().toISOString(),
@@ -202,7 +203,7 @@ export class PresetRepository {
     if (this.isBundled(id)) throw new Error('bundled presets are immutable');
     if (!(await this.fs.exists(this.userPath(id)))) throw new Error('unknown user preset: ' + id);
     await this.fs.deleteFile(this.userPath(id));
-    const next=structuredClone(this.library);
+    const next=cloneJson(this.library);
     next.favoritePresetIds=next.favoritePresetIds.filter(x=>x!==id);
     next.recentlyUsed=next.recentlyUsed.filter(x=>x!==id);
     for(const c of Object.values(next.collections))c.presetIds=c.presetIds.filter(x=>x!==id);
@@ -216,7 +217,7 @@ export class PresetRepository {
     if (!res.ok) throw new Error('invalid imported preset: ' + res.errors.join('; '));
     // Force a fresh user id so imports never collide with bundled ids.
     const id = await this.freshId();
-    const stamped: StateMotionPreset = { ...structuredClone(preset), presetId: id };
+    const stamped: StateMotionPreset = { ...cloneJson(preset), presetId: id };
     await this.fs.writeFile(this.userPath(id), serializePreset(stamped));
     return stamped;
   }

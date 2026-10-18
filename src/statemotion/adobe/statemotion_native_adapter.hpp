@@ -69,13 +69,15 @@ inline TransformState buildCanonicalState(double posPx, double posPy, double sca
     return t;
 }
 
-// POPUP index -> permanent enum (ProgressMode / AlignmentMode).
-inline ids::ProgressMode modeFromPopup(int idx) {
-    return static_cast<ids::ProgressMode>(idx);
+// Revision 5 corrects the one-based PF_PopupDef wire ABI. Older project
+// metadata selects the historical interpretation so saved renders do not change silently.
+inline int popupValue(int index,int count,int revision=5){
+    return std::clamp(index-(revision>=5?1:0),0,count-1);
 }
-inline ids::AlignmentMode alignmentFromPopup(int idx) {
-    return static_cast<ids::AlignmentMode>(idx);
-}
+inline int popupDefault(int canonical){return canonical+1;}
+inline double angleDefaultDegrees(double radians){return radians*180.0/3.14159265358979323846;}
+inline ids::ProgressMode modeFromPopup(int index,int revision=5){return static_cast<ids::ProgressMode>(popupValue(index,7,revision));}
+inline ids::AlignmentMode alignmentFromPopup(int index,int revision=5){return static_cast<ids::AlignmentMode>(popupValue(index,3,revision));}
 
 }  // namespace native
 }  // namespace statemotion
