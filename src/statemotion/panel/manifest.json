@@ -10,7 +10,7 @@
   },
   "icons": [],
   "requiredPermissions": {
-    "localFileSystem": "plugin",
+    "localFileSystem": "request",
     "network": false,
     "allowCodeGeneration": false
   },

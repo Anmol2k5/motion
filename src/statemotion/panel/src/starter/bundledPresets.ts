@@ -44,7 +44,7 @@ export const BUNDLED_PRESETS: StateMotionPreset[] = [
     'transform.opacity.a': 0, 'transform.opacity.b': 1,
   }),
   preset('bundled-rise-up', 'Rise Up', 'Slide upward into place.', 'Entrances', ['entrance', 'slide', 'position'], {
-    'transform.position.a': 'frameCenter', 'transform.position.b': 'frameCenter', 'transform.opacity.a': 0, 'transform.opacity.b': 1,
+    'transform.position.a': {x:.5,y:1.15}, 'transform.position.b': 'frameCenter', 'transform.opacity.a': 0, 'transform.opacity.b': 1,
   }),
 
   // ---- Exits ----
@@ -53,12 +53,12 @@ export const BUNDLED_PRESETS: StateMotionPreset[] = [
     'transform.scaleX.b': 0.9, 'transform.scaleY.b': 0.9, 'transform.opacity.b': 0,
   }),
   preset('bundled-drift-away', 'Drift Away', 'Fade while drifting down.', 'Exits', ['exit', 'slide', 'fade'], {
-    'transform.opacity.a': 1, 'transform.opacity.b': 0,
+    'transform.position.a':'frameCenter', 'transform.position.b':{x:.5,y:.8}, 'transform.opacity.a': 1, 'transform.opacity.b': 0,
   }),
 
   // ---- Slides ----
   preset('bundled-side-glide', 'Side Glide', 'Glide in from the left.', 'Slides', ['slide', 'position'], {
-    'transform.position.a': 'frameCenter', 'transform.position.b': 'frameCenter',
+    'transform.position.a': {x:-.2,y:.5}, 'transform.position.b': 'frameCenter',
   }),
   preset('bundled-gentle-push', 'Gentle Push', 'Push forward with mild scale.', 'Slides', ['slide', 'scale'], {
     'transform.scaleX.a': 0.95, 'transform.scaleY.a': 0.95, 'transform.scaleX.b': 1.05, 'transform.scaleY.b': 1.05,
@@ -80,7 +80,7 @@ export const BUNDLED_PRESETS: StateMotionPreset[] = [
 
   // ---- Layout ----
   preset('bundled-slide-over', 'Slide Over', 'Offset position for picture-in-picture feel.', 'Layout', ['layout', 'position'], {
-    'transform.position.a': 'frameCenter', 'transform.position.b': 'frameCenter',
+    'transform.position.a': 'frameCenter', 'transform.position.b': {x:.72,y:.5},
   }),
 
   // ---- Screen ----

@@ -56,3 +56,7 @@ function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
 })();
 
 console.log(`\nALL PASSED (${passed})`);
+for(const id of ['bundled-side-glide','bundled-slide-over','bundled-rise-up']){
+ const preset=BUNDLED_PRESETS.find(p=>p.presetId===id)!;
+ assert.notDeepStrictEqual(preset.parameters['transform.position.a'],preset.parameters['transform.position.b'],id+' must actually move');
+}

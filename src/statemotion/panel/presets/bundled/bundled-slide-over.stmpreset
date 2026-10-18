@@ -20,7 +20,10 @@
   },
   "parameters": {
     "transform.position.a": "frameCenter",
-    "transform.position.b": "frameCenter"
+    "transform.position.b": {
+      "x": 0.72,
+      "y": 0.5
+    }
   },
   "preview": {
     "kind": "generated"
