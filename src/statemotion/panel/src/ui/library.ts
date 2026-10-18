@@ -10,7 +10,7 @@ import type {ApplyReport} from '../host/premiereAdapter.ts';
 export interface LibraryCallbacks {
  onApply:(preset:StateMotionPreset)=>void|Promise<void|ApplyReport>;
  onToggleFavorite:(id:string)=>void|Promise<void>;
- getSelectionCount:()=>number;
+ getSelectionCount:()=>number|Promise<number>;
 }
 export class LibraryView {
  private view:LibraryViewState={query:'',filter:FilterKind.All,sort:SortKind.AZ};
@@ -42,9 +42,9 @@ export class LibraryView {
     for(const preset of model.presets){
      const card=el('div',{class:'sm-card',tabindex:'0',role:'button','aria-label':preset.name},[svgFromString(renderPreviewSvg(preset)),el('div',{class:'sm-card-name',text:preset.name}),el('div',{class:'sm-card-cat',text:preset.category})]);
      const apply=()=>status.run(async()=>{
-      if(this.cb.getSelectionCount()<=0){status.element.textContent='Select a video clip before applying a preset.';return;}
+      if((await this.cb.getSelectionCount())<=0){status.element.textContent='Select a video clip before applying a preset.';return;}
       const report=await this.cb.onApply(preset);
-      if(report)status.element.textContent=`${report.applied.length} applied, ${report.failed.length} failed, ${report.skipped.length} skipped.`;
+      if(report)status.element.textContent=`${report.applied.length} applied, ${report.failed.length} failed, ${report.skipped.length} skipped. ${report.warning??''}`;
      });
      card.addEventListener('click',apply);card.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();return apply();}});
      const favorite=el('button',{class:'sm-fav',text:model.favoriteIds.has(preset.presetId)?'★':'☆','aria-label':'Favorite '+preset.name});

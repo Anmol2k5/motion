@@ -36,6 +36,7 @@ export interface DetectResult {
 }
 
 export interface ApplyReport {
+  warning?:string;
   applied: string[];
   skipped: string[];
   failed: string[];

@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {installDom,TestElement} from '../testing/dom.ts';
+import {ViewRouter} from './routing.ts';
+const {container}=installDom();let finish:()=>void=()=>{};
+const slow=new Promise<void>(resolve=>finish=resolve);const router=new ViewRouter(container);
+const old=router.show(async target=>{await slow;target.textContent='OLD';});
+await router.show(async target=>{target.textContent='CURRENT';});finish();await old;
+assert.equal(container.textContent,'CURRENT','stale completion must not replace active view');
+await router.show(async()=>{throw Error('host rejected');});assert.match(container.textContent!,/could not|failed/i);
+console.log('PASS detached stale render and visible routing failure');

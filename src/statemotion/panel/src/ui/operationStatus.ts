@@ -9,7 +9,7 @@ export class OperationStatus {
     const controls=[...this.scope.querySelectorAll('button, input, select')] as (HTMLButtonElement|HTMLInputElement|HTMLSelectElement)[];
     const previous=controls.map(control=>control.disabled);controls.forEach(control=>control.disabled=true);
     try{await action();if(this.element.textContent==='Working…')this.element.textContent='Saved.';}
-    catch{this.element.textContent='The operation could not be completed. Your confirmed values were restored. Try again.';}
+    catch{this.element.textContent='The operation could not be completed. Check the current state before retrying.';}
     finally{controls.forEach((control,index)=>control.disabled=previous[index]);this.busy=false;}
   }
 }
