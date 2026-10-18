@@ -16,7 +16,7 @@ double safeScale(double value) {
 }
 
 RendererTransformState interpolate(const RendererTransformState& a, const RendererTransformState& b, double p) {
-    double t = std::clamp(p, 0.0, 1.0);
+    double t = std::isfinite(p) ? p : 0.0;
     RendererTransformState r;
     r.positionX = a.positionX + (b.positionX - a.positionX) * t;
     r.positionY = a.positionY + (b.positionY - a.positionY) * t;
@@ -25,7 +25,7 @@ RendererTransformState interpolate(const RendererTransformState& a, const Render
     r.rotationDeg = a.rotationDeg + (b.rotationDeg - a.rotationDeg) * t;
     r.anchorX = a.anchorX + (b.anchorX - a.anchorX) * t;
     r.anchorY = a.anchorY + (b.anchorY - a.anchorY) * t;
-    r.opacity = a.opacity + (b.opacity - a.opacity) * t;
+    r.opacity = std::clamp(a.opacity + (b.opacity - a.opacity) * t, 0.0, 1.0);
     r.cropLeft = a.cropLeft + (b.cropLeft - a.cropLeft) * t;
     r.cropRight = a.cropRight + (b.cropRight - a.cropRight) * t;
     r.cropTop = a.cropTop + (b.cropTop - a.cropTop) * t;

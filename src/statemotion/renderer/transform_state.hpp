@@ -2,6 +2,7 @@
 #define STATEMOTION_TRANSFORM_STATE_HPP
 
 #include <algorithm>
+#include <cmath>
 
 namespace statemotion {
 
@@ -23,7 +24,7 @@ struct TransformState {
 
 // Linear interpolation of the full canonical transform at progress p in [0,1].
 inline TransformState interpolateCanonical(const TransformState& a, const TransformState& b, double p) {
-    double t = std::clamp(p, 0.0, 1.0);
+    double t = std::isfinite(p) ? p : 0.0;
     TransformState r;
     r.positionNormX = a.positionNormX + (b.positionNormX - a.positionNormX) * t;
     r.positionNormY = a.positionNormY + (b.positionNormY - a.positionNormY) * t;
@@ -32,7 +33,7 @@ inline TransformState interpolateCanonical(const TransformState& a, const Transf
     r.rotationRadians = a.rotationRadians + (b.rotationRadians - a.rotationRadians) * t;
     r.anchorNormX = a.anchorNormX + (b.anchorNormX - a.anchorNormX) * t;
     r.anchorNormY = a.anchorNormY + (b.anchorNormY - a.anchorNormY) * t;
-    r.opacity = a.opacity + (b.opacity - a.opacity) * t;
+    r.opacity = std::clamp(a.opacity + (b.opacity - a.opacity) * t, 0.0, 1.0);
     return r;
 }
 
