@@ -1,3 +1,4 @@
+import { isRecord, validateParameterValues, canonicalDefault } from './parameterValues.ts';
 // StateMotion Preset Panel — preset domain model + schema validation.
 //
 // Original preset format: io.github.anmol2k5.statemotion.preset
@@ -80,92 +81,43 @@ const KNOWN_OPTIONAL = new Set([
 ]);
 
 export function validatePreset(preset: unknown): ValidationResult {
-  const errors: string[] = [];
-  if (!preset || typeof preset !== 'object') {
-    return { ok: false, errors: ['preset must be an object'] };
-  }
-  const p = preset as Record<string, unknown>;
-
-  if (p.formatId !== FORMAT_ID) {
-    errors.push(`formatId must be "${FORMAT_ID}" (got ${JSON.stringify(p.formatId)})`);
-  }
-  if (typeof p.schemaVersion !== 'number' || p.schemaVersion !== CURRENT_SCHEMA_VERSION) {
-    errors.push(`unsupported schemaVersion (got ${JSON.stringify(p.schemaVersion)}, supported ${CURRENT_SCHEMA_VERSION})`);
-  }
-
-  for (const f of REQUIRED_FIELDS) {
-    if (!(f in p)) errors.push(`missing required field "${f}"`);
-  }
-
-  if (p.tags !== undefined && !Array.isArray(p.tags)) errors.push('tags must be an array');
-  if (p.collectionIds !== undefined && !Array.isArray(p.collectionIds)) errors.push('collectionIds must be an array');
-
-  // Parameter logical IDs must exist in the contract.
-  if (p.parameters && typeof p.parameters === 'object') {
-    for (const key of Object.keys(p.parameters as object)) {
-      if (!LOGICAL_IDS.includes(key)) {
-        errors.push(`parameter uses invalid logical ID "${key}"`);
-      }
-    }
-  }
-
-  // Compatibility: contract must match the current generated contract.
-  const cc = p.compatibleContract as CompatibleContract | undefined;
-  if (cc && typeof cc === 'object') {
-    if (cc.schemaVersion !== SCHEMA_VERSION) {
-      errors.push(`incompatible contract schemaVersion ${cc.schemaVersion} != ${SCHEMA_VERSION}`);
-    }
-    if (cc.bindingRevision !== BINDING_REVISION) {
-      errors.push(`incompatible contract bindingRevision ${cc.bindingRevision} != ${BINDING_REVISION}`);
-    }
-    if (cc.parameterCount !== PARAMETER_COUNT) {
-      errors.push(`incompatible contract parameterCount ${cc.parameterCount} != ${PARAMETER_COUNT}`);
-    }
-  }
-
-  return { ok: errors.length === 0, errors };
+  if(!isRecord(preset))return {ok:false,errors:['preset must be an object']};
+  const p=preset, errors:string[]=[];
+  if(p.formatId!==FORMAT_ID)errors.push('unsupported formatId');
+  if(p.schemaVersion!==CURRENT_SCHEMA_VERSION)errors.push('unsupported schemaVersion');
+  for(const field of REQUIRED_FIELDS)if(!(field in p))errors.push(`missing required field "${field}"`);
+  for(const field of ['presetId','name','description','author','createdAt','modifiedAt','category'])
+    if(typeof p[field]!=='string')errors.push(`${field} must be a string`);
+  if(typeof p.presetId==='string'&&(!/^[a-z0-9][a-z0-9._-]{0,199}$/i.test(p.presetId)||p.presetId.includes('..')))
+    errors.push('unsafe presetId');
+  if(typeof p.name==='string'&&!p.name.trim())errors.push('name must not be empty');
+  for(const field of ['createdAt','modifiedAt'])if(typeof p[field]==='string'&&!Number.isFinite(Date.parse(p[field] as string)))errors.push(`${field} invalid date`);
+  for(const field of ['tags','collectionIds'])if(!Array.isArray(p[field])||!(p[field] as unknown[]).every(x=>typeof x==='string'))errors.push(`${field} must be a string array`);
+  if(!isRecord(p.preview)||p.preview.kind!=='generated')errors.push('unsupported preview');
+  if(!isRecord(p.compatibleContract)||p.compatibleContract.schemaVersion!==SCHEMA_VERSION||
+      p.compatibleContract.bindingRevision!==BINDING_REVISION||p.compatibleContract.parameterCount!==PARAMETER_COUNT)
+    errors.push('incompatible contract schemaVersion/bindingRevision/parameterCount');
+  errors.push(...validateParameterValues(p.parameters).errors);
+  return {ok:errors.length===0,errors};
 }
 
-// Explicit forward migration. Add cases as schema versions grow.
+// Historical contract pairs verified from committed schema history.
+const LEGACY_CONTRACTS=new Set(['1:20','2:25','2:43','3:60','3:67']);
 export function migratePreset(raw: unknown): StateMotionPreset {
-  const p = raw as Record<string, unknown>;
-  const cc = p.compatibleContract as CompatibleContract | undefined;
-  const current =
-    typeof p.schemaVersion === 'number' && p.schemaVersion === CURRENT_SCHEMA_VERSION &&
-    cc && cc.bindingRevision === BINDING_REVISION && cc.parameterCount === PARAMETER_COUNT;
-  if (current) {
-    // Already current; just normalize via validation-free copy.
-    return p as unknown as StateMotionPreset;
-  }
-  // Legacy schema 0: lacked createdAt/modifiedAt.
-  const now = new Date().toISOString();
-  const migrated: StateMotionPreset = {
-    formatId: FORMAT_ID,
-    schemaVersion: CURRENT_SCHEMA_VERSION,
-    presetId: String(p.presetId ?? 'p-' + Math.random().toString(36).slice(2, 10)),
-    name: String(p.name ?? 'Untitled'),
-    description: String(p.description ?? ''),
-    author: String(p.author ?? 'StateMotion'),
-    createdAt: String(p.createdAt ?? now),
-    modifiedAt: String(p.modifiedAt ?? now),
-    tags: Array.isArray(p.tags) ? (p.tags as string[]) : [],
-    category: String(p.category ?? 'Custom'),
-    collectionIds: Array.isArray(p.collectionIds) ? (p.collectionIds as string[]) : [],
-    // Forward migration always targets the current contract so the result
-    // validates and applies against the current native build.
-    compatibleContract: {
-      schemaVersion: SCHEMA_VERSION,
-      bindingRevision: BINDING_REVISION,
-      parameterCount: PARAMETER_COUNT,
-    },
-    parameters: (p.parameters as ParameterValues) ?? {},
-    preview: (p.preview as { kind: string }) ?? { kind: 'generated' },
-  };
-  // Preserve unknown optional fields.
-  for (const k of Object.keys(p)) {
-    if (!KNOWN_OPTIONAL.has(k)) migrated[k] = p[k];
-  }
-  return migrated;
+  if(!isRecord(raw)||raw.formatId!==FORMAT_ID)throw new Error('unsupported preset format');
+  if(raw.schemaVersion!==0&&raw.schemaVersion!==CURRENT_SCHEMA_VERSION)throw new Error('unsupported schemaVersion');
+  const contract=raw.compatibleContract;
+  if(!isRecord(contract)||contract.schemaVersion!==SCHEMA_VERSION)throw new Error('incompatible contract');
+  const current=contract.bindingRevision===BINDING_REVISION&&contract.parameterCount===PARAMETER_COUNT;
+  if(!current&&!LEGACY_CONTRACTS.has(`${contract.bindingRevision}:${contract.parameterCount}`))throw new Error('unsupported historical contract');
+  const preset=structuredClone(raw) as unknown as StateMotionPreset;
+  // Legacy fixtures use the same canonical units; only introduced fields/defaults differ.
+  preset.schemaVersion=CURRENT_SCHEMA_VERSION;
+  preset.compatibleContract={schemaVersion:SCHEMA_VERSION,bindingRevision:BINDING_REVISION,parameterCount:PARAMETER_COUNT};
+  if(raw.schemaVersion===0){const now=new Date().toISOString();preset.createdAt??=now;preset.modifiedAt??=now;}
+  const result=validatePreset(preset);
+  if(!result.ok)throw new Error('invalid preset: '+result.errors.join('; '));
+  return preset;
 }
 
 // Deterministic serialization: stable key order, sorted parameter keys,
@@ -190,8 +142,8 @@ export function deserializePreset(text: string): StateMotionPreset {
 
 // Convenience: resolve a logical parameter value to its numeric/string default
 // when absent from a preset (used by preview + apply planning).
-export function defaultValueFor(logicalId: string): number | string | boolean | undefined {
-  return getBinding(logicalId)?.defaultVal;
+export function defaultValueFor(logicalId: string): ParameterValue | undefined {
+  return canonicalDefault(logicalId);
 }
 
 // Build a valid user preset from a live canonical config + contract. Used by the
