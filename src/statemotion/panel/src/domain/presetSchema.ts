@@ -1,3 +1,4 @@
+import { newId } from './ids.ts';
 import { isRecord, validateParameterValues, canonicalDefault } from './parameterValues.ts';
 // StateMotion Preset Panel — preset domain model + schema validation.
 //
@@ -162,7 +163,7 @@ export function buildUserPresetFromConfig(
   return {
     formatId: FORMAT_ID,
     schemaVersion: CURRENT_SCHEMA_VERSION,
-    presetId: 'user-' + Date.now().toString(36),
+    presetId: newId(),
     name: 'StateMotion preset',
     description: '',
     author: 'StateMotion',

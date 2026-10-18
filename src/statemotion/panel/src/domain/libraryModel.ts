@@ -27,6 +27,10 @@ export function buildLibraryViewModel(
   knownCategories: string[],
 ): LibraryViewModel {
   let list = allPresets;
+  if(view.filter===FilterKind.Collection&&view.collectionId){
+    const members=new Set(library.collections[view.collectionId]?.presetIds??[]);
+    list=allPresets.filter(p=>members.has(p.presetId));
+  }
   // Favorites pre-filter using library metadata (presets carry no favorite flag).
   if (view.filter === FilterKind.Favorites) {
     list = filterFavorites(library, list);
@@ -34,7 +38,7 @@ export function buildLibraryViewModel(
   const opts: SearchOptions = {
     query: view.query,
     // After favorites pre-filter, let searchPresets handle category/collection/query.
-    filter: view.filter === FilterKind.Favorites ? FilterKind.All : view.filter,
+    filter: view.filter === FilterKind.Favorites || view.filter === FilterKind.Collection ? FilterKind.All : view.filter,
     category: view.category,
     collectionIds: view.collectionId ? [view.collectionId] : undefined,
     sort: view.sort,

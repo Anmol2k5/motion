@@ -9,6 +9,7 @@ import {
 import { FORMAT_ID, PARAMETER_COUNT } from './presetSchema.ts';
 import { fromPartial } from '@total-typescript/shoehorn';
 
+const tasks: Promise<void>[]=[];
 let passed = 0;
 function pass(name: string) {
   console.log(`PASS  ${name}`);
@@ -55,7 +56,7 @@ function samplePreset(id: string, name: string, category = 'Entrances') {
 }
 
 // ---- create + get ----
-(async () => {
+tasks.push((async () => {
   const fs = makeMemoryFs();
   const repo = new PresetRepository(fs, '/data');
   await repo.init();
@@ -65,10 +66,10 @@ function samplePreset(id: string, name: string, category = 'Entrances') {
   assert.ok(got && got.presetId === 'p1', 'created preset should be retrievable');
   assert.ok((await repo.list()).length === 1, 'list should return 1');
   pass('create + get + list works');
-})();
+})());
 
 // ---- bundled immutable ----
-(async () => {
+tasks.push((async () => {
   const fs = makeMemoryFs();
   // Seed a bundled preset file.
   const bundled = samplePreset('b1', 'Bundled One', 'Zooms');
@@ -84,10 +85,10 @@ function samplePreset(id: string, name: string, category = 'Entrances') {
   const after = await repo.list();
   assert.ok(after.some((x) => x.presetId === 'b1'), 'bundled preset must still exist');
   pass('bundled presets are listed but immutable');
-})();
+})());
 
 // ---- update ----
-(async () => {
+tasks.push((async () => {
   const fs = makeMemoryFs();
   const repo = new PresetRepository(fs, '/data');
   await repo.init();
@@ -96,10 +97,10 @@ function samplePreset(id: string, name: string, category = 'Entrances') {
   const got = await repo.get('p1');
   assert.strictEqual(got?.name, 'Renamed', 'update should change name');
   pass('update modifies a user preset');
-})();
+})());
 
 // ---- duplicate gets new id ----
-(async () => {
+tasks.push((async () => {
   const fs = makeMemoryFs();
   const repo = new PresetRepository(fs, '/data');
   await repo.init();
@@ -110,10 +111,10 @@ function samplePreset(id: string, name: string, category = 'Entrances') {
   const ids = (await repo.list()).map((x) => x.presetId);
   assert.ok(ids.includes('p1') && ids.includes(dup.presetId), 'both originals + dup present');
   pass('duplicate creates a new presetId');
-})();
+})());
 
 // ---- delete ----
-(async () => {
+tasks.push((async () => {
   const fs = makeMemoryFs();
   const repo = new PresetRepository(fs, '/data');
   await repo.init();
@@ -121,10 +122,10 @@ function samplePreset(id: string, name: string, category = 'Entrances') {
   await repo.delete('p1');
   assert.strictEqual(await repo.get('p1'), undefined, 'deleted preset gone');
   pass('delete removes a user preset');
-})();
+})());
 
 // ---- import writes user file ----
-(async () => {
+tasks.push((async () => {
   const fs = makeMemoryFs();
   const repo = new PresetRepository(fs, '/data');
   await repo.init();
@@ -133,10 +134,10 @@ function samplePreset(id: string, name: string, category = 'Entrances') {
   const got = await repo.get(imported.presetId);
   assert.ok(got && got.name === 'Imported', 'imported preset persisted');
   pass('import writes a user preset file');
-})();
+})());
 
 // ---- export ----
-(async () => {
+tasks.push((async () => {
   const fs = makeMemoryFs();
   const repo = new PresetRepository(fs, '/data');
   await repo.init();
@@ -144,10 +145,10 @@ function samplePreset(id: string, name: string, category = 'Entrances') {
   const text = await repo.export('p1');
   assert.ok(text.includes(FORMAT_ID), 'export includes formatId');
   pass('export emits serialized preset');
-})();
+})());
 
 // ---- corrupt preset skipped ----
-(async () => {
+tasks.push((async () => {
   const fs = makeMemoryFs();
   const repo = new PresetRepository(fs, '/data');
   await repo.init();
@@ -157,7 +158,8 @@ function samplePreset(id: string, name: string, category = 'Entrances') {
   assert.strictEqual(items.length, 1, 'corrupt file should be skipped');
   assert.strictEqual(items[0].presetId, 'p1', 'valid preset should still be returned');
   pass('corrupt preset file is skipped gracefully in list()');
-})();
+})());
 
+await Promise.all(tasks);
 console.log(`\nALL PASSED (${passed})`);
 

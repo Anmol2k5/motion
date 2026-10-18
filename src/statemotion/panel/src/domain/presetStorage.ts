@@ -1,3 +1,5 @@
+import { newId, assertSafeId } from './ids.ts';
+import { isRecord } from './parameterValues.ts';
 // StateMotion Preset Panel — local preset repository (storage).
 //
 // File-backed repository. Host-independent: the FS surface is injected so tests
@@ -38,57 +40,98 @@ const EMPTY_LIBRARY: LibraryModel = {
   recentlyUsed: [],
 };
 
-function userId(id: string): string {
-  return 'user-' + id;
+function validLibrary(value: unknown): value is LibraryModel {
+  if(!isRecord(value)||!isRecord(value.collections))return false;
+  for(const key of ['favoritePresetIds','collectionIds','recentlyUsed'])
+    if(!Array.isArray(value[key])||!(value[key] as unknown[]).every(x=>typeof x==='string'))return false;
+  try {
+    for(const [id,c] of Object.entries(value.collections)){
+      assertSafeId(id);
+      if(!isRecord(c)||c.id!==id||typeof c.name!=='string'||!Array.isArray(c.presetIds)||!c.presetIds.every(x=>typeof x==='string'))return false;
+    }
+    return (value.collectionIds as string[]).every(id=>Object.prototype.hasOwnProperty.call(value.collections,id));
+  }catch{return false;}
 }
 
 export class PresetRepository {
   private library: LibraryModel = structuredClone(EMPTY_LIBRARY);
+  private pending: Promise<unknown> = Promise.resolve();
+  private warnings = new Set<string>();
+  private mutate<T>(operation:()=>Promise<T>): Promise<T> {
+    const result=this.pending.then(operation,operation);
+    this.pending=result.then(()=>{},()=>{});
+    return result;
+  }
+  getWarnings(): string[] { return [...this.warnings]; }
+  private async freshId(): Promise<string> {
+    for(let attempt=0;attempt<100;attempt++){
+      const id=newId();
+      if(!(await this.fs.exists(this.userPath(id))))return id;
+    }
+    throw new Error('Could not allocate a unique preset ID');
+  }
 
   constructor(private fs: FsLike, private root: string) {}
 
   private bundledDir(): string { return this.root + '/bundled'; }
   private userDir(): string { return this.root + '/user'; }
   private libPath(): string { return this.root + '/library.json'; }
-  private userPath(id: string): string { return `${this.userDir()}/${id}.stmpreset`; }
-  private bundledPath(id: string): string { return `${this.bundledDir()}/${id}.stmpreset`; }
+  private userPath(id: string): string { assertSafeId(id); return `${this.userDir()}/${id}.stmpreset`; }
+  private bundledPath(id: string): string { assertSafeId(id); return `${this.bundledDir()}/${id}.stmpreset`; }
 
   async init(): Promise<void> {
-    await this.fs.mkdir(this.bundledDir());
-    await this.fs.mkdir(this.userDir());
-    if (await this.fs.exists(this.libPath())) {
-      try {
-        const raw = await this.fs.readFile(this.libPath());
-        const parsed = JSON.parse(raw) as Partial<LibraryModel>;
-        this.library = { ...structuredClone(EMPTY_LIBRARY), ...parsed };
-        if (!this.library.collections) this.library.collections = {};
-      } catch {
-        this.library = structuredClone(EMPTY_LIBRARY);
+    return this.mutate(async()=>{
+      await this.fs.mkdir(this.bundledDir()); await this.fs.mkdir(this.userDir());
+      let recovered=structuredClone(EMPTY_LIBRARY);
+      if(await this.fs.exists(this.libPath())){
+        const original=await this.fs.readFile(this.libPath());
+        try{
+          const parsed=JSON.parse(original);
+          if(!validLibrary(parsed))throw new Error('Invalid library metadata');
+          recovered=parsed;
+        }catch{
+          const backup=this.root+'/library.backup-'+newId('recovery')+'.json';
+          await this.fs.writeFile(backup,original);
+          this.warnings.add('Library metadata was recovered; the original was saved in a backup.');
+        }
       }
-    }
-    await this.persistLibrary();
+      await this.fs.writeFile(this.libPath(),JSON.stringify(recovered,null,2));
+      this.library=recovered;
+    });
   }
 
   getLibrary(): LibraryModel {
     return structuredClone(this.library);
   }
 
+  async installBundled(presets: StateMotionPreset[]): Promise<void> { return this.mutate(()=>this.doInstallBundled(presets)); }
+
+  async create(preset: StateMotionPreset): Promise<void> { return this.mutate(()=>this.doCreate(preset)); }
+
+  async update(preset: StateMotionPreset): Promise<void> { return this.mutate(()=>this.doUpdate(preset)); }
+
+  async duplicate(id: string): Promise<StateMotionPreset> { return this.mutate(()=>this.doDuplicate(id)); }
+
+  async delete(id: string): Promise<void> { return this.mutate(()=>this.doDelete(id)); }
+
+  async import(text: string): Promise<StateMotionPreset> { return this.mutate(()=>this.doImport(text)); }
+
   // Persist library metadata (favorites/collections/recently-used). The caller
   // passes an updated model; this keeps the repository the single writer.
   async saveLibrary(lib: LibraryModel): Promise<void> {
-    this.library = structuredClone(lib);
-    await this.persistLibrary();
-  }
-
-  private async persistLibrary(): Promise<void> {
-    await this.fs.writeFile(this.libPath(), JSON.stringify(this.library, null, 2));
+    return this.mutate(async()=>{
+      if(!validLibrary(lib))throw new Error('Invalid library metadata');
+      const next=structuredClone(lib);
+      await this.fs.writeFile(this.libPath(),JSON.stringify(next,null,2));
+      this.library=next;
+    });
   }
 
   private isBundled(id: string): boolean {
     return id.startsWith('bundled-');
   }
 
-  async installBundled(presets: StateMotionPreset[]): Promise<void> {
+  private async doInstallBundled(presets: StateMotionPreset[]): Promise<void> {
     for (const preset of presets) {
       const res = validatePreset(preset);
       if (!this.isBundled(preset.presetId) || !res.ok) throw new Error('invalid bundled preset: ' + preset.presetId);
@@ -105,7 +148,7 @@ export class PresetRepository {
         try {
           out.push(deserializePreset(await this.fs.readFile(f)));
         } catch {
-          // Skip malformed preset file gracefully
+          this.warnings.add('Some preset files could not be loaded; the original files were preserved.');
         }
       }
     }
@@ -122,7 +165,7 @@ export class PresetRepository {
     return undefined;
   }
 
-  async create(preset: StateMotionPreset): Promise<void> {
+  private async doCreate(preset: StateMotionPreset): Promise<void> {
     const res = validatePreset(preset);
     if (!res.ok) throw new Error('invalid preset: ' + res.errors.join('; '));
     const id = preset.presetId;
@@ -131,7 +174,7 @@ export class PresetRepository {
     await this.fs.writeFile(this.userPath(id), serializePreset(preset));
   }
 
-  async update(preset: StateMotionPreset): Promise<void> {
+  private async doUpdate(preset: StateMotionPreset): Promise<void> {
     const res = validatePreset(preset);
     if (!res.ok) throw new Error('invalid preset: ' + res.errors.join('; '));
     const id = preset.presetId;
@@ -140,10 +183,10 @@ export class PresetRepository {
     await this.fs.writeFile(this.userPath(id), serializePreset(preset));
   }
 
-  async duplicate(id: string): Promise<StateMotionPreset> {
+  private async doDuplicate(id: string): Promise<StateMotionPreset> {
     const src = await this.get(id);
     if (!src) throw new Error('unknown preset: ' + id);
-    const newId = userId(id + '-' + Date.now().toString(36));
+    const newId = await this.freshId();
     const copy: StateMotionPreset = {
       ...structuredClone(src),
       presetId: newId,
@@ -155,18 +198,24 @@ export class PresetRepository {
     return copy;
   }
 
-  async delete(id: string): Promise<void> {
+  private async doDelete(id: string): Promise<void> {
     if (this.isBundled(id)) throw new Error('bundled presets are immutable');
     if (!(await this.fs.exists(this.userPath(id)))) throw new Error('unknown user preset: ' + id);
     await this.fs.deleteFile(this.userPath(id));
+    const next=structuredClone(this.library);
+    next.favoritePresetIds=next.favoritePresetIds.filter(x=>x!==id);
+    next.recentlyUsed=next.recentlyUsed.filter(x=>x!==id);
+    for(const c of Object.values(next.collections))c.presetIds=c.presetIds.filter(x=>x!==id);
+    await this.fs.writeFile(this.libPath(),JSON.stringify(next,null,2));
+    this.library=next;
   }
 
-  async import(text: string): Promise<StateMotionPreset> {
+  private async doImport(text: string): Promise<StateMotionPreset> {
     const preset = migratePreset(JSON.parse(text));
     const res = validatePreset(preset);
     if (!res.ok) throw new Error('invalid imported preset: ' + res.errors.join('; '));
     // Force a fresh user id so imports never collide with bundled ids.
-    const id = userId(preset.presetId + '-' + Date.now().toString(36));
+    const id = await this.freshId();
     const stamped: StateMotionPreset = { ...structuredClone(preset), presetId: id };
     await this.fs.writeFile(this.userPath(id), serializePreset(stamped));
     return stamped;
