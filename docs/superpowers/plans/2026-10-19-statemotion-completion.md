@@ -10,6 +10,10 @@
 
 **Spec:** `docs/superpowers/specs/2026-10-19-statemotion-completion-design.md`
 
+## Execution status
+
+All ten implementation tasks and the final review fix pass are complete. See [completion report](../../implementation/2026-10-19-completion-report.md) for current evidence, decisions and remaining desktop gates. Original step checkboxes below preserve the approved plan; they are not a desktop certification checklist.
+
 ## Global Constraints
 
 - Use the existing isolated checkout `/workspace/motion`; do not create a worktree unless explicitly requested.

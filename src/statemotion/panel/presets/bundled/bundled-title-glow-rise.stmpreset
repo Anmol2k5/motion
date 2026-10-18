@@ -20,6 +20,14 @@
     "parameterCount": 70
   },
   "parameters": {
+    "transform.position.a": {
+      "x": 0.5,
+      "y": 0.75
+    },
+    "transform.position.b": {
+      "x": 0.5,
+      "y": 0.6
+    },
     "transform.scaleX.a": 0.92,
     "transform.scaleY.a": 0.92,
     "transform.opacity.a": 0,

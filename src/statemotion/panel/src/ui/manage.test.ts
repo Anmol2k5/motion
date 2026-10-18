@@ -4,7 +4,7 @@ import {ManageView} from './manage.ts';
 import {BUNDLED_PRESETS} from '../starter/bundledPresets.ts';
 const {container}=installDom(),root=container as unknown as TestElement;
 let lib:any={favoritePresetIds:[],collectionIds:[],collections:{},recentlyUsed:[]};let imported=0,exported=0;
-const repo={list:async()=>BUNDLED_PRESETS,saveLibrary:async()=>{},import:async()=>{imported++;},export:async()=> 'original',getWarnings:()=>[]};
+const repo={list:async()=>BUNDLED_PRESETS,saveLibrary:async()=>{},updateLibrary:async(update:any)=>update(lib),import:async()=>{imported++;},export:async()=> 'original',getWarnings:()=>[]};
 const interaction={prompt:async()=> 'Collection one',confirm:async()=>true,importPreset:async()=> 'preset text',exportPreset:async()=>{exported++;return true;}};
 const view=new ManageView(repo as never,()=>lib,v=>lib=v,interaction);await view.render(container);
 assert.ok(root.querySelector('[data-action="import"]'),'import uses explicit interaction adapter');

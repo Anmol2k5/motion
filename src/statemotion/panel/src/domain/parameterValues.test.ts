@@ -19,3 +19,8 @@ console.log('PASS strict malformed/future presets and bundled originals');
 assert.equal(defaultValueFor('transform.scaleX.a'),1);
 assert.equal(defaultValueFor('transform.opacity.a'),1);
 assert.equal(defaultValueFor('shadow.angle.a'),Math.PI*3/4);
+assert.equal(defaultValueFor('stroke.color1.a'),'#ffffff','named schema color default must become canonical RGB');
+const {BINDINGS}=await import('../../../../../shared/generated/parameterBindings.ts');
+const {validateParameterValues}=await import('./parameterValues.ts');
+const defaults=Object.fromEntries(BINDINGS.filter(b=>b.stateOwnership!=='metadata').map(b=>[b.logicalId,defaultValueFor(b.logicalId)]));
+assert.equal(validateParameterValues(defaults).ok,true,'complete generated defaults must satisfy canonical validation');

@@ -72,7 +72,7 @@ inline TransformState buildCanonicalState(double posPx, double posPy, double sca
 // Revision 5 corrects the one-based PF_PopupDef wire ABI. Older project
 // metadata selects the historical interpretation so saved renders do not change silently.
 inline int popupValue(int index,int count,int revision=5){
-    return std::clamp(index-(revision>=5?1:0),0,count-1);
+    return revision<5?index:std::clamp(index-1,0,count-1);
 }
 inline int popupDefault(int canonical){return canonical+1;}
 inline double angleDefaultDegrees(double radians){return radians*180.0/3.14159265358979323846;}

@@ -7,6 +7,10 @@ export function isRecord(value: unknown): value is Record<string, unknown> {
 export function canonicalDefault(logicalId: string): ParameterValue | undefined {
   const binding=getBinding(logicalId);
   if(!binding)return undefined;
+  if(binding.nativeType==='COLOR'){
+    const colors:Record<string,string>={white:'#ffffff',black:'#000000'};
+    return typeof binding.defaultVal==='string' ? (colors[binding.defaultVal.toLowerCase()]??binding.defaultVal) : binding.defaultVal;
+  }
   // The schema stores ANGLE defaults in radians, POINT defaults as tokens.
   if(binding.nativeType==='POPUP'||binding.nativeType==='POINT'||binding.nativeType==='ANGLE'||binding.nativeType==='CHECKBOX')return binding.defaultVal;
   return toCanonical(logicalId,binding.defaultVal,binding);

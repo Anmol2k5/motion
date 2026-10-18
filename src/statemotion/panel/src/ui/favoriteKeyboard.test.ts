@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {installDom,TestElement} from '../testing/dom.ts';
+import {LibraryView} from './library.ts';
+import {BUNDLED_PRESETS} from '../starter/bundledPresets.ts';
+const {container}=installDom(),root=container as unknown as TestElement;let applies=0,favorites=0;
+const library={favoritePresetIds:[],collectionIds:[],collections:{},recentlyUsed:[]};
+const view=new LibraryView({list:async()=>[BUNDLED_PRESETS[0]],getWarnings:()=>[]} as never,()=>library,{getSelectionCount:()=>1,onApply:async()=>{applies++;},onToggleFavorite:async()=>{favorites++;}});
+await view.render(container);const card=root.querySelector('.sm-card')!,favorite=root.querySelector('.sm-fav')!;
+await card.dispatch('keydown',{key:'Enter',target:favorite});assert.equal(applies,0,'Favorite key event must not apply card');
+await favorite.click();assert.equal(favorites,1);
+await root.querySelector('.sm-card')!.dispatch('keydown',{key:'Enter'});assert.equal(applies,1,'card keyboard activation still applies');
+console.log('PASS separate keyboard activation for favorite and card');

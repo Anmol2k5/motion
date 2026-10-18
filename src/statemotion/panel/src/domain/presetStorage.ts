@@ -120,11 +120,15 @@ export class PresetRepository {
   // Persist library metadata (favorites/collections/recently-used). The caller
   // passes an updated model; this keeps the repository the single writer.
   async saveLibrary(lib: LibraryModel): Promise<void> {
+    const requested=cloneJson(lib);
+    await this.updateLibrary(()=>requested);
+  }
+  async updateLibrary(update:(current:LibraryModel)=>LibraryModel):Promise<LibraryModel>{
     return this.mutate(async()=>{
-      if(!validLibrary(lib))throw new Error('Invalid library metadata');
-      const next=cloneJson(lib);
+      const next=cloneJson(update(this.getLibrary()));
+      if(!validLibrary(next))throw new Error('Invalid library metadata');
       await this.fs.writeFile(this.libPath(),JSON.stringify(next,null,2));
-      this.library=next;
+      this.library=next;return this.getLibrary();
     });
   }
 

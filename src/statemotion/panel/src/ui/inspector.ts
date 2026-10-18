@@ -18,6 +18,7 @@ export class InspectorView {
   private lastPreset:StateMotionPreset|null=null;
   private repository:PresetRepository|null=null;
   private generation=0;
+  private notice='';
   constructor(private adapter:PremiereAdapter,private options:InspectorOptions={}){}
   setLastPreset(p:StateMotionPreset|null){this.lastPreset=p;}
   setRepository(repo:PresetRepository){this.repository=repo;}
@@ -33,9 +34,9 @@ export class InspectorView {
     if(generation!==this.generation)return;
     const clip=detection.supported[0],snapshot={...config.parameters};
     container.append(el('p',{class:'muted',text:'Editing the first compatible selected clip. Apply, swap and remove act on the selected compatible clips.'}));
-    const status=new OperationStatus(container);container.append(status.element);
+    const status=new OperationStatus(container);status.element.textContent=this.notice;container.append(status.element);
     const reportResult=(report:ApplyReport)=>{
-      status.element.textContent=`${report.applied.length} updated, ${report.failed.length} failed, ${report.skipped.length} skipped.`;
+      this.notice=`${report.applied.length} updated, ${report.failed.length} failed, ${report.skipped.length} skipped.`;status.element.textContent=this.notice;
       this.options.onOperation?.(report);
     };
     const actions=el('div',{class:'sm-actionbar'});
@@ -43,7 +44,7 @@ export class InspectorView {
       const button=el('button',{class:'sm-btn secondary',text:label,'data-action':id});
       button.addEventListener('click',()=>status.run(run));actions.append(button);return button;
     };
-    const apply=action('Apply last preset','apply',async()=>{if(this.lastPreset)reportResult(await this.adapter.applyPresetToSelection(this.lastPreset,detection.supported.map(c=>c.clipId)));});
+    const apply=action('Apply last preset','apply',async()=>{if(this.lastPreset){reportResult(await this.adapter.applyPresetToSelection(this.lastPreset,detection.supported.map(c=>c.clipId)));await this.render(container);}});
     apply.disabled=!this.lastPreset;
     action('Swap A/B','swap',async()=>{reportResult(await this.adapter.runSelectionAction('swap',detection.supported));await this.render(container);});
     action('Remove effect','remove',async()=>{if(await this.options.confirmRemoval?.()){reportResult(await this.adapter.runSelectionAction('remove',detection.supported));await this.render(container);}});

@@ -1,5 +1,5 @@
 import { validatePreset } from '../domain/presetSchema.ts';
-import { validateParameterValues } from '../domain/parameterValues.ts';
+import { validateParameterValues,canonicalDefault } from '../domain/parameterValues.ts';
 // StateMotion Preset Panel — PremiereAdapter (thin host seam).
 //
 // The adapter is the ONLY module that talks to Premiere. It depends on a
@@ -49,9 +49,9 @@ export class PremiereAdapter {
   private exclusive<T>(run:()=>Promise<T>):Promise<T>{
     const result=this.pending.then(run,run);this.pending=result.then(()=>{},()=>{});return result;
   }
-  private async transaction(label:string,run:()=>Promise<void>):Promise<void>{
+  private async transaction(label:string,clip:ClipRef,run:()=>Promise<void>):Promise<void>{
     await this.host.beginUndo(label);
-    try {await run();await this.host.endUndo();}
+    try {await run();await this.assertSelected(clip);await this.host.endUndo();}
     catch(error){await this.host.cancelUndo();throw error;}
   }
   private async assertSelected(clip:ClipRef):Promise<void>{
@@ -77,18 +77,20 @@ export class PremiereAdapter {
       const clips=selectionClipIds?selectionClipIds.map(clipId=>({clipId})):selected;
       const report:ApplyReport={applied:[],skipped:[],failed:[],reasons:{}};
       const validation=validatePreset(preset);
+      const values:Record<string,ParameterValue>={};
+      if(validation.ok){for(const id of LOGICAL_IDS)if(isCreative(id))values[id]=canonicalDefault(id)!;Object.assign(values,preset.parameters);}
       for(const clip of clips){
         try {
           if(!validation.ok)throw new Error('Invalid or incompatible preset');
           if(!selected.some(c=>c.clipId===clip.clipId))throw new Error('Selection changed');
-          await this.transaction('StateMotion: apply '+preset.name,async()=>{
+          await this.transaction('StateMotion: apply '+preset.name,clip,async()=>{
             if(!(await this.host.hasStateMotionEffect(clip)))await this.host.applyEffect(clip);
             await this.assertCompatible(clip);
-            for(const [id,value] of Object.entries(preset.parameters)){
+            for(const [id,value] of Object.entries(values)){
               const binding=getBinding(id)!;
               if(await this.host.enumerateParamIndex(clip,binding.wireName)===undefined)throw new Error('Cannot resolve required parameter');
             }
-            for(const [id,value] of Object.entries(preset.parameters))await this.host.writeLogical(clip,id,value);
+            for(const [id,value] of Object.entries(values))await this.host.writeLogical(clip,id,value);
           });
           report.applied.push(clip.clipId);
         }catch(error){report.failed.push(clip.clipId);report.reasons[clip.clipId]=error instanceof ContractIncompatible||error instanceof ContractReadOnly?'Contract incompatible':error instanceof Error&&error.message==='Selection changed'?'Selection changed':'Operation failed; no staged changes were committed';}
@@ -103,7 +105,7 @@ export class PremiereAdapter {
       if(!result.ok)throw new Error('Invalid parameter values');
       await this.assertCompatible(clip);await this.assertSelected(clip);
       for(const id of Object.keys(values))if(await this.host.enumerateParamIndex(clip,getBinding(id)!.wireName)===undefined)throw new Error('Cannot resolve required parameter');
-      await this.transaction('StateMotion: edit parameters',async()=>{
+      await this.transaction('StateMotion: edit parameters',clip,async()=>{
         for(const [id,value] of Object.entries(values))await this.host.writeLogical(clip,id,value);
       });
     });
@@ -117,7 +119,7 @@ export class PremiereAdapter {
     return {parameters};
   }
   async removeEffect(clip:ClipRef):Promise<void>{
-    return this.exclusive(async()=>{await this.assertSelected(clip);await this.assertCompatible(clip);await this.transaction('StateMotion: remove effect',()=>this.host.removeEffect(clip));});
+    return this.exclusive(async()=>{await this.assertSelected(clip);await this.assertCompatible(clip);await this.transaction('StateMotion: remove effect',clip,()=>this.host.removeEffect(clip));});
   }
   async swapStates(clip:ClipRef):Promise<void>{
     return this.exclusive(async()=>{
@@ -127,7 +129,7 @@ export class PremiereAdapter {
         const target=id.endsWith('.a')?id.slice(0,-2)+'.b':id.endsWith('.b')?id.slice(0,-2)+'.a':id;
         if(target!==id&&state.parameters[target]!==undefined)values[id]=state.parameters[target];
       }
-      await this.transaction('StateMotion: swap states',async()=>{for(const [id,value] of Object.entries(values))await this.host.writeLogical(clip,id,value);});
+      await this.transaction('StateMotion: swap states',clip,async()=>{for(const [id,value] of Object.entries(values))await this.host.writeLogical(clip,id,value);});
     });
   }
   async runSelectionAction(action:'swap'|'remove',clips:ClipRef[]):Promise<ApplyReport>{

@@ -15,13 +15,13 @@ import type {UserInteraction} from './host/userInteraction.ts';
 export interface PanelDependencies {repo:PresetRepository;adapter:PremiereAdapter;interaction:UserInteraction;}
 export async function startPanel(app:HTMLElement,{repo,adapter,interaction}:PanelDependencies):Promise<void>{
  clear(app);await repo.init();await repo.installBundled(BUNDLED_PRESETS);
- let library=repo.getLibrary(),selectionCount=0,selectionRequest=0;
+ let selectionCount=0,selectionRequest=0;
  const diagnostic:DiagnosticInput={effectMatchName:EXPECTED_MATCH_NAME,selectionCount:0,contractStatus:'unknown',lastOperation:'none'};
  const record=(report:ApplyReport,label:string)=>{
   diagnostic.lastOperation=`${label}: ${report.applied.length} applied, ${report.failed.length} failed, ${report.skipped.length} skipped`;
   diagnostic.lastErrorCode=report.failed.length?'OperationFailed':null;
  };
- const saveLibrary=async(next:LibraryModel)=>{await repo.saveLibrary(next);library=next;};
+ const getLibrary=()=>repo.getLibrary();
  const capture=async()=>{
   const before=await adapter.detectSelection(),clip=before.supported[0];if(!clip)throw new Error('Select a compatible clip');
   const name=await interaction.prompt('Preset name','My StateMotion preset');if(!name?.trim())return;
@@ -30,20 +30,20 @@ export async function startPanel(app:HTMLElement,{repo,adapter,interaction}:Pane
   await repo.create({...preset,name:name.trim()});record({applied:[clip.clipId],failed:[],skipped:[],reasons:{}},'Capture preset');
  };
  const inspector=new InspectorView(adapter,{promptName:initial=>interaction.prompt('Preset name',initial),confirmRemoval:()=>interaction.confirm('Remove StateMotion from selected clips?'),onOperation:report=>record(report,'Inspector')});inspector.setRepository(repo);
- const libraryView=new LibraryView(repo,()=>library,{
+ const libraryView=new LibraryView(repo,getLibrary,{
   getSelectionCount:async()=>{const selection=await adapter.detectSelection();return selection.supported.length+selection.unsupported.length;},
   onApply:async preset=>{
    const report=await adapter.applyPresetToSelection(preset);record(report,'Apply preset');
    if(report.applied.length){
     inspector.setLastPreset(preset);
-    try{await saveLibrary({...library,recentlyUsed:[preset.presetId,...library.recentlyUsed.filter(id=>id!==preset.presetId)].slice(0,12)});}
+    try{await repo.updateLibrary(library=>({...library,recentlyUsed:[preset.presetId,...library.recentlyUsed.filter(id=>id!==preset.presetId)].slice(0,12)}));}
     catch{diagnostic.lastErrorCode='StorageWriteFailed';report.warning='Applied, but recent history could not be saved.';}
    }
    return report;
   },
-  onToggleFavorite:async id=>{await saveLibrary(toggleFavorite(library,id));},
+  onToggleFavorite:async id=>{await repo.updateLibrary(library=>toggleFavorite(library,id));},
  });
- const manage=new ManageView(repo,()=>library,next=>{library=next;},interaction,capture);
+ const manage=new ManageView(repo,getLibrary,()=>{},interaction,capture);
  const diagnostics=new DiagnosticsView(()=>({...diagnostic}));
  const tabBar=el('div',{class:'sm-tabs',role:'tablist','aria-label':'StateMotion views'}),views=el('div',{class:'sm-view'});app.append(tabBar,views);
  const router=new ViewRouter(views,()=>{diagnostic.lastErrorCode='ViewLoadFailed';});

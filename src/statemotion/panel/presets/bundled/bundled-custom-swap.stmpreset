@@ -19,7 +19,17 @@
     "parameterCount": 70
   },
   "parameters": {
-    "transition.mode": 0
+    "transition.mode": 0,
+    "transition.durationSeconds": 0,
+    "transition.delaySeconds": 0.25,
+    "transform.position.a": {
+      "x": 0.4,
+      "y": 0.5
+    },
+    "transform.position.b": {
+      "x": 0.6,
+      "y": 0.5
+    }
   },
   "preview": {
     "kind": "generated"

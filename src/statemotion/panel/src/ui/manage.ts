@@ -15,7 +15,7 @@ export class ManageView {
   let presets;
   try{presets=await this.repo.list();}catch{status.element.textContent='Presets could not be loaded.';return;}
   if(generation!==this.generation)return;
-  const save=async(lib:LibraryModel)=>{await this.repo.saveLibrary(lib);this.setLibrary(lib);};
+  const save=async(update:(current:LibraryModel)=>LibraryModel)=>{this.setLibrary(await this.repo.updateLibrary(update));};
   const button=(label:string,id:string,run:()=>Promise<void|boolean>)=>{
    const element=el('button',{class:'sm-btn secondary',text:label,'data-action':id});
    element.addEventListener('click',()=>status.run(async()=>{const result=await run();this.notice=result===false?'Canceled.':'Saved.';await this.render(container);}));return element;
@@ -24,15 +24,15 @@ export class ManageView {
   container.append(el('div',{class:'sm-actionbar'},[
    button('Import preset','import',async()=>{const text=await this.interaction.importPreset();if(text===null)return false;await this.repo.import(text);}),
    capture,
-   button('New collection','new-collection',async()=>{const name=await this.interaction.prompt('Collection name');if(name?.trim())await save(createCollection(this.getLibrary(),newId('col'),name.trim()));}),
+   button('New collection','new-collection',async()=>{const name=await this.interaction.prompt('Collection name');if(name?.trim())await save(library=>createCollection(library,newId('col'),name.trim()));}),
   ]));
   container.append(el('h2',{text:'Collections'}));
   const library=this.getLibrary();
   for(const id of library.collectionIds){const collection=library.collections[id];
    container.append(el('div',{class:'sm-row'},[
     el('span',{text:collection.name}),
-    button('Rename','collection-rename',async()=>{const name=await this.interaction.prompt('Rename collection',collection.name);if(name?.trim())await save(renameCollection(this.getLibrary(),id,name.trim()));}),
-    button('Delete','collection-delete',async()=>{if(await this.interaction.confirm('Delete this collection? Presets are kept.'))await save(deleteCollection(this.getLibrary(),id));}),
+    button('Rename','collection-rename',async()=>{const name=await this.interaction.prompt('Rename collection',collection.name);if(name?.trim())await save(library=>renameCollection(library,id,name.trim()));}),
+    button('Delete','collection-delete',async()=>{if(await this.interaction.confirm('Delete this collection? Presets are kept.'))await save(library=>deleteCollection(library,id));}),
    ]));
   }
   container.append(el('h2',{text:'Presets'}));
@@ -45,7 +45,7 @@ export class ManageView {
     row.append(button('Delete','delete',async()=>{if(await this.interaction.confirm('Delete this user preset?'))await this.repo.delete(preset.presetId);}));
    }
    for(const id of library.collectionIds){const collection=library.collections[id],member=collection.presetIds.includes(preset.presetId);
-    row.append(button((member?'Remove from ':'Add to ')+collection.name,'membership',async()=>{await save((member?removeFromCollection:addToCollection)(this.getLibrary(),id,preset.presetId));}));
+    row.append(button((member?'Remove from ':'Add to ')+collection.name,'membership',async()=>{await save(library=>(library.collections[id]?.presetIds.includes(preset.presetId)?removeFromCollection:addToCollection)(library,id,preset.presetId));}));
    }
    container.append(row);
   }

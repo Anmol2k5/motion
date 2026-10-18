@@ -127,7 +127,7 @@ function fakePreset(contract: typeof CURRENT_CONTRACT): StateMotionPreset {
   const adapter = new PremiereAdapter(bridge);
   const report = await adapter.applyPresetToSelection(fakePreset(CURRENT_CONTRACT));
   assert.strictEqual(bridge.applies, 1);
-  assert.strictEqual(bridge.writes, 2);
+  assert.strictEqual(bridge.writes, 67, 'preset writes every creative canonical default and override');
   assert.deepStrictEqual(report.applied, ['selected']);
   assert.ok(bridge.order.indexOf('begin') < bridge.order.indexOf('apply'));
   pass('adapter applies a preset to the current selection and installs a missing effect');

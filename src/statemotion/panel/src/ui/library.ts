@@ -46,7 +46,7 @@ export class LibraryView {
       const report=await this.cb.onApply(preset);
       if(report)status.element.textContent=`${report.applied.length} applied, ${report.failed.length} failed, ${report.skipped.length} skipped. ${report.warning??''}`;
      });
-     card.addEventListener('click',apply);card.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();return apply();}});
+     card.addEventListener('click',apply);card.addEventListener('keydown',event=>{if(event.target===card&&(event.key==='Enter'||event.key===' ')){event.preventDefault();return apply();}});
      const favorite=el('button',{class:'sm-fav',text:model.favoriteIds.has(preset.presetId)?'★':'☆','aria-label':'Favorite '+preset.name});
      favorite.addEventListener('click',event=>{event.stopPropagation();return status.run(async()=>{await this.cb.onToggleFavorite(preset.presetId);await refresh();});});card.append(favorite);grid.append(card);
     }
