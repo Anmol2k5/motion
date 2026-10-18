@@ -7,6 +7,7 @@ const values = BINDINGS.map((binding) => binding.defaultVal);
 
 function param(index: number) {
   return {
+    displayName: BINDINGS[index].wireName,
     async getStartValue() { return { value: { value: values[index] } }; },
     createKeyframe(value: unknown) { return { value: { value } }; },
     createSetValueAction(keyframe: any) {

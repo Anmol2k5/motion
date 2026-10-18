@@ -12,9 +12,9 @@ import { PARAMETER_COUNT } from '../domain/presetSchema.ts';
 let passed = 0;
 function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
 
-const CURRENT_CONTRACT = { schemaVersion: 1, bindingRevision: 2, parameterCount: PARAMETER_COUNT };
+const CURRENT_CONTRACT = { schemaVersion: 1, bindingRevision: 4, parameterCount: PARAMETER_COUNT };
 const OLDER_CONTRACT = { schemaVersion: 1, bindingRevision: 1, parameterCount: 20 };
-const NEWER_CONTRACT = { schemaVersion: 2, bindingRevision: 2, parameterCount: PARAMETER_COUNT };
+const NEWER_CONTRACT = { schemaVersion: 2, bindingRevision: 4, parameterCount: PARAMETER_COUNT };
 
 // --- pure plan classification ------------------------------------------------
 {
@@ -58,7 +58,7 @@ class CountingBridge implements HostBridge {
   writes = 0;
   applies = 0;
   constructor(private contract: typeof CURRENT_CONTRACT | null) {}
-  async getSelection(): Promise<ClipRef[]> { return []; }
+  async getSelection(): Promise<ClipRef[]> { return [{clipId:'a'}]; }
   async hasStateMotionEffect(): Promise<boolean> { return true; }
   async getContract(): Promise<any> { return this.contract; }
   async enumerateParamIndex(): Promise<number | undefined> { return 0; }
@@ -66,6 +66,7 @@ class CountingBridge implements HostBridge {
   async writeLogical(): Promise<void> { this.writes++; }
   async beginUndo(): Promise<void> {}
   async endUndo(): Promise<void> {}
+  async cancelUndo(): Promise<void> {}
   async applyEffect(): Promise<void> { this.applies++; }
 }
 

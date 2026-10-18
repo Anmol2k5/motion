@@ -32,6 +32,7 @@ function fakeBridgeWithState(native: Record<string, number | string>): HostBridg
     writeLogical: async () => {},
     beginUndo: async () => {},
     endUndo: async () => {},
+    cancelUndo: async () => {},
     applyEffect: async () => {},
   };
 }
@@ -46,6 +47,7 @@ function fakeBridgeWithContract(contract: { schemaVersion: number; bindingRevisi
     writeLogical: async () => {},
     beginUndo: async () => {},
     endUndo: async () => {},
+    cancelUndo: async () => {},
     applyEffect: async () => {},
   };
 }
@@ -59,7 +61,7 @@ import { PARAMETER_COUNT } from '../domain/presetSchema.ts';
     'transform.opacity.b': 100,
     'contract.schemaVersion': 1,
     'contract.parameterCount': PARAMETER_COUNT,
-    'contract.bindingRevision': 2,
+    'contract.bindingRevision': 4,
   }));
   const cfg = await adapter.readState({ clipId: 'c1' });
   assert.strictEqual(cfg.parameters['transition.manualProgress'], 0.5);

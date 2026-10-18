@@ -7,7 +7,7 @@ import { toNative, toCanonical } from './valueConversion.ts';
 import { BINDINGS, getBinding } from '../../../../../shared/generated/parameterBindings.ts';
 
 const MATCH_NAME = 'AE.io.github.anmol2k5.statemotion.effect';
-type Runtime = Pick<premierepro, 'Project' | 'VideoFilterFactory' | 'PointF'>;
+type Runtime = Pick<premierepro, 'Project' | 'VideoFilterFactory' | 'PointF' | 'Color'>;
 
 function loadRuntime(): Runtime {
   const runtime = (globalThis as any).require?.('premierepro');
@@ -50,9 +50,9 @@ export class UxpHostBridge implements HostBridge {
     const effect = await this.findEffect(clip);
     if (!effect || effect.getParamCount() < 3) return null;
     try {
-      const schemaVersion = await this.readParamNumber(effect, 0);
-      const parameterCount = await this.readParamNumber(effect, 1);
-      const bindingRevision = await this.readParamNumber(effect, 2);
+      const schemaVersion = await this.readParamNumber(effect, this.paramIndex(effect,'SM Schema Version'));
+      const parameterCount = await this.readParamNumber(effect, this.paramIndex(effect,'SM Param Count'));
+      const bindingRevision = await this.readParamNumber(effect, this.paramIndex(effect,'SM Binding Rev'));
       return { schemaVersion, parameterCount, bindingRevision };
     } catch {
       return null;
@@ -62,19 +62,23 @@ export class UxpHostBridge implements HostBridge {
   async enumerateParamIndex(clip: ClipRef, wireName: string): Promise<number | undefined> {
     const effect = await this.findEffect(clip);
     if (!effect || effect.getParamCount() < BINDINGS.length) return undefined;
-    const index = BINDINGS.findIndex((binding) => binding.wireName === wireName);
-    return index < 0 ? undefined : index;
+    return this.paramIndex(effect,wireName);
   }
 
   async readLogical(clip: ClipRef, logicalId: string): Promise<ParameterValue | undefined> {
     const binding = getBinding(logicalId);
     if (!binding) return undefined;
     const effect = await this.findEffect(clip);
-    const index = BINDINGS.indexOf(binding);
-    if (!effect || index < 0 || index >= effect.getParamCount()) return undefined;
+    const index = effect ? this.paramIndex(effect,binding.wireName) : undefined;
+    if (!effect || index === undefined) throw new Error('Cannot resolve parameter');
     const keyframe = await effect.getParam(index).getStartValue();
     const raw = keyframe?.value?.value;
     if (raw === undefined) return undefined;
+    if(binding.nativeType==='COLOR'){
+      if(!raw||!['red','green','blue'].every(channel=>typeof raw[channel]==='number'&&Number.isFinite(raw[channel])))throw new Error('Invalid host color');
+      const hex=['red','green','blue'].map(channel=>Math.round(Math.min(1,Math.max(0,raw[channel]))*255).toString(16).padStart(2,'0')).join('');
+      return '#'+hex;
+    }
     return toCanonical(logicalId, this.unmarshalNative(raw), binding);
   }
 
@@ -82,10 +86,14 @@ export class UxpHostBridge implements HostBridge {
     const binding = getBinding(logicalId);
     if (!binding) throw new Error(`Unknown logical ID ${logicalId}`);
     const effect = await this.findEffect(clip);
-    const index = BINDINGS.indexOf(binding);
-    if (!effect || index < 0 || index >= effect.getParamCount()) throw new Error(`Cannot resolve parameter ${logicalId}`);
+    const index = effect ? this.paramIndex(effect,binding.wireName) : undefined;
+    if (!effect || index === undefined) throw new Error(`Cannot resolve parameter ${logicalId}`);
     const param = effect.getParam(index);
-    const native = this.marshalNative(toNative(logicalId, value, binding));
+    let native = this.marshalNative(toNative(logicalId, value, binding));
+    if(binding.nativeType==='COLOR'){
+      if(typeof value!=='string'||!/^#[a-f0-9]{6}$/i.test(value)||!this.ppro.Color)throw new Error('Unsupported color');
+      native=new (this.ppro.Color as any)(parseInt(value.slice(1,3),16)/255,parseInt(value.slice(3,5),16)/255,parseInt(value.slice(5,7),16)/255,1);
+    }
     await this.addAction(param.createSetValueAction(param.createKeyframe(native)), 'StateMotion: edit parameter');
   }
 
@@ -104,7 +112,7 @@ export class UxpHostBridge implements HostBridge {
     if (!actions.length) return;
     const project = await this.ppro.Project.getActiveProject();
     const ok = project.executeTransaction((compound: any) => {
-      for (const action of actions) compound.addAction(action);
+      for (const action of actions) if(!compound.addAction(action))throw new Error('Premiere rejected an action');
     }, label);
     if (!ok) throw new Error('Premiere transaction failed');
   }
@@ -162,7 +170,14 @@ export class UxpHostBridge implements HostBridge {
     return null;
   }
 
-  private async readParamNumber(effect: any, index: number): Promise<number> {
+  private paramIndex(effect:any, wireName:string):number|undefined {
+    const matches:number[]=[];
+    for(let i=0;i<effect.getParamCount();i++)if(effect.getParam(i).displayName===wireName)matches.push(i);
+    return matches.length===1?matches[0]:undefined;
+  }
+  async cancelUndo():Promise<void>{this.pendingActions=null;this.pendingLabel='';this.pendingEffects.clear();}
+  private async readParamNumber(effect: any, index: number|undefined): Promise<number> {
+    if(index===undefined)throw new Error('Cannot resolve contract metadata');
     const keyframe = await effect.getParam(index).getStartValue();
     const value = Number(keyframe?.value?.value);
     if (!Number.isFinite(value)) throw new Error('Invalid contract metadata');
