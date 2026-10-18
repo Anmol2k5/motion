@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {installDom,TestElement} from '../testing/dom.ts';
+import {CurveEditor} from './curveEditor.ts';
+const {document}=installDom();const calls:number[][]=[];const editor=new CurveEditor(c=>calls.push([...c]));
+const root=editor.getElement() as unknown as TestElement;
+await root.querySelector('.sm-curve-h1')!.dispatch('mousedown');
+await document.dispatch('mousemove',{touches:[{clientX:80,clientY:120}]});
+await document.dispatch('mousemove',{touches:[{clientX:100,clientY:100}]});
+assert.equal(calls.length,0,'drag must not flood host transactions');
+await document.dispatch('mouseup');assert.equal(calls.length,1,'release sends final curve once');assert.equal(calls[0][0],.5);
+console.log('PASS curve commits its final four values once per gesture');

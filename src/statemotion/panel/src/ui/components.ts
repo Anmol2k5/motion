@@ -38,11 +38,12 @@ export function svgFromString(markup: string): SVGElement {
 export function accordion(title: string, content: HTMLElement[], isOpen = false): HTMLElement {
   const acc = el('div', { class: `sm-accordion ${isOpen ? 'open' : ''}` });
   const icon = el('span', { class: 'sm-accordion-icon', text: '▶' });
-  const header = el('div', { class: 'sm-accordion-header' }, [icon, el('span', { text: title })]);
+  const header = el('button', { type:'button', class: 'sm-accordion-header', 'aria-expanded':String(isOpen) }, [icon, el('span', { text: title })]);
   const body = el('div', { class: 'sm-accordion-content' }, content);
   
   header.addEventListener('click', () => {
     const isCurrentlyOpen = acc.classList.contains('open');
+    header.setAttribute('aria-expanded',String(!isCurrentlyOpen));
     if (isCurrentlyOpen) {
       acc.classList.remove('open');
     } else {

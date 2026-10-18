@@ -1,458 +1,113 @@
-// StateMotion Preset Panel — Inspector view (current selection status + apply).
-
+// Inspector edits canonical values; native units and transactions stay in the host seam.
 import { el, clear, showState, accordion } from './components.ts';
+import { OperationStatus } from './operationStatus.ts';
 import { CurveEditor } from './curveEditor.ts';
-import {
-  renderNumberRow,
-  renderAbNumberRow,
-  renderSelectRow,
-  renderCheckboxRow,
-  renderAbCheckboxRow,
-} from './parameterControls.ts';
-import { TypedStateConfig } from '../domain/typedConfig.ts';
-import type { PremiereAdapter } from '../host/premiereAdapter.ts';
+import { BINDINGS, type ParameterBinding } from '../../../../../shared/generated/parameterBindings.ts';
+import { canonicalDefault } from '../domain/parameterValues.ts';
+import { buildUserPresetFromConfig, type ParameterValue, type StateMotionPreset, type CanonicalStateMotionConfig } from '../domain/presetSchema.ts';
+import type { PremiereAdapter, ApplyReport } from '../host/premiereAdapter.ts';
 import type { PresetRepository } from '../domain/presetStorage.ts';
-import type { StateMotionPreset, ParameterValue } from '../domain/presetSchema.ts';
-
+export interface InspectorOptions {
+  promptName?:(initial:string)=>Promise<string|null>;
+  confirmRemoval?:()=>Promise<boolean>;
+  onOperation?:(report:ApplyReport)=>void;
+}
+const ENUMS:Record<string,string[]>={ProgressMode:['A to B','B to A','A to B to A','B to A to B','Hold A','Hold B','Manual'],AlignmentMode:['Clip Start','Clip End','Entire Clip'],EasingMode:['Linear','Ease In','Ease Out','Ease In/Out','Custom Bezier','Spring','Bounce']};
+const displayNumber=(value:number)=>String(Number(value.toFixed(6)));
 export class InspectorView {
-  constructor(private adapter: PremiereAdapter) {}
-
-  async render(container: HTMLElement): Promise<void> {
-    clear(container);
-    const detection = await this.adapter.detectSelection();
-    const supported = detection.supported;
-    const unsupported = detection.unsupported;
-
-    if (supported.length === 0 && unsupported.length === 0) {
-      showState(container, '🎞️', 'No clip selected', 'Select a clip in the timeline to inspect its StateMotion state.');
-      return;
-    }
-    if (supported.length === 0) {
-      showState(container, '⚠️', 'No StateMotion effect', `${unsupported.length} selected clip(s) lack a StateMotion effect. Apply a preset to add one.`);
-      container.lastElementChild?.classList.add('sm-warn');
-      return;
-    }
-
-    // Clip Actions section
-    container.append(el('div', { class: 'sm-header', text: 'CLIP ACTIONS' }));
-
-    const applyBtn = el('button', { class: 'sm-action-btn', title: 'Apply last preset' }, [
-      el('span', { text: '+ Apply' }),
-    ]) as HTMLButtonElement;
-    applyBtn.disabled = !this.lastPreset;
-    applyBtn.addEventListener('click', () => {
-      if (this.lastPreset) this.adapter.applyPresetToSelection(this.lastPreset, supported.map((c) => c.clipId));
-    });
-
-    const swapBtn = el('button', { class: 'sm-action-btn', title: 'Swap A ↔ B' }, [
-      el('span', { text: '⇄ Swap A/B' }),
-    ]) as HTMLButtonElement;
-    swapBtn.addEventListener('click', async () => {
-      for (const clip of supported) await this.adapter.swapStates(clip);
-      this.render(container);
-    });
-
-    const removeBtn = el('button', { class: 'sm-action-btn', title: 'Remove Effect' }, [
-      el('span', { text: '✕ Remove' }),
-    ]);
-    removeBtn.addEventListener('click', async () => {
-      if (window.confirm('Remove StateMotion from selected clips?')) {
-        for (const clip of supported) await this.adapter.removeEffect(clip);
-        this.render(container);
-      }
-    });
-
-    const actionGrid = el('div', { class: 'sm-actions-grid' }, [applyBtn, swapBtn, removeBtn]);
-    container.append(actionGrid);
-
-    // Accordions wrapper
-    container.append(el('div', { class: 'sm-header', text: 'PARAMETERS' }));
-
-    const clipId = supported[0].clipId;
-
-    await this.renderTransitionControl(container, clipId);
-    await this.renderCropControl(container, clipId);
-    await this.renderShadowControl(container, clipId);
-    await this.renderStrokeControl(container, clipId);
-    await this.renderGlowControl(container, clipId);
-    await this.renderMotionBlurControl(container, clipId);
-
-    if (unsupported.length > 0) {
-      const warn = el('p', {
-        class: 'sm-warn',
-        style: 'padding: 12px',
-        text: `${unsupported.length} clip(s) skipped: no StateMotion effect.`,
-      });
-      container.append(warn);
-    }
-  }
-
-  setLastPreset(p: StateMotionPreset | null) { this.lastPreset = p; }
-  setRepository(repo: PresetRepository) { this.repository = repo; }
-  private lastPreset: StateMotionPreset | null = null;
-  private repository: PresetRepository | null = null;
-
-  private async readConfig(clipId: string): Promise<TypedStateConfig> {
-    try {
-      const cfg = await this.adapter.readState({ clipId });
-      return new TypedStateConfig(cfg);
-    } catch {
-      return new TypedStateConfig(null);
-    }
-  }
-
-  private async renderTransitionControl(container: HTMLElement, clipId: string): Promise<void> {
-    const MODES = ['A to B', 'B to A', 'A to B to A', 'B to A to B', 'Hold A', 'Hold B', 'Manual'];
-    const ALIGNMENTS = ['Clip Start', 'Clip End', 'Entire Clip'];
-    const EASING_LABELS = ['Linear', 'Ease In', 'Ease Out', 'Ease In/Out', 'Custom Bezier', 'Spring', 'Bounce'];
-
-    const typed = await this.readConfig(clipId);
-    const mode = typed.getNumber('transition.mode', 0);
-    const alignment = typed.getNumber('transition.alignment', 0);
-    const duration = typed.getNumber('transition.durationSeconds', 1.0);
-    const delay = typed.getNumber('transition.delaySeconds', 0.0);
-    const easing = typed.getNumber('transition.easing', 3);
-    const curve = typed.getCurve();
-
-    const content: HTMLElement[] = [];
-
-    // Duration & Delay
-    content.push(
-      renderNumberRow({
-        label: 'Duration',
-        value: duration,
-        unit: 's',
-        min: 0,
-        step: 0.1,
-        onChange: (v) => this.writeLogical(clipId, 'transition.durationSeconds', v),
-      }),
-    );
-
-    content.push(
-      renderNumberRow({
-        label: 'Delay',
-        value: delay,
-        unit: 's',
-        min: 0,
-        step: 0.1,
-        onChange: (v) => this.writeLogical(clipId, 'transition.delaySeconds', v),
-      }),
-    );
-
-    // Alignment & Mode
-    content.push(
-      renderSelectRow({
-        label: 'Alignment',
-        options: ALIGNMENTS,
-        selectedIndex: alignment,
-        onChange: (idx) => this.writeLogical(clipId, 'transition.alignment', idx),
-      }),
-    );
-
-    content.push(
-      renderSelectRow({
-        label: 'Mode',
-        options: MODES,
-        selectedIndex: mode,
-        onChange: (idx) => this.writeLogical(clipId, 'transition.mode', idx),
-      }),
-    );
-
-    // Easing Dropdown & Specifics
-    const easeRow = renderSelectRow({
-      label: 'Easing Type',
-      options: EASING_LABELS,
-      selectedIndex: easing,
-      onChange: (idx) => {
-        this.writeLogical(clipId, 'transition.easing', idx);
-        syncVisibility(idx);
-      },
-    });
-    content.push(easeRow);
-
-    const curveRow = el('div', { class: 'sm-control-row', style: 'justify-content: center;' }, []);
-    const editor = new CurveEditor((newCurve) => {
-      this.writeLogical(clipId, 'transition.curveX1', newCurve[0]);
-      this.writeLogical(clipId, 'transition.curveY1', newCurve[1]);
-      this.writeLogical(clipId, 'transition.curveX2', newCurve[2]);
-      this.writeLogical(clipId, 'transition.curveY2', newCurve[3]);
-    });
-    editor.setCurve(curve);
-    curveRow.append(editor.getElement());
-    content.push(curveRow);
-
-    const springFreq = typed.getNumber('transition.spring.frequency', 1.0);
-    const springDamp = typed.getNumber('transition.spring.damping', 0.5);
-    const springVel = typed.getNumber('transition.spring.initialVelocity', 0.0);
-
-    const bounceCount = typed.getNumber('transition.bounce.count', 3);
-    const bounceHDecay = typed.getNumber('transition.bounce.heightDecay', 0.5);
-    const bounceTDecay = typed.getNumber('transition.bounce.timeDecay', 0.5);
-    const bounceHang = typed.getNumber('transition.bounce.hangTime', 0.0);
-
-    const springContainer = el('div', { style: 'display: flex; flex-direction: column; width: 100%; gap: 4px;' }, [
-      renderNumberRow({
-        label: 'Frequency',
-        value: springFreq,
-        min: 0,
-        max: 100,
-        step: 0.1,
-        onChange: (v) => this.writeLogical(clipId, 'transition.spring.frequency', v),
-      }),
-      renderNumberRow({
-        label: 'Damping',
-        value: springDamp,
-        min: 0,
-        max: 100,
-        step: 0.05,
-        onChange: (v) => this.writeLogical(clipId, 'transition.spring.damping', v),
-      }),
-      renderNumberRow({
-        label: 'Initial Vel',
-        value: springVel,
-        min: -100,
-        max: 100,
-        step: 0.1,
-        onChange: (v) => this.writeLogical(clipId, 'transition.spring.initialVelocity', v),
-      }),
-    ]);
-    content.push(springContainer);
-
-    const bounceContainer = el('div', { style: 'display: flex; flex-direction: column; width: 100%; gap: 4px;' }, [
-      renderNumberRow({
-        label: 'Count',
-        value: bounceCount,
-        min: 0,
-        max: 100,
-        step: 1,
-        onChange: (v) => this.writeLogical(clipId, 'transition.bounce.count', v),
-      }),
-      renderNumberRow({
-        label: 'Height Decay',
-        value: bounceHDecay,
-        min: 0,
-        max: 1,
-        step: 0.05,
-        onChange: (v) => this.writeLogical(clipId, 'transition.bounce.heightDecay', v),
-      }),
-      renderNumberRow({
-        label: 'Time Decay',
-        value: bounceTDecay,
-        min: 0,
-        max: 1,
-        step: 0.05,
-        onChange: (v) => this.writeLogical(clipId, 'transition.bounce.timeDecay', v),
-      }),
-      renderNumberRow({
-        label: 'Hang Time',
-        value: bounceHang,
-        min: 0,
-        max: 1,
-        step: 0.05,
-        onChange: (v) => this.writeLogical(clipId, 'transition.bounce.hangTime', v),
-      }),
-    ]);
-    content.push(bounceContainer);
-
-    const syncVisibility = (valIdx: number) => {
-      curveRow.style.display = valIdx === 4 ? 'flex' : 'none';
-      springContainer.style.display = valIdx === 5 ? 'flex' : 'none';
-      bounceContainer.style.display = valIdx === 6 ? 'flex' : 'none';
+  private lastPreset:StateMotionPreset|null=null;
+  private repository:PresetRepository|null=null;
+  private generation=0;
+  constructor(private adapter:PremiereAdapter,private options:InspectorOptions={}){}
+  setLastPreset(p:StateMotionPreset|null){this.lastPreset=p;}
+  setRepository(repo:PresetRepository){this.repository=repo;}
+  async render(container:HTMLElement):Promise<void>{
+    const generation=++this.generation;clear(container);
+    let detection,config:CanonicalStateMotionConfig;
+    try{
+      detection=await this.adapter.detectSelection();
+      if(generation!==this.generation)return;
+      if(!detection.supported.length){showState(container,'','No compatible clip',detection.unsupported.length?'Apply a preset to a supported clip, or update an incompatible effect.':'Select a video clip in the timeline.');return;}
+      config=await this.adapter.readState(detection.supported[0]);
+    }catch{if(generation===this.generation)showState(container,'','Could not read selection','Editing is unavailable. Refresh the Inspector to retry.');return;}
+    if(generation!==this.generation)return;
+    const clip=detection.supported[0],snapshot={...config.parameters};
+    container.append(el('p',{class:'muted',text:'Editing the first compatible selected clip. Apply, swap and remove act on the selected compatible clips.'}));
+    const status=new OperationStatus(container);container.append(status.element);
+    const reportResult=(report:ApplyReport)=>{
+      status.element.textContent=`${report.applied.length} updated, ${report.failed.length} failed, ${report.skipped.length} skipped.`;
+      this.options.onOperation?.(report);
     };
-    syncVisibility(easing);
-
-    container.append(accordion('Transition', content, true));
-  }
-
-  private writeLogical(clipId: string, logicalId: string, value: ParameterValue): void {
-    this.adapter.writeLogical({ clipId }, logicalId, value).catch(() => {});
-  }
-
-  private async renderCropControl(container: HTMLElement, clipId: string): Promise<void> {
-    const CROP_FIELDS = [
-      { idA: 'crop.left.a', idB: 'crop.left.b', label: 'Left' },
-      { idA: 'crop.right.a', idB: 'crop.right.b', label: 'Right' },
-      { idA: 'crop.top.a', idB: 'crop.top.b', label: 'Top' },
-      { idA: 'crop.bottom.a', idB: 'crop.bottom.b', label: 'Bottom' },
-      { idA: 'crop.cornerRadius.a', idB: 'crop.cornerRadius.b', label: 'Radius' },
-    ] as const;
-
-    const typed = await this.readConfig(clipId);
-    const content: HTMLElement[] = CROP_FIELDS.map((item) =>
-      renderAbNumberRow({
-        label: item.label,
-        valA: typed.getNumber(item.idA, 0),
-        valB: typed.getNumber(item.idB, 0),
-        scale: 100,
-        min: 0,
-        max: 100,
-        onChangeA: (v) => this.writeLogical(clipId, item.idA, Math.min(1, Math.max(0, v))),
-        onChangeB: (v) => this.writeLogical(clipId, item.idB, Math.min(1, Math.max(0, v))),
-      }),
-    );
-
-    container.append(accordion('Crop & Mask', content, false));
-  }
-
-  private async renderShadowControl(container: HTMLElement, clipId: string): Promise<void> {
-    const SHADOW_FIELDS = [
-      { idA: 'shadow.opacity.a', idB: 'shadow.opacity.b', label: 'Opacity', scale: 100, max: 100, unit: '%' },
-      { idA: 'shadow.angle.a', idB: 'shadow.angle.b', label: 'Angle', scale: 180 / Math.PI, max: 360, unit: '°' },
-      { idA: 'shadow.distance.a', idB: 'shadow.distance.b', label: 'Distance', scale: 1, max: 1000, unit: 'px' },
-      { idA: 'shadow.softness.a', idB: 'shadow.softness.b', label: 'Softness', scale: 1, max: 500, unit: 'px' },
-    ] as const;
-
-    const typed = await this.readConfig(clipId);
-    const content: HTMLElement[] = SHADOW_FIELDS.map((item) =>
-      renderAbNumberRow({
-        label: item.label,
-        valA: typed.getNumber(item.idA, 0),
-        valB: typed.getNumber(item.idB, 0),
-        scale: item.scale,
-        max: item.max,
-        unit: item.unit,
-        onChangeA: (v) => this.writeLogical(clipId, item.idA, v),
-        onChangeB: (v) => this.writeLogical(clipId, item.idB, v),
-      }),
-    );
-
-    container.append(accordion('Drop Shadow', content, false));
-  }
-
-  private async renderStrokeControl(container: HTMLElement, clipId: string): Promise<void> {
-    const typed = await this.readConfig(clipId);
-    const content: HTMLElement[] = [];
-
-    content.push(
-      renderAbCheckboxRow({
-        label: 'Enabled',
-        checkedA: typed.getBoolean('stroke.enabled.a', false),
-        checkedB: typed.getBoolean('stroke.enabled.b', false),
-        onChangeA: (v) => this.writeLogical(clipId, 'stroke.enabled.a', v),
-        onChangeB: (v) => this.writeLogical(clipId, 'stroke.enabled.b', v),
-      }),
-    );
-
-    content.push(
-      renderAbNumberRow({
-        label: 'Width',
-        valA: typed.getNumber('stroke.width.a', 10),
-        valB: typed.getNumber('stroke.width.b', 10),
-        scale: 1,
-        max: 1000,
-        unit: 'px',
-        onChangeA: (v) => this.writeLogical(clipId, 'stroke.width.a', v),
-        onChangeB: (v) => this.writeLogical(clipId, 'stroke.width.b', v),
-      }),
-    );
-
-    content.push(
-      renderAbNumberRow({
-        label: 'Angle',
-        valA: typed.getNumber('stroke.gradientAngle.a', 0),
-        valB: typed.getNumber('stroke.gradientAngle.b', 0),
-        scale: 180 / Math.PI,
-        max: 360,
-        unit: '°',
-        onChangeA: (v) => this.writeLogical(clipId, 'stroke.gradientAngle.a', v),
-        onChangeB: (v) => this.writeLogical(clipId, 'stroke.gradientAngle.b', v),
-      }),
-    );
-
-    content.push(
-      renderNumberRow({
-        label: 'Cycle Speed',
-        value: typed.getNumber('stroke.gradientCycleSpeed', 0),
-        unit: 'Hz',
-        min: -10,
-        max: 10,
-        step: 0.1,
-        onChange: (v) => this.writeLogical(clipId, 'stroke.gradientCycleSpeed', v),
-      }),
-    );
-
-    container.append(accordion('Stroke', content, false));
-  }
-
-  private async renderGlowControl(container: HTMLElement, clipId: string): Promise<void> {
-    const typed = await this.readConfig(clipId);
-    const content: HTMLElement[] = [];
-
-    content.push(
-      renderAbCheckboxRow({
-        label: 'Enabled',
-        checkedA: typed.getBoolean('glow.enabled.a', false),
-        checkedB: typed.getBoolean('glow.enabled.b', false),
-        onChangeA: (v) => this.writeLogical(clipId, 'glow.enabled.a', v),
-        onChangeB: (v) => this.writeLogical(clipId, 'glow.enabled.b', v),
-      }),
-    );
-
-    content.push(
-      renderAbNumberRow({
-        label: 'Amount',
-        valA: typed.getNumber('glow.amount.a', 0),
-        valB: typed.getNumber('glow.amount.b', 0),
-        scale: 100,
-        max: 100,
-        unit: '%',
-        onChangeA: (v) => this.writeLogical(clipId, 'glow.amount.a', v),
-        onChangeB: (v) => this.writeLogical(clipId, 'glow.amount.b', v),
-      }),
-    );
-
-    content.push(
-      renderAbNumberRow({
-        label: 'Radius',
-        valA: typed.getNumber('glow.radius.a', 50),
-        valB: typed.getNumber('glow.radius.b', 50),
-        scale: 1,
-        max: 1000,
-        unit: 'px',
-        onChangeA: (v) => this.writeLogical(clipId, 'glow.radius.a', v),
-        onChangeB: (v) => this.writeLogical(clipId, 'glow.radius.b', v),
-      }),
-    );
-
-    container.append(accordion('Glow', content, false));
-  }
-
-  private async renderMotionBlurControl(container: HTMLElement, clipId: string): Promise<void> {
-    const typed = await this.readConfig(clipId);
-    const content: HTMLElement[] = [];
-
-    content.push(
-      renderCheckboxRow({
-        label: 'Enabled',
-        checked: typed.getBoolean('motionBlur.enabled', false),
-        onChange: (v) => this.writeLogical(clipId, 'motionBlur.enabled', v),
-      }),
-    );
-
-    content.push(
-      renderNumberRow({
-        label: 'Angle',
-        value: typed.getNumber('motionBlur.shutterAngle', 180),
-        unit: '°',
-        min: 0,
-        max: 720,
-        step: 1,
-        onChange: (v) => this.writeLogical(clipId, 'motionBlur.shutterAngle', v),
-      }),
-    );
-
-    content.push(
-      renderNumberRow({
-        label: 'Samples',
-        value: typed.getNumber('motionBlur.samples', 8),
-        unit: '',
-        min: 2,
-        max: 64,
-        step: 1,
-        onChange: (v) => this.writeLogical(clipId, 'motionBlur.samples', v),
-      }),
-    );
-
-    container.append(accordion('Motion Blur', content, false));
+    const actions=el('div',{class:'sm-actionbar'});
+    const action=(label:string,id:string,run:()=>Promise<void>)=>{
+      const button=el('button',{class:'sm-btn secondary',text:label,'data-action':id});
+      button.addEventListener('click',()=>status.run(run));actions.append(button);return button;
+    };
+    const apply=action('Apply last preset','apply',async()=>{if(this.lastPreset)reportResult(await this.adapter.applyPresetToSelection(this.lastPreset,detection.supported.map(c=>c.clipId)));});
+    apply.disabled=!this.lastPreset;
+    action('Swap A/B','swap',async()=>{reportResult(await this.adapter.runSelectionAction('swap',detection.supported));await this.render(container);});
+    action('Remove effect','remove',async()=>{if(await this.options.confirmRemoval?.()){reportResult(await this.adapter.runSelectionAction('remove',detection.supported));await this.render(container);}});
+    const capture=action('Capture preset','capture',async()=>{
+      const name=await this.options.promptName?.('My StateMotion preset');if(!name?.trim()||!this.repository)return;
+      const selected=await this.adapter.detectSelection();if(!selected.supported.some(c=>c.clipId===clip.clipId))throw new Error('Selection changed');
+      const state=await this.adapter.readState(clip),contract=await this.adapter.getContract(clip);
+      await this.repository.create({...buildUserPresetFromConfig(state,contract),name:name.trim()});
+      status.element.textContent='Preset saved to your library.';
+    });capture.disabled=!this.repository||!this.options.promptName;
+    container.append(actions);
+    const write=async(values:Record<string,ParameterValue>,restore:()=>void)=>status.run(async()=>{
+      try{await this.adapter.writeParameters(clip,values);Object.assign(snapshot,values);this.options.onOperation?.({applied:[clip.clipId],failed:[],skipped:[],reasons:{}});}
+      catch(error){restore();this.options.onOperation?.({applied:[],failed:[clip.clipId],skipped:[],reasons:{[clip.clipId]:'Parameter write failed'}});throw error;}
+    });
+    const row=(binding:ParameterBinding):HTMLElement=>{
+      const id=binding.logicalId,value=()=>snapshot[id]??canonicalDefault(id)!;
+      const label=binding.wireName.replace(/^SM /,'');
+      const wrap=el('label',{class:'sm-control-row'},[el('span',{class:'sm-control-label',text:label})]);
+      const common={'data-param':id,'aria-label':label};
+      if(binding.nativeType==='POINT'){
+        const point=()=>typeof value()==='string'?{x:.5,y:.5}:value() as {x:number;y:number};
+        for(const axis of ['x','y'] as const){
+          const input=el('input',{...common,'data-axis':axis,type:'number',step:'any',class:'sm-input',value:displayNumber(point()[axis]*100),'aria-label':label+' '+axis+' (%)'});
+          input.addEventListener('change',()=>{const number=Number(input.value);if(!input.value.trim()||!Number.isFinite(number)){input.value=displayNumber(point()[axis]*100);return;}
+            return write({[id]:{...point(),[axis]:number/100}},()=>{input.value=displayNumber(point()[axis]*100);});});wrap.append(input);
+        }
+        wrap.append(el('span',{text:'%'}));return wrap;
+      }
+      if(binding.nativeType==='POPUP'){
+        const select=el('select',{...common,class:'sm-select'});
+        ENUMS[binding.enumRef].forEach((text,index)=>{const option=el('option',{text,value:String(index)});option.selected=index===value();select.append(option);});select.value=String(value());
+        select.addEventListener('change',()=>write({[id]:Number(select.value)},()=>{select.value=String(value());}));wrap.append(select);return wrap;
+      }
+      if(binding.nativeType==='CHECKBOX'){
+        const checkbox=el('input',{...common,type:'checkbox'});checkbox.checked=value()===true;
+        checkbox.addEventListener('change',()=>write({[id]:checkbox.checked},()=>{checkbox.checked=value()===true;}));wrap.append(checkbox);return wrap;
+      }
+      if(binding.nativeType==='COLOR'){
+        const input=el('input',{...common,type:'color',value:String(value())});
+        input.addEventListener('change',()=>write({[id]:input.value},()=>{input.value=String(value());}));wrap.append(input);return wrap;
+      }
+      const percent=/^(transform\.(scale|opacity)|crop\.|shadow\.opacity|glow\.amount|transition\.manualProgress)/.test(id);
+      const factor=binding.nativeType==='ANGLE'?180/Math.PI:percent?100:1;
+      const input=el('input',{...common,type:'number',step:id==='motionBlur.samples'?'1':'any',class:'sm-input',value:displayNumber(Number(value())*factor)});
+      if(binding.nativeType==='FLOAT_SLIDER'){input.min=String(binding.validMin);input.max=String(binding.validMax);}
+      input.addEventListener('change',()=>{
+        const number=Number(input.value);
+        if(!input.value.trim()||!Number.isFinite(number)){input.value=displayNumber(Number(value())*factor);return;}
+        return write({[id]:number/factor},()=>{input.value=displayNumber(Number(value())*factor);});
+      });
+      wrap.append(input,el('span',{class:'sm-input-unit',text:binding.nativeType==='ANGLE'?'°':percent?'%':id.endsWith('Seconds')?'s':''}));return wrap;
+    };
+    for(const [prefix,title] of [['transform.','Transform A/B'],['transition.','Transition'],['crop.','Crop & Mask'],['stroke.','Stroke'],['glow.','Glow'],['shadow.','Drop Shadow'],['motionBlur.','Motion Blur']]){
+      const controls=BINDINGS.filter(b=>b.logicalId.startsWith(prefix)).map(row);
+      if(prefix==='transition.'){
+        const editor=new CurveEditor(curve=>{
+          const ids=['transition.curveX1','transition.curveY1','transition.curveX2','transition.curveY2'];
+          void write(Object.fromEntries(ids.map((id,index)=>[id,curve[index]])),()=>editor.setCurve(ids.map(id=>Number(snapshot[id]??canonicalDefault(id)))));
+        });
+        editor.setCurve(['transition.curveX1','transition.curveY1','transition.curveX2','transition.curveY2'].map(id=>Number(snapshot[id]??canonicalDefault(id))));controls.push(editor.getElement());
+      }
+      container.append(accordion(title,controls,prefix==='transform.'||prefix==='transition.'));
+    }
+    if(detection.unsupported.length)container.append(el('p',{class:'sm-warn',text:`${detection.unsupported.length} selected clip(s) are unavailable or incompatible.`}));
   }
 }
