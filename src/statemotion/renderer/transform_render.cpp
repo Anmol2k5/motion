@@ -37,8 +37,12 @@ RendererTransformState interpolate(const RendererTransformState& a, const Render
     r.shadowSoftness = a.shadowSoftness + (b.shadowSoftness - a.shadowSoftness) * t;
     r.strokeEnabled = (t < 0.5) ? a.strokeEnabled : b.strokeEnabled;
     r.strokeWidth = a.strokeWidth + (b.strokeWidth - a.strokeWidth) * t;
-    r.strokeColor1 = a.strokeColor1;
-    r.strokeColor2 = a.strokeColor2;
+    auto color = [t](Pixel a, Pixel b) {
+        return Pixel{std::clamp(a.r+(b.r-a.r)*t,0.0,1.0),std::clamp(a.g+(b.g-a.g)*t,0.0,1.0),
+                     std::clamp(a.b+(b.b-a.b)*t,0.0,1.0),std::clamp(a.a+(b.a-a.a)*t,0.0,1.0)};
+    };
+    r.strokeColor1 = color(a.strokeColor1,b.strokeColor1);
+    r.strokeColor2 = color(a.strokeColor2,b.strokeColor2);
     r.strokeGradientAngleDeg = a.strokeGradientAngleDeg + (b.strokeGradientAngleDeg - a.strokeGradientAngleDeg) * t;
     r.strokeGradientPhaseOffset = a.strokeGradientPhaseOffset + (b.strokeGradientPhaseOffset - a.strokeGradientPhaseOffset) * t;
     r.glowEnabled = (t < 0.5) ? a.glowEnabled : b.glowEnabled;
@@ -81,7 +85,7 @@ CpuRenderPlan plan(const RendererTransformState& t, int srcW, int srcH) {
 
     if (cropW <= 0.0 || cropH <= 0.0) {
         p.fullyTransparent = true;
-    } else if (p.hasCropMask) {
+    } else {
         p.cropCenterX = 0.5 * (p.cropMinX + p.cropMaxX);
         p.cropCenterY = 0.5 * (p.cropMinY + p.cropMaxY);
         const double maxRadius = 0.5 * std::min(cropW, cropH);
@@ -106,6 +110,9 @@ CpuRenderPlan plan(const RendererTransformState& t, int srcW, int srcH) {
     p.strokeColor1 = t.strokeColor1;
     p.strokeColor2 = t.strokeColor2;
     p.strokeGradientPhaseOffset = t.strokeGradientPhaseOffset;
+    const double gradientRadians=t.strokeGradientAngleDeg*3.14159265358979323846/180.0;
+    p.strokeGradientDx=std::cos(gradientRadians);
+    p.strokeGradientDy=std::sin(gradientRadians);
     p.hasStroke = p.strokeEnabled && p.strokeWidthPx > 0.0;
 
     p.glowEnabled = t.glowEnabled;
@@ -181,7 +188,7 @@ double sampleTransformedAlphaAt(const CpuRenderPlan& p, Sampler sampler, void* u
 
 }  // namespace
 
-void render(const CpuRenderPlan& p, Sampler sampler, void* user,
+static void renderContent(const CpuRenderPlan& p, Sampler sampler, void* user,
             int outW, int outH, Pixel* out) {
     if (p.fullyTransparent) {
         for (int i = 0; i < outW * outH; ++i) out[i] = Pixel{};
@@ -261,6 +268,88 @@ void render(const CpuRenderPlan& p, Sampler sampler, void* user,
 
             out[y * outW + x] = result;
         }
+    }
+}
+
+
+namespace {
+Pixel over(Pixel front, Pixel back) {
+    const double inv=1.0-front.a;
+    return {front.r+back.r*inv,front.g+back.g*inv,front.b+back.b*inv,front.a+back.a*inv};
+}
+
+// Zero-padded separable box filter, O(width*height), independent of radius.
+std::vector<double> blurAlpha(const Pixel* pixels,int w,int h,int radius) {
+    std::vector<double> horizontal(static_cast<size_t>(w)*h), result(horizontal.size());
+    const double divisor=2.0*radius+1;
+    for(int y=0;y<h;++y){
+        double sum=0;
+        for(int x=0;x<=std::min(radius,w-1);++x)sum+=pixels[y*w+x].a;
+        for(int x=0;x<w;++x){
+            horizontal[y*w+x]=sum/divisor;
+            if(x-radius>=0)sum-=pixels[y*w+x-radius].a;
+            if(x+radius+1<w)sum+=pixels[y*w+x+radius+1].a;
+        }
+    }
+    for(int x=0;x<w;++x){
+        double sum=0;
+        for(int y=0;y<=std::min(radius,h-1);++y)sum+=horizontal[y*w+x];
+        for(int y=0;y<h;++y){
+            result[y*w+x]=std::max(0.0,sum/divisor);
+            if(y-radius>=0)sum-=horizontal[(y-radius)*w+x];
+            if(y+radius+1<h)sum+=horizontal[(y+radius+1)*w+x];
+        }
+    }
+    return result;
+}
+
+Pixel strokeAt(const CpuRenderPlan& p,double x,double y) {
+    const double dx=x-p.translateX, dy=y-p.translateY;
+    const double sx=(p.cosR*dx+p.sinR*dy)*p.invScaleX+p.anchorX;
+    const double sy=(-p.sinR*dx+p.cosR*dy)*p.invScaleY+p.anchorY;
+    const double px=std::abs(sx-p.cropCenterX)-p.cropHalfInnerW;
+    const double py=std::abs(sy-p.cropCenterY)-p.cropHalfInnerH;
+    const double distance=std::hypot(std::max(px,0.0),std::max(py,0.0))+
+                          std::min(std::max(px,py),0.0)-p.cornerRadiusPx;
+    const double coverage=std::clamp(p.strokeWidthPx+0.5-std::abs(distance),0.0,1.0);
+    const double extent=std::max(1.0,std::abs(p.strokeGradientDx)*(p.cropMaxX-p.cropMinX)+
+                                    std::abs(p.strokeGradientDy)*(p.cropMaxY-p.cropMinY));
+    double mix=std::clamp(0.5+((sx-p.cropCenterX)*p.strokeGradientDx+
+                              (sy-p.cropCenterY)*p.strokeGradientDy)/extent,0.0,1.0);
+    if(p.strokeGradientPhaseOffset!=0){mix+=p.strokeGradientPhaseOffset;mix-=std::floor(mix);}
+    Pixel color=lerp(p.strokeColor1,p.strokeColor2,mix);
+    const double alpha=std::clamp(color.a,0.0,1.0)*coverage*p.opacity;
+    return {std::clamp(color.r,0.0,1.0)*alpha,std::clamp(color.g,0.0,1.0)*alpha,
+            std::clamp(color.b,0.0,1.0)*alpha,alpha};
+}
+}
+
+void render(const CpuRenderPlan& p, Sampler sampler, void* user,
+            int outW,int outH,Pixel* out) {
+    if(outW<=0||outH<=0||!out)return;
+    if(p.srcW<=0||p.srcH<=0||p.fullyTransparent){std::fill(out,out+static_cast<size_t>(outW)*outH,Pixel{});return;}
+    if(!p.hasStroke&&!p.hasGlow){renderContent(p,sampler,user,outW,outH,out);return;}
+    CpuRenderPlan content=p;content.hasShadow=false;
+    renderContent(content,sampler,user,outW,outH,out);
+    std::vector<double> glow;
+    if(p.hasGlow){
+        const int radius=static_cast<int>(std::clamp(std::ceil(p.glowRadiusPx),0.0,
+                                                   static_cast<double>(std::max(outW,outH))));
+        glow=blurAlpha(out,outW,outH,radius);
+    }
+    for(int y=0;y<outH;++y)for(int x=0;x<outW;++x){
+        Pixel background;
+        if(p.hasShadow){
+            const int radius=static_cast<int>(std::clamp(std::ceil(p.shadowSoftnessPx),0.0,5.0));
+            double sum=0;
+            for(int dy=-radius;dy<=radius;++dy)for(int dx=-radius;dx<=radius;++dx)
+                sum+=sampleTransformedAlphaAt(p,sampler,user,x-p.shadowOffsetX+dx,y-p.shadowOffsetY+dy);
+            background.a=std::clamp(sum/((2*radius+1)*(2*radius+1))*p.shadowOpacity,0.0,1.0);
+        }
+        const size_t index=static_cast<size_t>(y)*outW+x;
+        if(p.hasGlow){double alpha=std::clamp(glow[index]*p.glowAmount,0.0,1.0);background=over({alpha,alpha,alpha,alpha},background);}
+        if(p.hasStroke)background=over(strokeAt(p,x,y),background);
+        out[index]=over(out[index],background);
     }
 }
 
