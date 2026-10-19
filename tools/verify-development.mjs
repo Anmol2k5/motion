@@ -34,6 +34,7 @@ export function verifyDevelopment(){
  check('panel-build',npm,['run','build'],{cwd:panel});
  check('package-tests',process.execPath,['tools/package-panel.test.mjs']);
  check('verification-runner-tests',process.execPath,['tools/verify-development.test.mjs']);
+ check('native-build-runner-tests',process.execPath,['tools/build-native.test.mjs']);
  check('generation-commands',process.execPath,['tools/generation-commands.test.mjs']);
  const project=readFileSync(path.join(root,'src/statemotion/adobe/statemotion_effect.vcxproj'),'utf8');
  const sources=[...project.matchAll(/<ClCompile Include="([^"]+)"/g)].map(match=>match[1]);

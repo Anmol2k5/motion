@@ -72,6 +72,10 @@ current logs under `build/verification/`. The panel ZIP is
 `dist/statemotion-panel-dev.zip`; load its **manifest.json** through UXP Developer
 Tool after building/installing the matching native effect.
 
+On Windows, `node tools/build-native.mjs --check` checks native prerequisites;
+`node tools/build-native.mjs` performs an isolated rebuild and records binary
+hashes, build logs and an untested desktop checklist.
+
 See [installation](docs/releases/v0.1-alpha-installation.md) and
 [host certification status](docs/releases/v0.1-alpha-host-status.md). Native build,
 point/popup host units, timing after trims, save/reopen, undo and export remain
