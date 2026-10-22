@@ -20,6 +20,8 @@ export function checkCompatibility(contract: CompatibleContract | null | undefin
   if (!contract) {
     return { level: CompatLevel.Incompatible, reasons: ['missing contract'] };
   }
+  if(![contract.schemaVersion,contract.bindingRevision,contract.parameterCount].every(x=>Number.isInteger(x)&&x>0))
+    return {level:CompatLevel.Incompatible,reasons:['invalid contract metadata']};
   // Newer schema: we cannot safely write -> incompatible (read-only diagnostic).
   if (contract.schemaVersion > SCHEMA_VERSION) {
     reasons.push(`preset/effect schemaVersion ${contract.schemaVersion} > current ${SCHEMA_VERSION}`);
@@ -33,5 +35,7 @@ export function checkCompatibility(contract: CompatibleContract | null | undefin
     reasons.push(`parameterCount ${contract.parameterCount} != current ${PARAMETER_COUNT} (older project)`);
     return { level: CompatLevel.ReadOnly, reasons };
   }
+  if(contract.schemaVersion!==SCHEMA_VERSION||contract.bindingRevision!==BINDING_REVISION)
+    return {level:CompatLevel.ReadOnly,reasons:['older contract revision; read-only']};
   return { level: CompatLevel.Ok, reasons };
 }

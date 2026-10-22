@@ -1,121 +1,63 @@
-// StateMotion Preset Panel — Library view (browse / search / favorite / apply).
-
-import { el, clear, showState, svgFromString } from './components.ts';
-import { BUNDLED_PRESETS, CATEGORIES } from '../starter/bundledPresets.ts';
-import {
-  buildLibraryViewModel, type LibraryViewState,
-} from '../domain/libraryModel.ts';
-import { FilterKind, SortKind } from '../domain/search.ts';
-import { toggleFavorite } from '../domain/favorites.ts';
-import { renderPreviewSvg } from '../preview/previewCard.ts';
-import type { PresetRepository, LibraryModel } from '../domain/presetStorage.ts';
-import type { StateMotionPreset } from '../domain/presetSchema.ts';
-
+import {el,clear,svgFromString} from './components.ts';
+import {OperationStatus} from './operationStatus.ts';
+import {CATEGORIES} from '../starter/bundledPresets.ts';
+import {buildLibraryViewModel,type LibraryViewState} from '../domain/libraryModel.ts';
+import {FilterKind,SortKind} from '../domain/search.ts';
+import {renderPreviewSvg} from '../preview/previewCard.ts';
+import type {PresetRepository,LibraryModel} from '../domain/presetStorage.ts';
+import type {StateMotionPreset} from '../domain/presetSchema.ts';
+import type {ApplyReport} from '../host/premiereAdapter.ts';
 export interface LibraryCallbacks {
-  onApply: (preset: StateMotionPreset) => void;
-  onToggleFavorite: (presetId: string) => void;
-  getSelectionCount: () => number;
+ onApply:(preset:StateMotionPreset)=>void|Promise<void|ApplyReport>;
+ onToggleFavorite:(id:string)=>void|Promise<void>;
+ getSelectionCount:()=>number|Promise<number>;
 }
-
 export class LibraryView {
-  private view: LibraryViewState = { query: '', filter: FilterKind.All, sort: SortKind.AZ };
-  private listMode = false;
-
-  constructor(
-    private repo: PresetRepository,
-    private getLibrary: () => LibraryModel,
-    private cb: LibraryCallbacks,
-  ) {}
-
-  async render(container: HTMLElement): Promise<void> {
-    clear(container);
-    showState(container, '⏳', 'Loading presets...', '');
-    const all = await this.repo.list();
-    clear(container);
-    const library = this.getLibrary();
-    const vm = buildLibraryViewModel(all, library, this.view, CATEGORIES);
-
-    // Toolbar: search + sort + view toggle
-    const search = el('input', { class: 'sm-search', type: 'search', placeholder: 'Search presets', 'aria-label': 'Search presets' }) as HTMLInputElement;
-    search.value = this.view.query;
-    search.addEventListener('input', () => { this.view.query = search.value; this.render(container); });
-
-    const sort = el('select', { class: 'sm-chip', 'aria-label': 'Sort presets' }) as HTMLSelectElement;
-    for (const [label, val] of [['A–Z', SortKind.AZ], ['Newest', SortKind.Newest], ['Recently used', SortKind.RecentlyUsed]] as [string, SortKind][]) {
-      const o = el('option', { value: val, text: label }) as HTMLOptionElement;
-      if (val === this.view.sort) o.selected = true;
-      sort.append(o);
+ private view:LibraryViewState={query:'',filter:FilterKind.All,sort:SortKind.AZ};
+ private listMode=false;
+ private generation=0;
+ constructor(private repo:PresetRepository,private getLibrary:()=>LibraryModel,private cb:LibraryCallbacks){}
+ setContainer(_container:HTMLElement){}
+ async render(container:HTMLElement):Promise<void>{
+  const generation=++this.generation;clear(container);
+  const status=new OperationStatus(container),grid=el('div',{class:'sm-grid'}),chips=el('div',{class:'sm-chips'});
+  const search=el('input',{class:'sm-search',type:'search',value:this.view.query,'aria-label':'Search presets',placeholder:'Search presets'});
+  const sort=el('select',{'aria-label':'Sort presets',class:'sm-select'});
+  for(const [label,value] of [['A–Z',SortKind.AZ],['Newest',SortKind.Newest],['Recently used',SortKind.RecentlyUsed]])sort.append(el('option',{text:label,value}));sort.value=this.view.sort;
+  let refreshId=0;
+  const refresh=async()=>{
+   const request=++refreshId;
+   try{
+    const all=await this.repo.list();if(generation!==this.generation||request!==refreshId)return;
+    const lib=this.getLibrary(),model=buildLibraryViewModel(all,lib,this.view,CATEGORIES);
+    clear(grid);clear(chips);grid.className=this.listMode?'sm-list':'sm-grid';
+    const chip=(text:string,filter:FilterKind,category?:string,collectionId?:string)=>{
+     const active=this.view.filter===filter&&this.view.category===category&&this.view.collectionId===collectionId;
+     const button=el('button',{text,class:'sm-chip','aria-pressed':String(active)});
+     button.addEventListener('click',()=>{this.view={...this.view,filter,category,collectionId};return refresh();});chips.append(button);
+    };
+    chip('All',FilterKind.All);chip('Favorites',FilterKind.Favorites);chip('User',FilterKind.User);
+    for(const category of CATEGORIES)chip(category,FilterKind.Category,category);
+    for(const id of lib.collectionIds)chip(lib.collections[id].name,FilterKind.Collection,undefined,id);
+    for(const preset of model.presets){
+     const card=el('div',{class:'sm-card',tabindex:'0',role:'button','aria-label':preset.name},[svgFromString(renderPreviewSvg(preset)),el('div',{class:'sm-card-name',text:preset.name}),el('div',{class:'sm-card-cat',text:preset.category})]);
+     const apply=()=>status.run(async()=>{
+      if((await this.cb.getSelectionCount())<=0){status.element.textContent='Select a video clip before applying a preset.';return;}
+      const report=await this.cb.onApply(preset);
+      if(report)status.element.textContent=`${report.applied.length} applied, ${report.failed.length} failed, ${report.skipped.length} skipped. ${report.warning??''}`;
+     });
+     card.addEventListener('click',apply);card.addEventListener('keydown',event=>{if(event.target===card&&(event.key==='Enter'||event.key===' ')){event.preventDefault();return apply();}});
+     const favorite=el('button',{class:'sm-fav',text:model.favoriteIds.has(preset.presetId)?'★':'☆','aria-label':'Favorite '+preset.name});
+     favorite.addEventListener('click',event=>{event.stopPropagation();return status.run(async()=>{await this.cb.onToggleFavorite(preset.presetId);await refresh();});});card.append(favorite);grid.append(card);
     }
-    sort.addEventListener('change', () => { this.view.sort = sort.value as SortKind; this.render(container); });
-
-    const toggle = el('button', { class: 'sm-chip', 'aria-pressed': String(this.listMode), text: this.listMode ? 'List' : 'Grid' }) as HTMLButtonElement;
-    toggle.addEventListener('click', () => { this.listMode = !this.listMode; this.render(container); });
-
-    container.append(el('div', { class: 'sm-toolbar' }, [search, sort, toggle]));
-
-    // Chips: filters + categories
-    const chipRow = el('div', { class: 'sm-chips' });
-    const filters: [string, FilterKind][] = [
-      ['All', FilterKind.All], ['Favorites', FilterKind.Favorites], ['User', FilterKind.User],
-    ];
-    for (const [label, f] of filters) {
-      const chip = el('button', { class: 'sm-chip', 'aria-pressed': String(this.view.filter === f), text: label });
-      chip.addEventListener('click', () => { this.view.filter = f; this.render(container); });
-      chipRow.append(chip);
-    }
-    for (const cat of CATEGORIES) {
-      const active = this.view.filter === FilterKind.Category && this.view.category === cat;
-      const chip = el('button', { class: 'sm-chip', 'aria-pressed': String(active), text: cat });
-      chip.addEventListener('click', () => {
-        if (active) { this.view.filter = FilterKind.All; this.view.category = undefined; }
-        else { this.view.filter = FilterKind.Category; this.view.category = cat; }
-        this.render(container);
-      });
-      chipRow.append(chip);
-    }
-    container.append(chipRow);
-
-    // Grid / List
-    const grid = el('div', { class: this.listMode ? 'sm-list' : 'sm-grid' });
-    if (vm.presets.length === 0) {
-      if (this.view.filter === FilterKind.Favorites) {
-        showState(grid, '⭐', 'No favorites yet', 'Favorite presets to keep them here.');
-      } else {
-        showState(grid, '🔍', 'No presets found', 'Try a different search or filter.');
-      }
-    }
-    for (const p of vm.presets) {
-      grid.append(this.renderCard(p, vm.favoriteIds.has(p.presetId)));
-    }
-    container.append(grid);
-
-    // Action bar
-    const count = this.cb.getSelectionCount();
-    const applyBtn = el('button', { class: 'sm-btn', text: count > 0 ? `Apply to ${count} clip${count > 1 ? 's' : ''}` : 'Apply (select a clip)' }) as HTMLButtonElement;
-    applyBtn.disabled = count === 0;
-    applyBtn.addEventListener('click', () => {
-      const sel = vm.presets.find((p) => p.presetId === this.selectedId);
-      if (sel) this.cb.onApply(sel);
-    });
-    container.append(el('div', { class: 'sm-actionbar' }, [applyBtn]));
-  }
-
-  private selectedId: string | null = null;
-
-  private renderCard(p: StateMotionPreset, favorite: boolean): HTMLElement {
-    const fav = el('button', { class: 'sm-fav', 'aria-pressed': String(favorite), 'aria-label': favorite ? `Unfavorite ${p.name}` : `Favorite ${p.name}`, title: 'Favorite', text: favorite ? '★' : '☆' });
-    fav.addEventListener('click', (e) => { e.stopPropagation(); this.cb.onToggleFavorite(p.presetId); this.render(this.lastContainer!); });
-    const card = el('div', { class: 'sm-card', tabindex: '0', role: 'button', 'aria-label': `${p.name}, ${p.category}` }, [
-      svgFromString(renderPreviewSvg(p)),
-      el('div', { class: 'sm-card-name', text: p.name }),
-      el('div', { class: 'sm-card-cat', text: p.category }),
-      fav,
-    ]);
-    card.addEventListener('click', () => { this.selectedId = p.presetId; this.cb.onApply(p); });
-    card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.selectedId = p.presetId; this.cb.onApply(p); } });
-    return card;
-  }
-
-  private lastContainer: HTMLElement | null = null;
-  setContainer(c: HTMLElement) { this.lastContainer = c; }
+    if(!model.presets.length)grid.append(el('p',{text:'No presets match this filter.'}));
+   }catch{if(request===refreshId)status.element.textContent='Presets could not be loaded. Try opening Library again.';}
+  };
+  search.addEventListener('input',()=>{this.view.query=search.value;return refresh();});
+  sort.addEventListener('change',()=>{this.view.sort=sort.value as SortKind;return refresh();});
+  const toggle=el('button',{class:'sm-btn secondary',text:'Toggle grid/list'});toggle.addEventListener('click',()=>{this.listMode=!this.listMode;return refresh();});
+  container.append(el('div',{class:'sm-toolbar'},[search,sort,toggle]),status.element,chips,grid);
+  await refresh();
+  for(const warning of this.repo.getWarnings?.()??[])container.append(el('p',{class:'sm-warn',text:warning}));
+ }
 }

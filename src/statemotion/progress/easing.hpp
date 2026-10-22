@@ -40,7 +40,7 @@ struct EasingCurve {
     double bounceHangTime = 0.0;
 };
 
-// Evaluate easing. `linear` is clamped to [0,1]; result in [0,1].
+// Evaluate easing. `linear` is clamped to [0,1]; spring may overshoot.
 // Invalid/non-finite control points or input fall back deterministically to
 // `linear` (identity). No throw, no NaN.
 double evaluateEasing(EasingMode mode, const EasingCurve& curve, double linear);

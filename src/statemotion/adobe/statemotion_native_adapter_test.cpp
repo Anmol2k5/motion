@@ -67,11 +67,16 @@ int main() {
               std::abs(s2.scaleX - 1.3) < 1e-12 && std::abs(s2.positionNormX - 0.25) < 1e-12,
           "buildCanonicalState B values");
 
-    check(modeFromPopup(6) == statemotion::ids::ProgressMode::Manual, "mode popup 6=Manual");
-    check(modeFromPopup(0) == statemotion::ids::ProgressMode::AToB, "mode popup 0=AToB");
-    check(alignmentFromPopup(2) == statemotion::ids::AlignmentMode::EntireClip, "align popup 2=EntireClip");
-    check(alignmentFromPopup(1) == statemotion::ids::AlignmentMode::ClipEnd, "align popup 1=ClipEnd");
+    check(modeFromPopup(7) == statemotion::ids::ProgressMode::Manual, "mode popup 7=Manual");
+    check(modeFromPopup(1) == statemotion::ids::ProgressMode::AToB, "mode popup 1=AToB");
+    check(alignmentFromPopup(3) == statemotion::ids::AlignmentMode::EntireClip, "align popup 3=EntireClip");
+    check(alignmentFromPopup(2) == statemotion::ids::AlignmentMode::ClipEnd, "align popup 2=ClipEnd");
 
+    check(modeFromPopup(1,4)==statemotion::ids::ProgressMode::BToA,"legacy projects retain previous enum interpretation");
+    check(popupDefault(0)==1 && popupDefault(6)==7,"new popup defaults are one based");
+    check(std::abs(angleDefaultDegrees(3.14159265358979323846*3/4)-135)<1e-10,"angle defaults convert radians to degrees");
+    for(int index=0;index<=7;index++)check(popupValue(index,7,4)==index,"legacy raw mode/easing enum must be preserved");
+    check(popupValue(3,3,4)==3,"legacy last alignment must be preserved");
     std::printf("\n%s: %d failures\n", g_fail ? "FAILED" : "ALL PASSED", g_fail);
     return g_fail ? 1 : 0;
 }

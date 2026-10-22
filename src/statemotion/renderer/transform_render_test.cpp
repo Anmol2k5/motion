@@ -337,6 +337,17 @@ int main() {
         check(clampedSamples == 64, "AC14 motion blur sample count clamped to max 64");
     }
 
+    // Spring response must reach transform interpolation; physical properties clamp.
+    {
+        RendererTransformState a, b;
+        b.positionX=20; b.scaleX=-1; b.rotationDeg=90; a.opacity=0;
+        auto t=statemotion::interpolate(a,b,1.2);
+        check(std::abs(t.positionX-24)<1e-12 && std::abs(t.rotationDeg-108)<1e-12,
+              "spring extrapolates render geometry");
+        check(t.opacity==1, "overshoot opacity remains physical");
+        auto invalid=statemotion::interpolate(a,b,NAN);
+        check(std::isfinite(invalid.positionX), "nonfinite interpolation fallback");
+    }
     std::printf("\n%s: %d failures\n", failures ? "FAILED" : "ALL PASSED", failures);
     return failures ? 1 : 0;
 }

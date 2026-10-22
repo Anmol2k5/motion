@@ -12,9 +12,9 @@ import { PARAMETER_COUNT } from '../domain/presetSchema.ts';
 let passed = 0;
 function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
 
-const CURRENT_CONTRACT = { schemaVersion: 1, bindingRevision: 2, parameterCount: PARAMETER_COUNT };
+const CURRENT_CONTRACT = { schemaVersion: 1, bindingRevision:5, parameterCount: PARAMETER_COUNT };
 const OLDER_CONTRACT = { schemaVersion: 1, bindingRevision: 1, parameterCount: 20 };
-const NEWER_CONTRACT = { schemaVersion: 2, bindingRevision: 2, parameterCount: PARAMETER_COUNT };
+const NEWER_CONTRACT = { schemaVersion: 2, bindingRevision:5, parameterCount: PARAMETER_COUNT };
 
 // --- pure plan classification ------------------------------------------------
 {
@@ -58,7 +58,7 @@ class CountingBridge implements HostBridge {
   writes = 0;
   applies = 0;
   constructor(private contract: typeof CURRENT_CONTRACT | null) {}
-  async getSelection(): Promise<ClipRef[]> { return []; }
+  async getSelection(): Promise<ClipRef[]> { return [{clipId:'a'}]; }
   async hasStateMotionEffect(): Promise<boolean> { return true; }
   async getContract(): Promise<any> { return this.contract; }
   async enumerateParamIndex(): Promise<number | undefined> { return 0; }
@@ -66,6 +66,7 @@ class CountingBridge implements HostBridge {
   async writeLogical(): Promise<void> { this.writes++; }
   async beginUndo(): Promise<void> {}
   async endUndo(): Promise<void> {}
+  async cancelUndo(): Promise<void> {}
   async applyEffect(): Promise<void> { this.applies++; }
 }
 
@@ -126,7 +127,7 @@ function fakePreset(contract: typeof CURRENT_CONTRACT): StateMotionPreset {
   const adapter = new PremiereAdapter(bridge);
   const report = await adapter.applyPresetToSelection(fakePreset(CURRENT_CONTRACT));
   assert.strictEqual(bridge.applies, 1);
-  assert.strictEqual(bridge.writes, 2);
+  assert.strictEqual(bridge.writes, 67, 'preset writes every creative canonical default and override');
   assert.deepStrictEqual(report.applied, ['selected']);
   assert.ok(bridge.order.indexOf('begin') < bridge.order.indexOf('apply'));
   pass('adapter applies a preset to the current selection and installs a missing effect');

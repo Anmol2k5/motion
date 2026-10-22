@@ -32,7 +32,7 @@ enum class EasingMode : int {
 };
 
 inline constexpr int kSchemaVersion = 1;
-inline constexpr int kBindingRevision = 4;
+inline constexpr int kBindingRevision = 5;
 inline constexpr int kParameterCount = 70;
 
 inline constexpr int kContractSchemaVersion = 1;

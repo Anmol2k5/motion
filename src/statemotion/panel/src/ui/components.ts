@@ -31,18 +31,22 @@ export function showState(container: HTMLElement, icon: string, title: string, d
 }
 
 export function svgFromString(markup: string): SVGElement {
-  const doc = new DOMParser().parseFromString(markup, 'image/svg+xml');
-  return doc.documentElement as unknown as SVGElement;
+  const container=document.createElement('div');
+  container.innerHTML=markup;
+  const svg=container.querySelector('svg');
+  if(!svg)throw new Error('Invalid generated SVG');
+  return svg;
 }
 
 export function accordion(title: string, content: HTMLElement[], isOpen = false): HTMLElement {
   const acc = el('div', { class: `sm-accordion ${isOpen ? 'open' : ''}` });
   const icon = el('span', { class: 'sm-accordion-icon', text: '▶' });
-  const header = el('div', { class: 'sm-accordion-header' }, [icon, el('span', { text: title })]);
+  const header = el('button', { type:'button', class: 'sm-accordion-header', 'aria-expanded':String(isOpen) }, [icon, el('span', { text: title })]);
   const body = el('div', { class: 'sm-accordion-content' }, content);
   
   header.addEventListener('click', () => {
     const isCurrentlyOpen = acc.classList.contains('open');
+    header.setAttribute('aria-expanded',String(!isCurrentlyOpen));
     if (isCurrentlyOpen) {
       acc.classList.remove('open');
     } else {

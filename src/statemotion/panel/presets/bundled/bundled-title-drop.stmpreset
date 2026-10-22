@@ -16,12 +16,18 @@
   "collectionIds": [],
   "compatibleContract": {
     "schemaVersion": 1,
-    "bindingRevision": 4,
+    "bindingRevision": 5,
     "parameterCount": 70
   },
   "parameters": {
-    "transform.position.a": "frameCenter",
-    "transform.position.b": "frameCenter"
+    "transform.position.a": {
+      "x": 0.5,
+      "y": 0.2
+    },
+    "transform.position.b": "frameCenter",
+    "transition.easing": 5,
+    "transition.spring.frequency": 1.35,
+    "transition.spring.damping": 0.55
   },
   "preview": {
     "kind": "generated"

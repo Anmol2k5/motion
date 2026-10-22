@@ -56,3 +56,20 @@ function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
 })();
 
 console.log(`\nALL PASSED (${passed})`);
+for(const id of ['bundled-side-glide','bundled-slide-over','bundled-rise-up']){
+ const preset=BUNDLED_PRESETS.find(p=>p.presetId===id)!;
+ assert.notDeepStrictEqual(preset.parameters['transform.position.a'],preset.parameters['transform.position.b'],id+' must actually move');
+}
+const {canonicalDefault}=await import('../domain/parameterValues.ts');
+const {BINDINGS}=await import('../../../../../shared/generated/parameterBindings.ts');
+const normalized=(value:any)=>value==='frameCenter'||value==='sourceCenter'?{x:.5,y:.5}:value;
+for(const preset of BUNDLED_PRESETS){
+ const moving=BINDINGS.filter(b=>b.stateOwnership==='A').some(binding=>{
+  const a=binding.logicalId,b=a.replace(/\.a$/,'.b');
+  return JSON.stringify(normalized(preset.parameters[a]??canonicalDefault(a)))!==JSON.stringify(normalized(preset.parameters[b]??canonicalDefault(b)));
+ });
+ assert.ok(moving,preset.name+' must define an actual endpoint change');
+}
+const hold=BUNDLED_PRESETS.find(p=>p.presetId==='bundled-custom-hold')!;
+assert.notEqual(hold.parameters['transition.mode'],4,'Hold Then Move cannot remain in permanent HoldA');
+assert.ok(Number(hold.parameters['transition.delaySeconds'])>0);

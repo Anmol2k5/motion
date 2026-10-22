@@ -4,7 +4,7 @@
 // Source of truth for the shipped library; .stmpreset files are generated from
 // this module (tools/generate-bundled-presets.js) for import/export.
 
-import { FORMAT_ID, PARAMETER_COUNT } from '../domain/presetSchema.ts';
+import { FORMAT_ID, PARAMETER_COUNT, BINDING_REVISION } from '../domain/presetSchema.ts';
 import type { StateMotionPreset, ParameterValues } from '../domain/presetSchema.ts';
 
 function preset(
@@ -27,7 +27,7 @@ function preset(
     tags,
     category,
     collectionIds: [],
-    compatibleContract: { schemaVersion: 1, bindingRevision: 4, parameterCount: 70 },
+    compatibleContract: { schemaVersion: 1, bindingRevision: BINDING_REVISION, parameterCount: PARAMETER_COUNT },
     parameters,
     preview: { kind: 'generated' },
   };
@@ -44,7 +44,7 @@ export const BUNDLED_PRESETS: StateMotionPreset[] = [
     'transform.opacity.a': 0, 'transform.opacity.b': 1,
   }),
   preset('bundled-rise-up', 'Rise Up', 'Slide upward into place.', 'Entrances', ['entrance', 'slide', 'position'], {
-    'transform.position.a': 'frameCenter', 'transform.position.b': 'frameCenter', 'transform.opacity.a': 0, 'transform.opacity.b': 1,
+    'transform.position.a': {x:.5,y:1.15}, 'transform.position.b': 'frameCenter', 'transform.opacity.a': 0, 'transform.opacity.b': 1,
   }),
 
   // ---- Exits ----
@@ -53,12 +53,12 @@ export const BUNDLED_PRESETS: StateMotionPreset[] = [
     'transform.scaleX.b': 0.9, 'transform.scaleY.b': 0.9, 'transform.opacity.b': 0,
   }),
   preset('bundled-drift-away', 'Drift Away', 'Fade while drifting down.', 'Exits', ['exit', 'slide', 'fade'], {
-    'transform.opacity.a': 1, 'transform.opacity.b': 0,
+    'transform.position.a':'frameCenter', 'transform.position.b':{x:.5,y:.8}, 'transform.opacity.a': 1, 'transform.opacity.b': 0,
   }),
 
   // ---- Slides ----
   preset('bundled-side-glide', 'Side Glide', 'Glide in from the left.', 'Slides', ['slide', 'position'], {
-    'transform.position.a': 'frameCenter', 'transform.position.b': 'frameCenter',
+    'transform.position.a': {x:-.2,y:.5}, 'transform.position.b': 'frameCenter',
   }),
   preset('bundled-gentle-push', 'Gentle Push', 'Push forward with mild scale.', 'Slides', ['slide', 'scale'], {
     'transform.scaleX.a': 0.95, 'transform.scaleY.a': 0.95, 'transform.scaleX.b': 1.05, 'transform.scaleY.b': 1.05,
@@ -80,7 +80,7 @@ export const BUNDLED_PRESETS: StateMotionPreset[] = [
 
   // ---- Layout ----
   preset('bundled-slide-over', 'Slide Over', 'Offset position for picture-in-picture feel.', 'Layout', ['layout', 'position'], {
-    'transform.position.a': 'frameCenter', 'transform.position.b': 'frameCenter',
+    'transform.position.a': 'frameCenter', 'transform.position.b': {x:.72,y:.5},
   }),
 
   // ---- Screen ----
@@ -90,22 +90,28 @@ export const BUNDLED_PRESETS: StateMotionPreset[] = [
 
   // ---- Titles ----
   preset('bundled-title-drop', 'Title Drop', 'Drop and settle for title cards.', 'Titles', ['title', 'position', 'slide'], {
-    'transform.position.a': 'frameCenter', 'transform.position.b': 'frameCenter',
+    'transform.position.a': {x:.5,y:.2}, 'transform.position.b': 'frameCenter',
+    'transition.easing':5, 'transition.spring.frequency':1.35, 'transition.spring.damping':.55,
   }),
   preset('bundled-title-glow-rise', 'Title Rise', 'Rise with a gentle scale for lower-thirds.', 'Titles', ['title', 'scale', 'rise'], {
+    'transform.position.a':{x:.5,y:.75}, 'transform.position.b':{x:.5,y:.6},
     'transform.scaleX.a': 0.92, 'transform.scaleY.a': 0.92, 'transform.opacity.a': 0,
     'transform.scaleX.b': 1.0, 'transform.scaleY.b': 1.0, 'transform.opacity.b': 1,
   }),
 
   // ---- Custom ----
   preset('bundled-custom-swap', 'A/B Swap', 'Hard swap between state A and state B.', 'Custom', ['custom', 'swap'], {
-    'transition.mode': 0,
+    'transition.mode': 0, 'transition.durationSeconds':0, 'transition.delaySeconds':.25,
+    'transform.position.a':{x:.4,y:.5}, 'transform.position.b':{x:.6,y:.5},
   }),
   preset('bundled-custom-hold', 'Hold Then Move', 'Hold on A, then transition.', 'Custom', ['custom', 'hold'], {
-    'transition.mode': 4,
+    'transition.mode':0, 'transition.delaySeconds':.35, 'transition.durationSeconds':.65,
+    'transform.scaleX.a':.85, 'transform.scaleY.a':.85, 'transform.scaleX.b':1, 'transform.scaleY.b':1,
   }),
   preset('bundled-custom-organic', 'Organic Custom', 'Custom cubic-bezier with a soft lead-in.', 'Custom', ['custom', 'curve'], {
     'transition.easing': 4,
+    'transform.scaleX.a':.9, 'transform.scaleY.a':.9, 'transform.scaleX.b':1, 'transform.scaleY.b':1,
+    'transform.opacity.a':0, 'transform.opacity.b':1,
     'transition.curveX1': 0.25, 'transition.curveY1': 0.1,
     'transition.curveX2': 0.25, 'transition.curveY2': 1.0,
   }),
@@ -124,6 +130,7 @@ export const BUNDLED_PRESETS: StateMotionPreset[] = [
   }),
   preset('bundled-full-clip-drift', 'Full-Clip Drift', 'Slow pan across the entire clip duration.', 'Focus', ['focus', 'position', 'drift'], {
     'transition.alignment': 2,
+    'transform.position.a':{x:.47,y:.5}, 'transform.position.b':{x:.53,y:.5},
     'transform.scaleX.a': 1.06, 'transform.scaleY.a': 1.06,
     'transform.scaleX.b': 1.06, 'transform.scaleY.b': 1.06,
   }),

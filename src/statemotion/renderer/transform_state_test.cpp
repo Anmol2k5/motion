@@ -39,11 +39,19 @@ int main() {
     auto ey = statemotion::interpolateCanonical(a, b, 0.0);
     check(std::abs(ey.opacity - 0.0) < 1e-12, "exact A opacity");
 
-    // clamp outside [0,1]
+    // Easing may overshoot; physical opacity remains bounded.
     auto lo = statemotion::interpolateCanonical(a, b, -0.3);
-    check(std::abs(lo.positionNormX) < 1e-12, "clamp low");
+    check(std::abs(lo.positionNormX + 0.3) < 1e-12, "anticipation position");
+    check(lo.opacity == 0.0, "opacity lower bound");
     auto hi = statemotion::interpolateCanonical(a, b, 1.7);
-    check(std::abs(hi.positionNormX - 1.0) < 1e-12, "clamp high");
+    check(std::abs(hi.positionNormX - 1.7) < 1e-12, "overshoot position");
+    check(std::abs(hi.scaleX - 2.7) < 1e-12, "overshoot scale");
+    check(hi.opacity == 1.0, "opacity upper bound");
+    check(std::abs(hi.rotationRadians - 1.7*b.rotationRadians) < 1e-12, "overshoot rotation");
+    auto invalid = statemotion::interpolateCanonical(a,b,NAN);
+    check(std::isfinite(invalid.positionNormX), "nonfinite progress deterministic");
+    b.scaleX = -1.0;
+    check(statemotion::interpolateCanonical(a,b,1.0).scaleX == -1.0, "negative scale retained");
 
     std::printf("\n%s: %d failures\n", g_fail ? "FAILED" : "ALL PASSED", g_fail);
     return g_fail ? 1 : 0;

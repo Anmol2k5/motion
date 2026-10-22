@@ -1,152 +1,54 @@
-// StateMotion Preset Panel — Manage view (user presets, collections, import/export).
-
-import { el, clear, showState } from './components.ts';
-import type { PresetRepository, LibraryModel } from '../domain/presetStorage.ts';
-import { createCollection, renameCollection, deleteCollection, addToCollection, removeFromCollection } from '../domain/collections.ts';
-import { toggleFavorite } from '../domain/favorites.ts';
-import type { StateMotionPreset } from '../domain/presetSchema.ts';
-
+import {el,clear} from './components.ts';
+import {OperationStatus} from './operationStatus.ts';
+import {UxpUserInteraction,type UserInteraction} from '../host/userInteraction.ts';
+import {newId} from '../domain/ids.ts';
+import {createCollection,renameCollection,deleteCollection,addToCollection,removeFromCollection} from '../domain/collections.ts';
+import type {PresetRepository,LibraryModel} from '../domain/presetStorage.ts';
 export class ManageView {
-  constructor(
-    private repo: PresetRepository,
-    private getLibrary: () => LibraryModel,
-    private setLibrary: (lib: LibraryModel) => void,
-  ) {}
-
-  async render(container: HTMLElement): Promise<void> {
-    clear(container);
-    showState(container, '⏳', 'Loading presets...', '');
-    const all = await this.repo.list();
-    clear(container);
-    const library = this.getLibrary();
-    const userPresets = all.filter((p) => p.presetId.startsWith('user-'));
-
-    container.append(el('div', { class: 'sm-section-title', text: `User presets (${userPresets.length})` }));
-    if (userPresets.length === 0) {
-      showState(container, '📁', 'No user presets yet', 'Create one from the Inspector or duplicate a bundled preset.');
-    }
-    const list = el('div', { class: 'sm-list' });
-    for (const p of userPresets) {
-      list.append(this.renderUserRow(p));
-    }
-    container.append(list);
-
-    container.append(el('div', { class: 'sm-section-title', text: `Collections (${library.collectionIds.length})` }));
-    const colList = el('div', { class: 'sm-list' });
-    for (const id of library.collectionIds) {
-      const c = library.collections[id];
-      colList.append(el('div', { class: 'sm-row' }, [
-        el('span', { class: 'label', text: c.name }),
-        el('span', { text: `${c.presetIds.length} presets` }),
-      ]));
-    }
-    if (library.collectionIds.length === 0) {
-      colList.append(el('p', { class: 'muted', text: 'No collections. Create one to group presets.' }));
-    }
-    container.append(colList);
-
-    const newColBtn = el('button', { class: 'sm-btn secondary', text: '+ New collection' }) as HTMLButtonElement;
-    newColBtn.addEventListener('click', async () => {
-      const name = window.prompt('Collection name?', 'My Collection');
-      if (!name) return;
-      const id = 'col-' + Date.now().toString(36);
-      const updated = createCollection(library, id, name);
-      this.setLibrary(updated);
-      await this.repo.saveLibrary(updated);
-      this.render(container);
-    });
-
-    const importBtn = el('button', { class: 'sm-btn secondary', text: 'Import .stmpreset' }) as HTMLButtonElement;
-    importBtn.addEventListener('click', async () => {
-      const input = el('input', { type: 'file', accept: '.stmpreset,application/json' }) as HTMLInputElement;
-      input.addEventListener('change', async () => {
-        const file = input.files?.[0];
-        if (!file) return;
-        const text = await file.text();
-        try {
-          await this.repo.import(text);
-          this.render(this.lastContainer!);
-        } catch (e: any) {
-          window.alert('Import failed: ' + (e?.message ?? e));
-        }
-      });
-      input.click();
-    });
-
-    const newBtn = el('button', { class: 'sm-btn secondary', text: '+ New preset' }) as HTMLButtonElement;
-    newBtn.addEventListener('click', async () => {
-      const name = window.prompt('New preset name?', 'My Preset');
-      if (!name) return;
-      const id = 'user-' + Date.now().toString(36);
-      const now = new Date().toISOString();
-      const preset: StateMotionPreset = {
-        formatId: 'io.github.anmol2k5.statemotion.preset',
-        schemaVersion: 1,
-        presetId: id,
-        name,
-        description: '',
-        author: 'You',
-        createdAt: now,
-        modifiedAt: now,
-        tags: [],
-        category: 'Custom',
-        collectionIds: [],
-        compatibleContract: { schemaVersion: 1, bindingRevision: 2, parameterCount: 25 },
-        parameters: {},
-        preview: { kind: 'generated' },
-      };
-      await this.repo.create(preset);
-      this.render(this.lastContainer!);
-    });
-
-    container.append(el('div', { class: 'sm-actionbar' }, [newColBtn, importBtn, newBtn]));
+ private generation=0;
+ private notice='';
+ constructor(private repo:PresetRepository,private getLibrary:()=>LibraryModel,private setLibrary:(lib:LibraryModel)=>void,private interaction:UserInteraction=new UxpUserInteraction(),private capture?:()=>Promise<void>){}
+ setContainer(_container:HTMLElement){}
+ async render(container:HTMLElement):Promise<void>{
+  const generation=++this.generation;clear(container);
+  const status=new OperationStatus(container);status.element.textContent=this.notice;container.append(status.element);
+  let presets;
+  try{presets=await this.repo.list();}catch{status.element.textContent='Presets could not be loaded.';return;}
+  if(generation!==this.generation)return;
+  const save=async(update:(current:LibraryModel)=>LibraryModel)=>{this.setLibrary(await this.repo.updateLibrary(update));};
+  const button=(label:string,id:string,run:()=>Promise<void|boolean>)=>{
+   const element=el('button',{class:'sm-btn secondary',text:label,'data-action':id});
+   element.addEventListener('click',()=>status.run(async()=>{const result=await run();this.notice=result===false?'Canceled.':'Saved.';await this.render(container);}));return element;
+  };
+  const capture=button('Capture selected clip','capture',async()=>{await this.capture?.();});capture.disabled=!this.capture;
+  container.append(el('div',{class:'sm-actionbar'},[
+   button('Import preset','import',async()=>{const text=await this.interaction.importPreset();if(text===null)return false;await this.repo.import(text);}),
+   capture,
+   button('New collection','new-collection',async()=>{const name=await this.interaction.prompt('Collection name');if(name?.trim())await save(library=>createCollection(library,newId('col'),name.trim()));}),
+  ]));
+  container.append(el('h2',{text:'Collections'}));
+  const library=this.getLibrary();
+  for(const id of library.collectionIds){const collection=library.collections[id];
+   container.append(el('div',{class:'sm-row'},[
+    el('span',{text:collection.name}),
+    button('Rename','collection-rename',async()=>{const name=await this.interaction.prompt('Rename collection',collection.name);if(name?.trim())await save(library=>renameCollection(library,id,name.trim()));}),
+    button('Delete','collection-delete',async()=>{if(await this.interaction.confirm('Delete this collection? Presets are kept.'))await save(library=>deleteCollection(library,id));}),
+   ]));
   }
-
-  private renderUserRow(p: StateMotionPreset): HTMLElement {
-    const rename = el('button', { class: 'sm-btn secondary', text: 'Rename' });
-    rename.addEventListener('click', async () => {
-      const name = window.prompt('Rename preset', p.name);
-      if (!name) return;
-      await this.repo.update({ ...p, name, modifiedAt: new Date().toISOString() });
-      this.render(this.lastContainer!);
-    });
-    const dup = el('button', { class: 'sm-btn secondary', text: 'Duplicate' }) as HTMLButtonElement;
-    dup.addEventListener('click', async () => {
-      dup.disabled = true;
-      try {
-        await this.repo.duplicate(p.presetId);
-        this.render(this.lastContainer!);
-      } finally {
-        dup.disabled = false;
-      }
-    });
-    const exp = el('button', { class: 'sm-btn secondary', text: 'Export' });
-    exp.addEventListener('click', async () => {
-      const text = await this.repo.export(p.presetId);
-      this.download(p.name + '.stmpreset', text);
-    });
-    const del = el('button', { class: 'sm-btn secondary', text: 'Delete' });
-    del.addEventListener('click', async () => {
-      if (!window.confirm(`Delete "${p.name}"? This cannot be undone.`)) return;
-      await this.repo.delete(p.presetId);
-      this.render(this.lastContainer!);
-    });
-    return el('div', { class: 'sm-row' }, [
-      el('span', { text: p.name }),
-      el('div', { style: 'display:flex; gap:4px' }, [rename, dup, exp, del]),
-    ]);
+  container.append(el('h2',{text:'Presets'}));
+  for(const preset of presets){
+   const row=el('div',{class:'sm-managed-preset'},[el('span',{text:preset.name})]);
+   row.append(button('Export','export',async()=>{return this.interaction.exportPreset(preset.name.replace(/[^a-z0-9._-]/gi,'_')+'.stmpreset',await this.repo.export(preset.presetId));}));
+   row.append(button('Duplicate','duplicate',async()=>{await this.repo.duplicate(preset.presetId);}));
+   if(!preset.presetId.startsWith('bundled-')){
+    row.append(button('Rename','rename',async()=>{const name=await this.interaction.prompt('Preset name',preset.name);if(name?.trim())await this.repo.update({...preset,name:name.trim(),modifiedAt:new Date().toISOString()});}));
+    row.append(button('Delete','delete',async()=>{if(await this.interaction.confirm('Delete this user preset?'))await this.repo.delete(preset.presetId);}));
+   }
+   for(const id of library.collectionIds){const collection=library.collections[id],member=collection.presetIds.includes(preset.presetId);
+    row.append(button((member?'Remove from ':'Add to ')+collection.name,'membership',async()=>{await save(library=>(library.collections[id]?.presetIds.includes(preset.presetId)?removeFromCollection:addToCollection)(library,id,preset.presetId));}));
+   }
+   container.append(row);
   }
-
-  private download(filename: string, content: string): void {
-    const blob = new Blob([content], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = el('a', { href: url, download: filename });
-    document.body.append(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  }
-
-  private lastContainer: HTMLElement | null = null;
-  setContainer(c: HTMLElement) { this.lastContainer = c; }
+  for(const warning of this.repo.getWarnings?.()??[])container.append(el('p',{class:'sm-warn',text:warning}));
+ }
 }

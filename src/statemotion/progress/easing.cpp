@@ -86,6 +86,8 @@ double evaluateEasing(EasingMode mode, const EasingCurve& curve, double linear) 
             return clamp01(bezierY(t, curve.y1, curve.y2));
         }
         case EasingMode::SPRING: {
+            if (!std::isfinite(curve.springFrequency) || !std::isfinite(curve.springDamping) ||
+                !std::isfinite(curve.springInitialVelocity)) return x;
             if (x <= 0.0) return 0.0;
             if (x >= 1.0) return 1.0;
             double freq = std::max(0.01, curve.springFrequency);
@@ -103,15 +105,6 @@ double evaluateEasing(EasingMode mode, const EasingCurve& curve, double linear) 
                 // Normalize so response(1) lands exactly at 1
                 double env1 = std::exp(-zeta * omega0 * 1.0);
                 double raw1 = 1.0 - env1 * (c1 * std::cos(omegaD * 1.0) + c2 * std::sin(omegaD * 1.0));
-                if (std::abs(raw1 - 1.0) > 1e-6 && raw1 != 0.0) {
-                     return 1.0 + (raw - 1.0) / (raw1 - 1.0 + 1e-12) * (1.0 - 1.0); // Wait, this division doesn't scale to 1 properly if we want to fix exactly at 1.
-                     // The spec says: Normalize the final sample so response(1) lands exactly at 1. 
-                     // A simple fix is to fade out the residual error over time:
-                }
-                
-                // Correct normalization:
-                // Error at t=1 is (1 - raw1).
-                // We can distribute this error linearly: raw + x * (1 - raw1).
                 double err = 1.0 - raw1;
                 return raw + x * err;
             } else {
@@ -125,10 +118,12 @@ double evaluateEasing(EasingMode mode, const EasingCurve& curve, double linear) 
             }
         }
         case EasingMode::BOUNCE: {
+            if (!std::isfinite(curve.bounceCount) || !std::isfinite(curve.bounceHeightDecay) ||
+                !std::isfinite(curve.bounceTimeDecay) || !std::isfinite(curve.bounceHangTime)) return x;
             if (x <= 0.0) return 0.0;
             if (x >= 1.0) return 1.0;
             
-            int count = std::clamp(static_cast<int>(curve.bounceCount), 1, 8);
+            int count = static_cast<int>(std::clamp(curve.bounceCount, 1.0, 8.0));
             double hDecay = std::clamp(curve.bounceHeightDecay, 0.0, 1.0);
             double tDecay = std::clamp(curve.bounceTimeDecay, 0.01, 1.0);
             

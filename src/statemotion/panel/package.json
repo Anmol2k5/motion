@@ -8,8 +8,8 @@
     "build": "node tools/build-panel.mjs",
     "typecheck": "tsc --noEmit",
     "test": "node tools/run-panel-tests.mjs",
-    "gen:contract": "node tools/generate-contract.js",
-    "gen:presets": "node --experimental-transform-types tools/generate-bundled-presets.ts"
+    "gen:contract": "node ../../../tools/generate-contract.js",
+    "gen:presets": "node --experimental-transform-types ../../../tools/generate-bundled-presets.ts"
   },
   "devDependencies": {
     "@adobe/premierepro": "26.3.0",

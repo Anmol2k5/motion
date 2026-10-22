@@ -1,9 +1,9 @@
 # StateMotion Parameter Contract (generated)
 
 - schemaVersion: 1
-- bindingRevision: 4
+- bindingRevision: 5
 - parameterCount: 70
-- SHA-256: `05ee3222039a01759cb7c8ab392095d6d6ddc3a777a65f04f19c2f3f2e295ee3`
+- SHA-256: `156082aadbd4f0a4da0b94caf1100d94c2d43b1097b5c4ac9c813ded32f586be`
 
 > GENERATED from shared/schema/parameter-contract.json. Do not edit by hand.
 
@@ -38,7 +38,7 @@
 |---|---|---|---|---|---|---|---|
 | contract.schemaVersion | 1 | SM Schema Version | FLOAT_SLIDER | 1 | 1..9999 | static | metadata |
 | contract.parameterCount | 2 | SM Param Count | FLOAT_SLIDER | 70 | 1..9999 | static | metadata |
-| contract.bindingRevision | 3 | SM Binding Rev | FLOAT_SLIDER | 4 | 1..9999 | static | metadata |
+| contract.bindingRevision | 3 | SM Binding Rev | FLOAT_SLIDER | 5 | 1..9999 | static | metadata |
 | transition.mode | 50 | SM Mode | POPUP | 0 | ProgressMode | static | transition |
 | transition.alignment | 51 | SM Alignment | POPUP | 0 | AlignmentMode | static | transition |
 | transition.durationSeconds | 52 | SM Duration | FLOAT_SLIDER | 1 | 0..3600 | static | transition |

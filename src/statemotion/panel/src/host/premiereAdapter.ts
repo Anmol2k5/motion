@@ -1,3 +1,5 @@
+import { validatePreset } from '../domain/presetSchema.ts';
+import { validateParameterValues,canonicalDefault } from '../domain/parameterValues.ts';
 // StateMotion Preset Panel — PremiereAdapter (thin host seam).
 //
 // The adapter is the ONLY module that talks to Premiere. It depends on a
@@ -23,6 +25,7 @@ export interface HostBridge {
   writeLogical(clip: ClipRef, logicalId: string, value: ParameterValue): Promise<void>;
   beginUndo(label: string): Promise<void>;
   endUndo(): Promise<void>;
+  cancelUndo(): Promise<void>;
   applyEffect(clip: ClipRef): Promise<void>;
   removeEffect(clip: ClipRef): Promise<void>;
 }
@@ -33,6 +36,7 @@ export interface DetectResult {
 }
 
 export interface ApplyReport {
+  warning?:string;
   applied: string[];
   skipped: string[];
   failed: string[];
@@ -40,136 +44,98 @@ export interface ApplyReport {
 }
 
 export class PremiereAdapter {
+  private pending:Promise<unknown>=Promise.resolve();
   constructor(private host: HostBridge) {}
-
-  async detectSelection(): Promise<DetectResult> {
-    const selection = await this.host.getSelection();
-    const supported: ClipRef[] = [];
-    const unsupported: ClipRef[] = [];
-    for (const clip of selection) {
-      const has = await this.host.hasStateMotionEffect(clip);
-      const contract = await this.host.getContract(clip);
-      const compat = checkCompatibility(contract);
-      if (has && compat.level !== CompatLevel.Incompatible) supported.push(clip);
-      else unsupported.push(clip);
-    }
-    return { supported, unsupported };
+  private exclusive<T>(run:()=>Promise<T>):Promise<T>{
+    const result=this.pending.then(run,run);this.pending=result.then(()=>{},()=>{});return result;
   }
-
-  // Apply a preset to the given selection clip ids. Uses buildApplyPlan for
-  // classification, then writes only resolvable logical params inside one undo.
-  async applyPresetToSelection(preset: StateMotionPreset, selectionClipIds?: string[]): Promise<ApplyReport> {
-    const clips = selectionClipIds
-      ? selectionClipIds.map((clipId) => ({ clipId }))
-      : await this.host.getSelection();
-    const report: ApplyReport = { applied: [], skipped: [], failed: [], reasons: {} };
-
-    await this.host.beginUndo('StateMotion: apply preset ' + preset.name);
-    try {
-      const items: SelectionItem[] = [];
-      for (const clip of clips) {
-        const has = await this.host.hasStateMotionEffect(clip);
-        let contract = await this.host.getContract(clip);
-        if (!has && contract === null) {
-          // No effect: queue it in the same transaction, then inspect the new
-          // component before commit so parameter actions remain one undo step.
-          await this.host.applyEffect(clip);
-          contract = await this.host.getContract(clip);
-        }
-        const effectiveHas = has || contract !== null;
-        items.push({ clipId: clip.clipId, hasStateMotion: effectiveHas, contract });
-      }
-
-      const plan = buildApplyPlan(items, preset.presetId, preset.compatibleContract);
-      for (const item of plan.items) {
-        if (item.status !== ItemStatus.Supported) {
-          if (item.status === ItemStatus.Unsupported) report.skipped.push(item.clipId);
-          else report.failed.push(item.clipId);
-          report.reasons[item.clipId] = item.reason;
-          continue;
-        }
-        const clip: ClipRef = { clipId: item.clipId };
-        for (const [logicalId, value] of Object.entries(preset.parameters)) {
-          const binding = getBinding(logicalId);
-          if (!binding) continue; // unknown logical id -> never write blindly
-          const index = await this.host.enumerateParamIndex(clip, binding.wireName);
-          if (index === undefined) continue; // index drift -> skip, no blind write
-          await this.host.writeLogical(clip, logicalId, value);
-        }
-        report.applied.push(item.clipId);
-      }
-    } finally {
-      await this.host.endUndo();
+  private async transaction(label:string,clip:ClipRef,run:()=>Promise<void>):Promise<void>{
+    await this.host.beginUndo(label);
+    try {await run();await this.assertSelected(clip);await this.host.endUndo();}
+    catch(error){await this.host.cancelUndo();throw error;}
+  }
+  private async assertSelected(clip:ClipRef):Promise<void>{
+    if(!(await this.host.getSelection()).some(c=>c.clipId===clip.clipId))throw new Error('Selection changed. Select the clip again.');
+  }
+  private async assertCompatible(clip:ClipRef):Promise<void>{
+    const compat=checkCompatibility(await this.host.getContract(clip));
+    if(compat.level===CompatLevel.ReadOnly)throw new ContractReadOnly(compat.reasons);
+    if(compat.level!==CompatLevel.Ok)throw new ContractIncompatible(compat.reasons);
+  }
+  async detectSelection():Promise<DetectResult>{
+    const supported:ClipRef[]=[],unsupported:ClipRef[]=[];
+    for(const clip of await this.host.getSelection()){
+      const has=await this.host.hasStateMotionEffect(clip);
+      const compat=checkCompatibility(await this.host.getContract(clip));
+      (has&&compat.level===CompatLevel.Ok?supported:unsupported).push(clip);
     }
+    return {supported,unsupported};
+  }
+  async applyPresetToSelection(preset:StateMotionPreset,selectionClipIds?:string[]):Promise<ApplyReport>{
+    return this.exclusive(async()=>{
+      const selected=await this.host.getSelection();
+      const clips=selectionClipIds?selectionClipIds.map(clipId=>({clipId})):selected;
+      const report:ApplyReport={applied:[],skipped:[],failed:[],reasons:{}};
+      const validation=validatePreset(preset);
+      const values:Record<string,ParameterValue>={};
+      if(validation.ok){for(const id of LOGICAL_IDS)if(isCreative(id))values[id]=canonicalDefault(id)!;Object.assign(values,preset.parameters);}
+      for(const clip of clips){
+        try {
+          if(!validation.ok)throw new Error('Invalid or incompatible preset');
+          if(!selected.some(c=>c.clipId===clip.clipId))throw new Error('Selection changed');
+          await this.transaction('StateMotion: apply '+preset.name,clip,async()=>{
+            if(!(await this.host.hasStateMotionEffect(clip)))await this.host.applyEffect(clip);
+            await this.assertCompatible(clip);
+            for(const [id,value] of Object.entries(values)){
+              const binding=getBinding(id)!;
+              if(await this.host.enumerateParamIndex(clip,binding.wireName)===undefined)throw new Error('Cannot resolve required parameter');
+            }
+            for(const [id,value] of Object.entries(values))await this.host.writeLogical(clip,id,value);
+          });
+          report.applied.push(clip.clipId);
+        }catch(error){report.failed.push(clip.clipId);report.reasons[clip.clipId]=error instanceof ContractIncompatible||error instanceof ContractReadOnly?'Contract incompatible':error instanceof Error&&error.message==='Selection changed'?'Selection changed':'Operation failed; no staged changes were committed';}
+      }
+      return report;
+    });
+  }
+  async getContract(clip:ClipRef){return this.host.getContract(clip);}
+  async writeParameters(clip:ClipRef,values:Record<string,ParameterValue>):Promise<void>{
+    return this.exclusive(async()=>{
+      const result=validateParameterValues(values);
+      if(!result.ok)throw new Error('Invalid parameter values');
+      await this.assertCompatible(clip);await this.assertSelected(clip);
+      for(const id of Object.keys(values))if(await this.host.enumerateParamIndex(clip,getBinding(id)!.wireName)===undefined)throw new Error('Cannot resolve required parameter');
+      await this.transaction('StateMotion: edit parameters',clip,async()=>{
+        for(const [id,value] of Object.entries(values))await this.host.writeLogical(clip,id,value);
+      });
+    });
+  }
+  async writeLogical(clip:ClipRef,id:string,value:ParameterValue):Promise<void>{return this.writeParameters(clip,{[id]:value});}
+  async readState(clip:ClipRef):Promise<CanonicalStateMotionConfig>{
+    await this.assertCompatible(clip);
+    if(!(await this.host.hasStateMotionEffect(clip)))throw new Error('No StateMotion effect on clip');
+    const parameters:Record<string,ParameterValue>={};
+    for(const id of LOGICAL_IDS){if(!isCreative(id))continue;const value=await this.host.readLogical(clip,id);if(value!==undefined)parameters[id]=value;}
+    return {parameters};
+  }
+  async removeEffect(clip:ClipRef):Promise<void>{
+    return this.exclusive(async()=>{await this.assertSelected(clip);await this.assertCompatible(clip);await this.transaction('StateMotion: remove effect',clip,()=>this.host.removeEffect(clip));});
+  }
+  async swapStates(clip:ClipRef):Promise<void>{
+    return this.exclusive(async()=>{
+      await this.assertSelected(clip);const state=await this.readState(clip);
+      const values:Record<string,ParameterValue>={};
+      for(const id of Object.keys(state.parameters)){
+        const target=id.endsWith('.a')?id.slice(0,-2)+'.b':id.endsWith('.b')?id.slice(0,-2)+'.a':id;
+        if(target!==id&&state.parameters[target]!==undefined)values[id]=state.parameters[target];
+      }
+      await this.transaction('StateMotion: swap states',clip,async()=>{for(const [id,value] of Object.entries(values))await this.host.writeLogical(clip,id,value);});
+    });
+  }
+  async runSelectionAction(action:'swap'|'remove',clips:ClipRef[]):Promise<ApplyReport>{
+    const report:ApplyReport={applied:[],skipped:[],failed:[],reasons:{}};
+    for(const clip of clips){try{if(action==='swap')await this.swapStates(clip);else await this.removeEffect(clip);report.applied.push(clip.clipId);}catch{report.failed.push(clip.clipId);report.reasons[clip.clipId]='Operation failed; retry this clip';}}
     return report;
-  }
-
-  async getContract(clip: ClipRef) {
-    return this.host.getContract(clip);
-  }
-
-  async writeLogical(clip: ClipRef, logicalId: string, value: ParameterValue): Promise<void> {
-    const compat = checkCompatibility(await this.host.getContract(clip));
-    if (compat.level === CompatLevel.ReadOnly) throw new ContractReadOnly(compat.reasons);
-    if (compat.level !== CompatLevel.Ok) throw new ContractIncompatible(compat.reasons);
-    await this.host.beginUndo('StateMotion: edit parameter');
-    try {
-      await this.host.writeLogical(clip, logicalId, value);
-    } finally {
-      await this.host.endUndo();
-    }
-  }
-
-  async readState(clip: ClipRef): Promise<CanonicalStateMotionConfig> {
-    const contract = await this.host.getContract(clip);
-    const compat = checkCompatibility(contract);
-    if (compat.level === CompatLevel.Incompatible) throw new ContractIncompatible(compat.reasons);
-    if (compat.level === CompatLevel.ReadOnly) throw new ContractReadOnly(compat.reasons);
-    if (!(await this.host.hasStateMotionEffect(clip))) throw new Error('No StateMotion effect on clip');
-
-    const parameters: Record<string, ParameterValue> = {};
-    for (const id of LOGICAL_IDS) {
-      if (!isCreative(id)) continue; // never read metadata
-      const v = await this.host.readLogical(clip, id);
-      if (v === undefined) continue;
-      parameters[id] = v;
-    }
-    return { parameters };
-  }
-
-  async removeEffect(clip: ClipRef): Promise<void> {
-    await this.host.beginUndo('StateMotion: remove effect');
-    try {
-      await this.host.removeEffect(clip);
-    } finally {
-      await this.host.endUndo();
-    }
-  }
-
-  async swapStates(clip: ClipRef): Promise<void> {
-    const state = await this.readState(clip);
-    await this.host.beginUndo('StateMotion: swap states');
-    try {
-      for (const id of LOGICAL_IDS) {
-        if (!isCreative(id)) continue;
-        const binding = getBinding(id);
-        if (!binding) continue;
-        
-        let targetId = id;
-        if (id.endsWith('.a')) targetId = id.replace(/\.a$/, '.b');
-        else if (id.endsWith('.b')) targetId = id.replace(/\.b$/, '.a');
-        else if (id.endsWith('A')) targetId = id.replace(/A$/, 'B'); // e.g. transform.positionA
-        else if (id.endsWith('B')) targetId = id.replace(/B$/, 'A');
-        
-        if (targetId !== id && state.parameters[targetId] !== undefined) {
-          const index = await this.host.enumerateParamIndex(clip, binding.wireName);
-          if (index === undefined) continue;
-          await this.host.writeLogical(clip, id, state.parameters[targetId]);
-        }
-      }
-    } finally {
-      await this.host.endUndo();
-    }
   }
 }
 

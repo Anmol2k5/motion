@@ -79,7 +79,7 @@ int main() {
     // Parameter-count metadata is 70; schema/binding revision match generated.
     check(kParameterCount == 70, "parameter count metadata is 70");
     check(kSchemaVersion == 1, "schema version matches generated contract (1)");
-    check(kBindingRevision == 4, "binding revision matches generated contract (4)");
+    check(kBindingRevision == 5, "binding revision matches generated contract (5)");
 
     // Metadata entries are hidden.
     for (int i = 0; i < 3; ++i) {

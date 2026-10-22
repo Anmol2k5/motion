@@ -238,6 +238,13 @@ int main() {
         check(std::abs(got - c.eased) <= tol, "bounce fixture");
     }
 
+    {
+        EasingCurve bad;
+        bad.springInitialVelocity = NAN;
+        check(statemotion::evaluateEasing(EasingMode::SPRING,bad,0.4)==0.4,"invalid spring falls back to linear");
+        bad.bounceCount = NAN;
+        check(statemotion::evaluateEasing(EasingMode::BOUNCE,bad,0.4)==0.4,"invalid bounce falls back to linear");
+    }
     if (failures) { std::printf("\nFAILED: %d failures\n", failures); return 1; }
     std::printf("\nALL PASSED: 0 failures\n");
     return 0;

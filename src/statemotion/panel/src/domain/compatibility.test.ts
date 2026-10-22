@@ -13,7 +13,7 @@ function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
 
 // ---- compatibility ----
 (() => {
-  const ok = checkCompatibility({ schemaVersion: 1, bindingRevision: 2, parameterCount: PARAMETER_COUNT });
+  const ok = checkCompatibility({ schemaVersion: 1, bindingRevision:5, parameterCount: PARAMETER_COUNT });
   assert.strictEqual(ok.level, CompatLevel.Ok, 'matching contract is Ok');
   pass('compatibility Ok for matching contract');
 })();
@@ -23,7 +23,7 @@ function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
   pass('compatibility ReadOnly for older parameterCount');
 })();
 (() => {
-  const bad = checkCompatibility({ schemaVersion: 2, bindingRevision: 2, parameterCount: PARAMETER_COUNT });
+  const bad = checkCompatibility({ schemaVersion: 2, bindingRevision:5, parameterCount: PARAMETER_COUNT });
   assert.strictEqual(bad.level, CompatLevel.Incompatible, 'newer schema -> incompatible');
   pass('compatibility Incompatible for newer schemaVersion');
 })();
@@ -51,12 +51,12 @@ function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
 // ---- apply plan ----
 (() => {
   const selection = [
-    { clipId: 'clip1', hasStateMotion: true, contract: { schemaVersion: 1, bindingRevision: 2, parameterCount: PARAMETER_COUNT } },
+    { clipId: 'clip1', hasStateMotion: true, contract: { schemaVersion: 1, bindingRevision:5, parameterCount: PARAMETER_COUNT } },
     { clipId: 'clip2', hasStateMotion: false, contract: null },
-    { clipId: 'clip3', hasStateMotion: true, contract: { schemaVersion: 2, bindingRevision: 2, parameterCount: PARAMETER_COUNT } },
+    { clipId: 'clip3', hasStateMotion: true, contract: { schemaVersion: 2, bindingRevision:5, parameterCount: PARAMETER_COUNT } },
   ] as any[];
   const plan = buildApplyPlan(selection, 'presetX', {
-    schemaVersion: 1, bindingRevision: 2, parameterCount: PARAMETER_COUNT,
+    schemaVersion: 1, bindingRevision:5, parameterCount: PARAMETER_COUNT,
   });
   const byId: Record<string, any> = {};
   for (const it of plan.items) byId[it.clipId] = it;
@@ -72,9 +72,9 @@ function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
 // ---- unknown contract blocks writes ----
 (() => {
   const plan = buildApplyPlan(
-    [{ clipId: 'c', hasStateMotion: true, contract: { schemaVersion: 1, bindingRevision: 2, parameterCount: PARAMETER_COUNT } } as any],
+    [{ clipId: 'c', hasStateMotion: true, contract: { schemaVersion: 1, bindingRevision:5, parameterCount: PARAMETER_COUNT } } as any],
     'presetX',
-    { schemaVersion: 5, bindingRevision: 2, parameterCount: PARAMETER_COUNT }, // preset claims unknown future contract
+    { schemaVersion: 5, bindingRevision:5, parameterCount: PARAMETER_COUNT }, // preset claims unknown future contract
   );
   assert.strictEqual(plan.items[0].status, ItemStatus.Incompatible, 'preset with unknown contract is incompatible');
   assert.strictEqual(plan.summary.applied, 0);
@@ -82,3 +82,5 @@ function pass(name: string) { console.log(`PASS  ${name}`); passed++; }
 })();
 
 console.log(`\nALL PASSED (${passed})`);
+assert.notStrictEqual(checkCompatibility({schemaVersion:1,bindingRevision:2,parameterCount:PARAMETER_COUNT}).level,CompatLevel.Ok,'older revision cannot be writable');
+assert.strictEqual(checkCompatibility({schemaVersion:NaN,bindingRevision:5,parameterCount:PARAMETER_COUNT}).level,CompatLevel.Incompatible);

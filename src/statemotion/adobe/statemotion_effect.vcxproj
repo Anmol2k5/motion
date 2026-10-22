@@ -81,8 +81,11 @@
     </Link>
     <PreBuildEvent>
       <Command>cl.exe /I "$(SM_SDK_HEADERS)" /EP "$(ProjectDir)statemotion_effect.r" &gt; "$(ProjectDir)statemotion_effect.rr"
+if errorlevel 1 exit /b 1
  "$(SM_SDK_RESOURCES)\PiPLTool.exe" "$(ProjectDir)statemotion_effect.rr" "$(ProjectDir)statemotion_effect.rrc"
- cl.exe /D MSWindows /EP "$(ProjectDir)statemotion_effect.rrc" &gt; "$(ProjectDir)statemotion_effect.rc"</Command>
+if errorlevel 1 exit /b 1
+ cl.exe /D MSWindows /EP "$(ProjectDir)statemotion_effect.rrc" &gt; "$(ProjectDir)statemotion_effect.rc"
+if errorlevel 1 exit /b 1</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
@@ -108,8 +111,11 @@
     </Link>
     <PreBuildEvent>
       <Command>cl.exe /I "$(SM_SDK_HEADERS)" /EP "$(ProjectDir)statemotion_effect.r" &gt; "$(ProjectDir)statemotion_effect.rr"
+if errorlevel 1 exit /b 1
  "$(SM_SDK_RESOURCES)\PiPLTool.exe" "$(ProjectDir)statemotion_effect.rr" "$(ProjectDir)statemotion_effect.rrc"
- cl.exe /D MSWindows /EP "$(ProjectDir)statemotion_effect.rrc" &gt; "$(ProjectDir)statemotion_effect.rc"</Command>
+if errorlevel 1 exit /b 1
+ cl.exe /D MSWindows /EP "$(ProjectDir)statemotion_effect.rrc" &gt; "$(ProjectDir)statemotion_effect.rc"
+if errorlevel 1 exit /b 1</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -118,7 +124,6 @@
     <ClCompile Include="$(MSBuildProjectDirectory)\..\renderer\transform_render.cpp" />
     <ClCompile Include="$(MSBuildProjectDirectory)\..\progress\easing.cpp" />
     <ClCompile Include="$(MSBuildProjectDirectory)\..\progress\progress_engine.cpp" />
-    <ClCompile Include="$(MSBuildProjectDirectory)\..\progress\easing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="statemotion_effect.h" />

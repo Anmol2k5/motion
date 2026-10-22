@@ -59,9 +59,9 @@ function throws(fn: () => unknown, ctor: Function) {
 })();
 
 (() => {
-  assert.strictEqual(toNative('transition.mode', 3, b('transition.mode')), 3);
-  assert.strictEqual(toCanonical('transition.mode', 5, b('transition.mode')), 5);
-  pass('popup enum identity');
+  assert.strictEqual(toNative('transition.mode', 3, b('transition.mode')), 4);
+  assert.strictEqual(toCanonical('transition.mode', 5, b('transition.mode')), 4);
+  pass('popup one-based wire conversion');
 })();
 
 (() => {
@@ -81,3 +81,6 @@ function throws(fn: () => unknown, ctor: Function) {
   }
   pass(`all ${LOGICAL_IDS.length} logical ids have a conversion kind`);
 })();
+assert.equal(toCanonical('glow.enabled.a',false,b('glow.enabled.a')),false,'native boolean false must remain disabled');
+assert.equal(toCanonical('glow.enabled.a',true,b('glow.enabled.a')),true);
+assert.equal(toCanonical('glow.enabled.a',0,b('glow.enabled.a')),false);

@@ -142,11 +142,13 @@ export class CurveEditor {
     }
 
     this.updateVisuals();
-    this.onChange(this.curve);
+
   };
 
   private stopDrag = () => {
+    if(!this.isDragging)return;
     this.isDragging = false;
+    this.onChange([...this.curve]);
     this.activeHandle = null;
     document.removeEventListener('mousemove', this.onDrag);
     document.removeEventListener('mouseup', this.stopDrag);

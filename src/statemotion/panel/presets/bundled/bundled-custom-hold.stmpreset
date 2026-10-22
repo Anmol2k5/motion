@@ -15,11 +15,17 @@
   "collectionIds": [],
   "compatibleContract": {
     "schemaVersion": 1,
-    "bindingRevision": 4,
+    "bindingRevision": 5,
     "parameterCount": 70
   },
   "parameters": {
-    "transition.mode": 4
+    "transition.mode": 0,
+    "transition.delaySeconds": 0.35,
+    "transition.durationSeconds": 0.65,
+    "transform.scaleX.a": 0.85,
+    "transform.scaleY.a": 0.85,
+    "transform.scaleX.b": 1,
+    "transform.scaleY.b": 1
   },
   "preview": {
     "kind": "generated"

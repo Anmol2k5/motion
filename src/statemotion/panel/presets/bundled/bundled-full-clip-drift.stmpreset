@@ -16,11 +16,19 @@
   "collectionIds": [],
   "compatibleContract": {
     "schemaVersion": 1,
-    "bindingRevision": 4,
+    "bindingRevision": 5,
     "parameterCount": 70
   },
   "parameters": {
     "transition.alignment": 2,
+    "transform.position.a": {
+      "x": 0.47,
+      "y": 0.5
+    },
+    "transform.position.b": {
+      "x": 0.53,
+      "y": 0.5
+    },
     "transform.scaleX.a": 1.06,
     "transform.scaleY.a": 1.06,
     "transform.scaleX.b": 1.06,

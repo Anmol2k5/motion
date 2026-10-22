@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {installDom,TestElement} from '../testing/dom.ts';
+import {InspectorView} from './inspector.ts';
+import {BUNDLED_PRESETS} from '../starter/bundledPresets.ts';
+const {container}=installDom(),root=container as unknown as TestElement;
+let scale=2,fail=false,reads=0;
+const adapter={detectSelection:async()=>({supported:[{clipId:'a'}],unsupported:[]}),readState:async()=>{reads++;return {parameters:{'transform.scaleX.a':scale}};},applyPresetToSelection:async()=>{scale=.85;return {applied:['a'],failed:[],skipped:[],reasons:{}};},writeParameters:async()=>{if(fail)throw Error('rejected');}};
+const inspector=new InspectorView(adapter as never);inspector.setLastPreset(BUNDLED_PRESETS[0]);await inspector.render(container);
+assert.equal(root.querySelector('[data-param="transform.scaleX.a"]')!.value,'200');await root.querySelector('[data-action="apply"]')!.click();
+assert.equal(root.querySelector('[data-param="transform.scaleX.a"]')!.value,'85','applied state must be reread');assert.ok(reads>=2);assert.match(root.textContent,/1 updated/);
+fail=true;const input=root.querySelector('[data-param="transform.scaleX.a"]')!;input.value='50';await input.dispatch('change');assert.equal(input.value,'85','failed edit restores new confirmed state');
+console.log('PASS Inspector apply rereads state and preserves report/rollback values');

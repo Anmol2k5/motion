@@ -44,6 +44,7 @@ export class DiagnosticsView {
     env.append(row('Contract status', input.contractStatus ?? 'unknown'));
     env.append(row('Selection count', String(input.selectionCount ?? 0)));
     env.append(row('Last operation', input.lastOperation ?? 'none'));
+    env.append(row('Last error',input.lastErrorCode??'none'));
     container.append(env);
 
     container.append(el('div', { class: 'sm-section-title', text: 'Capabilities' }));
@@ -62,17 +63,21 @@ export class DiagnosticsView {
     container.append(capList);
 
     const copyBtn = el('button', { class: 'sm-btn secondary', text: 'Copy Debug Report', 'aria-label': 'Copy debug report to clipboard' }) as HTMLButtonElement;
-    copyBtn.addEventListener('click', () => this.copyReport(input));
+    const status=el('p',{role:'status','aria-live':'polite'});
+    copyBtn.addEventListener('click', () => this.copyReport(input,status));
+    container.append(status);
+    container.append(el('p',{class:'muted',text:'StateMotion is an independent third-party plugin for Adobe Premiere Pro. It is not authorized, endorsed, sponsored by, or affiliated with Adobe Inc. Adobe and Premiere Pro are trademarks of Adobe. StateMotion is independently developed and is not affiliated with or derived from Motion State or its creator.'}));
     const copyRow = el('div', { class: 'sm-actionbar' }, [copyBtn]);
     container.append(copyRow);
   }
 
-  private async copyReport(input: DiagnosticInput): Promise<void> {
+  private async copyReport(input: DiagnosticInput,status:HTMLElement): Promise<void> {
     const report = buildDebugReport(input);
     try {
-      await (navigator as any).clipboard?.writeText(report);
+      if(typeof navigator==='undefined'||!navigator.clipboard?.writeText){status.textContent='Clipboard unavailable in this host.';return;}
+      await navigator.clipboard.writeText(report);status.textContent='Debug report copied.';
     } catch {
-      // Clipboard may be unavailable in some hosts; ignore (diagnostic only).
+      status.textContent='Could not copy the debug report.';
     }
   }
 }

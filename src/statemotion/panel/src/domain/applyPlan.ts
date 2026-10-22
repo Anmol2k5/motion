@@ -44,7 +44,7 @@ export function buildApplyPlan(
 
   // The preset itself declares a contract; only matching/older current is safe.
   const presetCompat = checkCompatibility(presetContract);
-  if (presetCompat.level === CompatLevel.Incompatible) {
+  if (presetCompat.level !== CompatLevel.Ok) {
     // Entire preset is unwriteable on this build.
     for (const s of selection) {
       items.push({ clipId: s.clipId, status: ItemStatus.Incompatible, reason: 'preset contract incompatible with this build' });

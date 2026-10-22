@@ -15,11 +15,14 @@
   "collectionIds": [],
   "compatibleContract": {
     "schemaVersion": 1,
-    "bindingRevision": 4,
+    "bindingRevision": 5,
     "parameterCount": 70
   },
   "parameters": {
-    "transform.position.a": "frameCenter",
+    "transform.position.a": {
+      "x": -0.2,
+      "y": 0.5
+    },
     "transform.position.b": "frameCenter"
   },
   "preview": {

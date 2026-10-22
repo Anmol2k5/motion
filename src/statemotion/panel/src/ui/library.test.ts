@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {installDom,TestElement} from '../testing/dom.ts';
+import {LibraryView} from './library.ts';
+import {BUNDLED_PRESETS} from '../starter/bundledPresets.ts';
+const {container}=installDom();const root=container as unknown as TestElement;
+const lib={favoritePresetIds:[],collectionIds:['col-test'],collections:{'col-test':{id:'col-test',name:'Test collection',presetIds:[BUNDLED_PRESETS[0].presetId]}},recentlyUsed:[]};
+const view=new LibraryView({list:async()=>BUNDLED_PRESETS,getWarnings:()=>[]} as never,()=>lib,{getSelectionCount:()=>1,onApply:async()=>{throw Error('host failed');},onToggleFavorite:async()=>{}});
+await view.render(container);const search=root.querySelector('[aria-label="Search presets"]')!;search.focus();search.value='Soft';await search.dispatch('input');await new Promise(resolve=>setTimeout(resolve,0));
+assert.equal(root.querySelector('[aria-label="Search presets"]'),search,'filtering preserves the input element');
+assert.ok(root.textContent.includes('Test collection'),'collection filter visible');
+await root.querySelector('.sm-card')!.click();assert.match(root.textContent,/could not|failed/i);
+console.log('PASS library focus, collection filters and rejected apply feedback');

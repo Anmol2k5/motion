@@ -15,11 +15,17 @@
   "collectionIds": [],
   "compatibleContract": {
     "schemaVersion": 1,
-    "bindingRevision": 4,
+    "bindingRevision": 5,
     "parameterCount": 70
   },
   "parameters": {
     "transition.easing": 4,
+    "transform.scaleX.a": 0.9,
+    "transform.scaleY.a": 0.9,
+    "transform.scaleX.b": 1,
+    "transform.scaleY.b": 1,
+    "transform.opacity.a": 0,
+    "transform.opacity.b": 1,
     "transition.curveX1": 0.25,
     "transition.curveY1": 0.1,
     "transition.curveX2": 0.25,
